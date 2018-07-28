@@ -1,0 +1,125 @@
+---
+
+# Notes:
+# Sample project C code is not presently written to produce a release artifact.
+# As such, release build options are disabled.
+# This sample, therefore, only demonstrates running a collection of unit tests.
+
+:project:
+  :use_exceptions: FALSE
+  :use_test_preprocessor: TRUE
+  :use_auxiliary_dependencies: TRUE
+  :build_root: build
+#  :release_build: TRUE
+  :test_file_prefix: test_
+  :which_ceedling: vendor/ceedling
+  :default_tasks:
+    - test:all
+
+#:release_build:
+#  :output: MyApp.out
+#  :use_assembly: FALSE
+
+:environment:
+
+:extension:
+  :executable: .exe
+
+:paths:
+  :test:
+    - +:test/**
+    - -:test/support
+  :source:
+    - src/**
+  :support:
+    - test/support
+
+:defines:
+  # in order to add common defines:
+  #  1) remove the trailing [] from the :common: section
+  #  2) add entries to the :common: section (e.g. :test: has TEST defined)
+  :commmon: &common_defines []
+  :test:
+    - *common_defines
+    - TEST
+    #- CEXCEPTION_USE_CONFIG_FILE
+    # The following macro is to ensure vsnprintf() returns the length of
+    # bytes needed to write when it fails due to buffer being too small
+    - _ISOC99_SOURCE
+  :test_preprocess:
+    - *common_defines
+    - TEST
+
+:cmock:
+  :mock_prefix: mock_
+  :when_no_prototypes: :warn
+  :enforce_strict_ordering: TRUE
+  :plugins:
+    - :ignore
+    - :callback
+  :treat_as:
+    uint8:    HEX8
+    uint16:   HEX16
+    uint32:   UINT32
+    int8:     INT8
+    bool:     UINT8
+
+:gcov:
+    :html_report_type: basic
+
+#:tools:
+# Ceedling defaults to using gcc for compiling, linking, etc.
+# As [:tools] is blank, gcc will be used (so long as it's in your system path)
+# See documentation to configure a given toolchain for use
+:tools:
+  :test_compiler:
+    :executable: gcc                    #exists in system search path
+    :name: 'gcc compiler'
+    :arguments:
+      - -c "${1}"                       #source code input file (Ruby method call param list sub)
+      - -o "${2}"                       #object file output (Ruby method call param list sub)
+      - -g
+      - -I test
+      - -I vendor/ceedling/vendor/unity/src
+      - -I vendor/ceedling/vendor/cmock/src
+      - -I vendor/ceedling/vendor/c_exception/lib
+      - -I build/test/mocks
+      - -I test/support
+      - -I src
+      - -D CEXCEPTION_USE_CONFIG_FILE
+      - -D _ISOC99_SOURCE
+      - -D TEST
+
+  :test_linker:
+    :executable: gcc                    #absolute file path
+    :name: 'gcc linker'
+    :arguments:
+      - "${1}"                          #Link all the object files. Note that, this must come before
+                                        #link libraries
+#      - -Llib/x86                       #Indicate where the user defined libraries reside
+#      - -Llib/x64_7_3_0
+      - -Llib/x64_TDM_5_1_0
+      - -lm                             #Link with math library
+      - -ltokenizer                     #Link with Tokenizer library
+      - -o "${2}"                       #Executable file output (Ruby method call param list sub)
+
+# LIBRARIES
+# These libraries are automatically injected into the build process. Those specified as
+# common will be used in all types of builds. Otherwise, libraries can be injected in just
+# tests or releases. These options are MERGED with the options in supplemental yaml files.
+:libraries:
+  :placement: :end
+  :flag: "${1}"  # or "-L ${1}" for example
+  :common: &common_libraries []
+  :test:
+    - *common_libraries
+  :release:
+    - *common_libraries
+
+:plugins:
+  :load_paths:
+    - vendor/ceedling/plugins
+  :enabled:
+    - stdout_pretty_tests_report
+    - module_generator
+...
