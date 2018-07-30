@@ -4,10 +4,8 @@
 
 
 
-Token *TDOPStarter(Tokenizer *expression);
-Token *TDOP (Tokenizer *tokenizer, int bindingPower);
-
-
+Token *TDOP(Tokenizer *expression);
+Token *evaluate(Tokenizer *expression, int rightBindingPower);
 
 
 

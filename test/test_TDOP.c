@@ -58,3 +58,29 @@ void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
 
   TEST_ASSERT_EQUAL (8.64,floatToken->value);
 }
+
+void test_TDOP_given_2_plus_9_should_return_11(void) {
+  Tokenizer *expression;
+  Token *token;
+  IntegerToken *intToken;
+
+  expression = createTokenizer(" 2 + 9 ");
+
+  token = TDOP(expression);
+  intToken = (IntegerToken *)token;
+
+  TEST_ASSERT_EQUAL (11,intToken->value);
+}
+
+void test_TDOP_given_negative_54_plus_21_should_return_negative_33(void) {
+  Tokenizer *expression;
+  Token *token;
+  IntegerToken *intToken;
+
+  expression = createTokenizer(" -54 + 21 ");
+
+  token = TDOP(expression);
+  intToken = (IntegerToken *)token;
+
+  TEST_ASSERT_EQUAL (-54 + 21, intToken->value);
+}
