@@ -1,6 +1,7 @@
 #include "TDOP.h"
 #include "Tokenizer.h"
 #include "TokenData.h"
+#include "Operator.h"
 
 Token *thisToken;
 int leftBindingPower;

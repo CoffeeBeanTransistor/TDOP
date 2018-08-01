@@ -4,6 +4,7 @@
 #include "Token.h"
 #include "TokenData.h"
 #include "IndirectTDOP.h"
+#include "Operator.h"
 
 void setUp(void)
 {
@@ -12,16 +13,6 @@ void setUp(void)
 void tearDown(void)
 {
 }
-
-/*void test_TDOP_given_1_plus_2_multiply_3_should_return_7(void) {
-  Token *token;
-  Tokenizer *tokenizer;
-
-  tokenizer = createTokenizer(" 1 + 2 * 3 ");
-  token = TDOP(tokenizer);
-
-  TEST_ASSERT_EQUAL (7, result);
-}*/
 
 void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
   Tokenizer *tokenizer;
@@ -72,15 +63,14 @@ void test_TDOP_given_2_plus_9_should_return_11(void) {
   TEST_ASSERT_EQUAL (11,intToken->value);
 }
 
-void test_TDOP_given_negative_54_plus_21_should_return_negative_33(void) {
-  Tokenizer *expression;
+void test_TDOP_given_1_plus_2_multiply_3_should_return_7(void) {
   Token *token;
+  Tokenizer *expression;
   IntegerToken *intToken;
 
-  expression = createTokenizer(" -54 + 21 ");
-
+  expression = createTokenizer(" 1 + 2 * 3 - -4 / 5 ");
   token = TDOP(expression);
   intToken = (IntegerToken *)token;
 
-  TEST_ASSERT_EQUAL (-54 + 21, intToken->value);
+  TEST_ASSERT_EQUAL (1 + 2 * 3 - -4 / 5, intToken->value);
 }
