@@ -63,14 +63,38 @@ void test_TDOP_given_2_plus_9_should_return_11(void) {
   TEST_ASSERT_EQUAL (11,intToken->value);
 }
 
-void test_TDOP_given_1_plus_2_multiply_3_should_return_7(void) {
+void test_TDOP_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_return_6(void) {
   Token *token;
   Tokenizer *expression;
   IntegerToken *intToken;
 
-  expression = createTokenizer(" 1 + 2 * 3 - -4 / 5 ");
+  expression = createTokenizer(" 1 + 2 * 3 - -4 % 5 ");
   token = TDOP(expression);
   intToken = (IntegerToken *)token;
 
-  TEST_ASSERT_EQUAL (1 + 2 * 3 - -4 / 5, intToken->value);
+  TEST_ASSERT_EQUAL (1 + 2 * 3 - -4 % 5, intToken->value);
+}
+
+void test_TDOP_given_logical_not_23_expect_0 (void) {
+  Token *token;
+  Tokenizer *expression;
+  IntegerToken *intToken;
+
+  expression = createTokenizer(" !23 ");
+  token = TDOP(expression);
+  intToken = (IntegerToken *)token;
+
+  TEST_ASSERT_EQUAL (!23, intToken->value);
+}
+
+void test_TDOP_given_logical_not_0_expect_1 (void) {
+  Token *token;
+  Tokenizer *expression;
+  IntegerToken *intToken;
+
+  expression = createTokenizer(" !0 ");
+  token = TDOP(expression);
+  intToken = (IntegerToken *)token;
+
+  TEST_ASSERT_EQUAL (!0, intToken->value);
 }

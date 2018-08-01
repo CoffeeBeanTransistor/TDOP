@@ -12,8 +12,8 @@ TokenInfo symbolMapTable[500] = {
   ['-'] = {.bindingPower = SUBTRACTION_BP, .nud = nudMinus, .led = ledMinus},
   ['*'] = {.bindingPower = MULTIPLICATION_BP, .nud = nudAsterisk, .led = ledAsterisk},
   ['/'] = {.bindingPower = DIVISION_BP, .nud = NULL, .led = ledSlash},
-  /*['%'] = {.bindingPower = REMAINDER_BP, .nud = NULL, .led = ledPercent},
-  ['!'] = {.bindingPower = LOGICAL_NOT_BP, .nud = nudExclamation, .led = NULL},*/
+  ['%'] = {.bindingPower = REMAINDER_BP, .nud = NULL, .led = ledPercent},
+  ['!'] = {.bindingPower = LOGICAL_NOT_BP, .nud = nudExclamation, .led = NULL},
   [INTEGER_SYMBOL] = {.nud = nudInt},
   [FLOAT_SYMBOL] = {.nud = nudFloat},
   [NULL_SYMBOL] = {.bindingPower = WEAKEST},

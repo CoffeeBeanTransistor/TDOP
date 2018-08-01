@@ -18,8 +18,8 @@ Token *ledMinus (Token *leftToken, Tokenizer *expression);
 Token *nudAsterisk(Token *thisToken, Tokenizer *expression);
 Token *ledAsterisk (Token *leftToken, Tokenizer *expression);
 Token *ledSlash(Token *leftToken, Tokenizer *expression);
-
-
+Token *ledPercent(Token *leftToken, Tokenizer *expression);
+Token *nudExclamation(Token *thisToken, Tokenizer *expression);
 
 
 #endif // _TDOP_H

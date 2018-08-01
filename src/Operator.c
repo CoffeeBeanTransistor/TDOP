@@ -8,7 +8,7 @@ Token *nudInt (Token *thisToken, Tokenizer *expression) {
   return thisToken;
 }
 
-Token *nudFloat (Token *thisToken, Tokenizer *expression) {
+Token *nudFloat(Token *thisToken, Tokenizer *expression) {
   return thisToken;
 }
 
@@ -16,7 +16,7 @@ Token *nudPlus(Token *thisToken, Tokenizer *expression) {
   return evaluate(expression, UNARY_PLUS_BP);
 }
 
-Token *ledPlus (Token *leftToken, Tokenizer *expression){
+Token *ledPlus(Token *leftToken, Tokenizer *expression){
   Token *intToken;
 
     ((IntegerToken *)intToken)->value = ((IntegerToken *)leftToken)->value + ((IntegerToken *)evaluate(expression, ADDITION_BP))->value;
@@ -33,7 +33,7 @@ Token *nudMinus(Token *thisToken, Tokenizer *expression) {
     return negtoken;
 }
 
-Token *ledMinus (Token *leftToken, Tokenizer *expression) {
+Token *ledMinus(Token *leftToken, Tokenizer *expression) {
   Token *intToken;
 
     ((IntegerToken *)intToken)->value = ((IntegerToken *)leftToken)->value - ((IntegerToken *)evaluate(expression, SUBTRACTION_BP))->value;
@@ -45,7 +45,7 @@ Token *nudAsterisk(Token *thisToken, Tokenizer *expression) {
   //return evaluate(expression, UNARY_PLUS_BP);
 }
 
-Token *ledAsterisk (Token *leftToken, Tokenizer *expression) {
+Token *ledAsterisk(Token *leftToken, Tokenizer *expression) {
   Token *intToken;
 
     ((IntegerToken *)intToken)->value = ((IntegerToken *)leftToken)->value * ((IntegerToken *)evaluate(expression, MULTIPLICATION_BP))->value;
@@ -59,4 +59,23 @@ Token *ledSlash(Token *leftToken, Tokenizer *expression) {
     ((IntegerToken *)intToken)->value = ((IntegerToken *)leftToken)->value / ((IntegerToken *)evaluate(expression, DIVISION_BP))->value;
 
   return intToken;
+}
+
+Token *ledPercent(Token *leftToken, Tokenizer *expression) {
+  Token *intToken;
+
+    ((IntegerToken *)intToken)->value = ((IntegerToken *)leftToken)->value % ((IntegerToken *)evaluate(expression, MULTIPLICATION_BP))->value;
+
+  return intToken;
+}
+
+Token *nudExclamation(Token *thisToken, Tokenizer *expression) {
+  Token *token;
+
+  token = evaluate(expression, LOGICAL_NOT_BP);
+  if(((IntegerToken *)token)->value > 0)
+    ((IntegerToken *)thisToken)->value = 0;
+
+  else
+    ((IntegerToken *)thisToken)->value = 1;
 }
