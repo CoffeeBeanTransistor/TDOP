@@ -5,6 +5,36 @@
 #include "Common.h"
 //#include "CException.h"
 //#include "Exception.h"
+typedef enum {
+  INTEGER_SYMBOL,
+  ADD_SYMBOL,
+  SUB_SYMBOL,
+  MUL_SYMBOL,
+  DIV_SYMBOL,
+  MODULO_SYMBOL,
+  POSITIVE_SYMBOL,
+  NEGATIVE_SYMBOL,
+  LOGICAL_NOT_SYMBOL,
+  BITWISE_NOT_SYMBOL,
+  LOGICAL_AND_SYMBOL,
+  BITWISE_AND_SYMBOL,
+  LOGICAL_OR_SYMBOL,
+  BITWISE_OR_SYMBOL,
+  BITWISE_XOR_SYMBOL,
+  BITWISE_LEFT_SHIFTER,
+  BITWISE_RIGHT_SHIFTER,
+  EQUALS_TO_SYMBOL,
+  NOT_EQUALS_TO_SYMBOL,
+  GREATER_SYMBOL,
+  LESSER_SYMBOL,
+  GREATER_EQUALS_SYMBOL,
+  LESSER_EQUALS_SYMBOL,
+  OPENING_BRACKET_SYMBOL,
+  CLOSING_BRACKET_SYMBOL,
+  FLOAT_SYMBOL,
+  IDENTIFIER_SYMBOL,
+  NULL_SYMBOL,
+} Symbols;
 
 typedef enum {
   TOKEN_UNKNOWN_TYPE,
@@ -48,7 +78,8 @@ typedef enum {
 } Associativity;
 
 typedef struct {
-  TokenType type;
+  TokenType type:16;
+  Symbols symbol:16;
   uint32_t startColumn;
   uint32_t length;
   char *originalStr;         ///

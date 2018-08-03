@@ -14,7 +14,7 @@ void tearDown(void)
 {
 }
 
-void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
+/*void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
   Tokenizer *tokenizer;
   TokenInfo *tokenInfo;
   Token *token;
@@ -24,9 +24,9 @@ void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_
   tokenInfo = getTokenInfo(token);
 
   TEST_ASSERT_EQUAL (ADDITION_BP, tokenInfo->bindingPower);
-}
+}*/
 
-void test_nudInt_given_1_should_return_1(void) {
+/*void test_nudInt_given_1_should_return_1(void) {
   Tokenizer *expression;
   Token *token;
   IntegerToken *intToken;
@@ -36,9 +36,81 @@ void test_nudInt_given_1_should_return_1(void) {
   intToken = (IntegerToken *)nudInt(token, expression);
 
   TEST_ASSERT_EQUAL (1,intToken->value);
+}*/
+
+void test_getNextToken_given_expression_1_should_return_value_1(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer(" 1 ");
+  token = getNextToken(expression);
+
+  TEST_ASSERT_EQUAL (1,((IntegerToken *)token)->value);
 }
 
-void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
+void test_verifyTokenBackToBack_given_double_closed_AND_should_return_true(void) {
+  Tokenizer *expression;
+  Token *token1, *token2;
+
+  expression = createTokenizer(" && ");
+  token1 =getToken(expression);
+  token2 = getToken(expression);
+
+  TEST_ASSERT_TRUE (verifyTokensBackToBack(token1,token2));
+}
+
+void test_modifyToken_given_logical_AND_symbol_should_return_double_AND_str_in_token(void) {
+  Tokenizer *expression;
+  Token *token, *token1;
+
+  expression = createTokenizer(" & ");
+  token1 =getToken(expression);
+  token = modifyToken(token1, LOGICAL_AND_SYMBOL);
+
+  TEST_ASSERT_EQUAL_STRING ("&&", token->str);
+}
+
+void test_getNextToken_given_NOT_EQUAL_expression_should_return_token_str_NOT_EQUAL(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer(" != ");
+  token = getNextToken(expression);
+
+  TEST_ASSERT_EQUAL_STRING ("!=", token->str);
+}
+
+void test_getNextToken_given_separated_AND_expression_should_return_token_str_BITWISE_OR(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer(" &   & ");
+  token = getNextToken(expression);
+
+  TEST_ASSERT_EQUAL_STRING ("&", token->str);
+}
+
+void test_getNextToken_given_negative_2_expression_should_return_token_with_negative_symbol(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer(" -2 ");
+  token = getNextToken(expression);
+
+  TEST_ASSERT_EQUAL (NEGATIVE_SYMBOL, token->symbol);
+}
+
+void test_getNextToken_given_subtract_54_expression_should_return_token_with_sub_symbol(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer(" - 54 ");
+  token = getNextToken(expression);
+
+  TEST_ASSERT_EQUAL (SUB_SYMBOL, token->symbol);
+}
+
+/*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
   Tokenizer *expression;
   Token *token;
   FloatToken *floatToken;
@@ -59,11 +131,10 @@ void test_TDOP_given_2_plus_9_should_return_11(void) {
 
   token = TDOP(expression);
   intToken = (IntegerToken *)token;
-
   TEST_ASSERT_EQUAL (11,intToken->value);
-}
+}*/
 
-void test_TDOP_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_return_6(void) {
+/*void test_TDOP_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_return_6(void) {
   Token *token;
   Tokenizer *expression;
   IntegerToken *intToken;
@@ -98,3 +169,25 @@ void test_TDOP_given_logical_not_0_expect_1 (void) {
 
   TEST_ASSERT_EQUAL (!0, intToken->value);
 }
+
+void test_TDOP_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_(void) {
+  Token *token;
+  Tokenizer *expression;
+  IntegerToken *intToken;
+
+  expression = createTokenizer(" 5 * ( 23 - 8 ) + 9 ");
+  token = TDOP(expression);
+  intToken = (IntegerToken *)token;
+
+  TEST_ASSERT_EQUAL (5 * ( 23 - 8 ) + 9 , intToken->value);
+}*/
+
+/*void test_matchBracket_given_2_left_3_right_brackets_expect_return_0(void) {
+  Token *token1, *token2, *token3, *token4, *ans;
+  Tokenizer *expression;
+
+  expression = createTokenizer(" (() ");
+  ans = TDOP(expression);
+
+  TEST_ASSERT_EQUAL (')',ans->str[0]);
+}*/

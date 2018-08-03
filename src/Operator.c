@@ -4,15 +4,16 @@
 #include "TDOP.h"
 #include "Token.h"
 
-Token *nudInt (Token *thisToken, Tokenizer *expression) {
+
+Token *nudInt (Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
   return thisToken;
 }
 
-Token *nudFloat(Token *thisToken, Tokenizer *expression) {
+Token *nudFloat(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
   return thisToken;
 }
 
-Token *nudPlus(Token *thisToken, Tokenizer *expression) {
+Token *nudPlus(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
   return evaluate(expression, UNARY_PLUS_BP);
 }
 
@@ -24,13 +25,13 @@ Token *ledPlus(Token *leftToken, Tokenizer *expression){
   return intToken;
 }
 
-Token *nudMinus(Token *thisToken, Tokenizer *expression) {
-  Token *negtoken;
+Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
+  Token *negtoken, *peepToken, *prefixToken;
 
     negtoken = evaluate(expression, UNARY_MINUS_BP);
     ((IntegerToken *)negtoken)->value = -(((IntegerToken *)negtoken)->value);
-
     return negtoken;
+
 }
 
 Token *ledMinus(Token *leftToken, Tokenizer *expression) {
@@ -41,7 +42,7 @@ Token *ledMinus(Token *leftToken, Tokenizer *expression) {
   return intToken;
 }
 
-Token *nudAsterisk(Token *thisToken, Tokenizer *expression) {
+Token *nudAsterisk(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
   //return evaluate(expression, UNARY_PLUS_BP);
 }
 
@@ -69,7 +70,7 @@ Token *ledPercent(Token *leftToken, Tokenizer *expression) {
   return intToken;
 }
 
-Token *nudExclamation(Token *thisToken, Tokenizer *expression) {
+Token *nudExclamation(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
   Token *token;
 
   token = evaluate(expression, LOGICAL_NOT_BP);
@@ -78,4 +79,17 @@ Token *nudExclamation(Token *thisToken, Tokenizer *expression) {
 
   else
     ((IntegerToken *)thisToken)->value = 1;
+}
+
+Token *nudLeftBracket(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
+    Token *expr = evaluate(expression, WEAKEST);
+
+    if(matchBracket(expr, ')'));
+    return 1;
+}
+
+int *matchBracket(Token *thisToken, char closing) {
+  Token *expr;
+  expr = thisToken;
+  return 1;
 }

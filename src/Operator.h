@@ -7,19 +7,21 @@
 #include "Token.h"
 
 
-
-Token *nudInt (Token *currToken, Tokenizer *expression);
+Token *nudInt (Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
 Token *ledInt (Token *leftToken, Tokenizer *expression);
-Token *nudFloat (Token *currToken, Tokenizer *expression);
-Token *nudPlus(Token *currToken, Tokenizer *expression);
+Token *nudFloat (Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
+Token *nudPlus(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
 Token *ledPlus (Token *leftToken, Tokenizer *expression);
-Token *nudMinus(Token *thisToken, Tokenizer *expression);
+Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
 Token *ledMinus (Token *leftToken, Tokenizer *expression);
-Token *nudAsterisk(Token *thisToken, Tokenizer *expression);
+Token *nudAsterisk(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
 Token *ledAsterisk (Token *leftToken, Tokenizer *expression);
 Token *ledSlash(Token *leftToken, Tokenizer *expression);
 Token *ledPercent(Token *leftToken, Tokenizer *expression);
-Token *nudExclamation(Token *thisToken, Tokenizer *expression);
-
+Token *nudExclamation(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
+Token *nudPlusPlus(Token *thisToken, Tokenizer expression, uint32_t leftBindingPower);
+Token *nudLeftBracket(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
+//Token *nudRightBracket(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
+int *matchBracket(Token *thisToken, char closing);
 
 #endif // _TDOP_H

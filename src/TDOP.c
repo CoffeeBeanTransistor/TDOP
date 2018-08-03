@@ -4,10 +4,10 @@
 #include "Operator.h"
 
 Token *thisToken;
-int leftBindingPower;
+uint32_t leftBindingPower = 0;
 
 Token *TDOP(Tokenizer *expression) {
-  thisToken = getToken(expression);
+  thisToken = getNextToken(expression);
   return evaluate(expression, 0);
 }
 
@@ -16,17 +16,17 @@ Token *evaluate(Tokenizer *expression, int rightBindingPower) {
   TokenInfo *thisTokenInfo, *leftTokenInfo, *tTokenInfo;
 
   t = thisToken;
-  thisToken = getToken(expression);
+  thisToken = getNextToken(expression);
   thisTokenInfo = getTokenInfo(thisToken);
   leftBindingPower = thisTokenInfo->bindingPower;
 
   tTokenInfo = getTokenInfo(t);
-  leftToken = tTokenInfo->nud(t, expression);
+  leftToken = tTokenInfo->nud(t, expression, leftBindingPower);
 
   while (rightBindingPower < leftBindingPower) {
     t = thisToken;
     tTokenInfo = getTokenInfo(t);
-    thisToken = getToken(expression);
+    thisToken = getNextToken(expression);
     leftToken = tTokenInfo->led(leftToken, expression);
   }
 
