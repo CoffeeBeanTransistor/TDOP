@@ -7,8 +7,10 @@
 #include <malloc.h>
 
 TokenInfo symbolMapTable[500] = {
-  [ADD_SYMBOL] = {.bindingPower = ADDITION_BP, .nud = nudPlus, .led = ledPlus},
-  [SUB_SYMBOL] = {.bindingPower = SUBTRACTION_BP, .nud = nudMinus, .led = ledMinus},
+  [ADD_SYMBOL] = {.bindingPower = ADDITION_BP, .nud = NULL, .led = ledPlus},
+  [POSITIVE_SYMBOL] = {.bindingPower = UNARY_PLUS_BP, .nud = nudPlus, .led = NULL},
+  [SUB_SYMBOL] = {.bindingPower = SUBTRACTION_BP, .nud = NULL, .led = ledMinus},
+  [NEGATIVE_SYMBOL] = {.bindingPower = UNARY_MINUS_BP, .nud = nudMinus, .led = NULL},
   [MUL_SYMBOL] = {.bindingPower = MULTIPLICATION_BP, .nud = nudAsterisk, .led = ledAsterisk},
   [DIV_SYMBOL] = {.bindingPower = DIVISION_BP, .nud = NULL, .led = ledSlash},
   [MODULO_SYMBOL] = {.bindingPower = REMAINDER_BP, .nud = NULL, .led = ledPercent},
@@ -20,8 +22,201 @@ TokenInfo symbolMapTable[500] = {
   [NULL_SYMBOL] = {.bindingPower = WEAKEST},
 };
 
-TokenInfo *getTokenInfo(Token *thistoken) {
-  Token *token;
+Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
+  Token *token2;
+
+  if(token1->type == TOKEN_OPERATOR_TYPE) {
+    token2 = getToken(expression);
+      switch (*(token1)->str) {
+        case '+'  : switch (token2->type) {
+                      case  TOKEN_INTEGER_TYPE  :
+                        if(verifyTokensBackToBack(token1,token2)) {
+                          modifyToken(token1,POSITIVE_SYMBOL);
+                          pushBackToken(expression,token2);
+                        }
+                        else  {
+                          modifyToken(token1,ADD_SYMBOL);
+                          pushBackToken(expression,token2);
+                        }
+                        break;
+
+                      default :
+                        modifyToken(token1,ADD_SYMBOL);
+                        pushBackToken(expression,token2);
+                    }
+                    break;
+
+
+        case '-'  : switch (token2->type) {
+                      case  TOKEN_INTEGER_TYPE  :
+                        if(verifyTokensBackToBack(token1,token2)) {
+                          modifyToken(token1,NEGATIVE_SYMBOL);
+                          pushBackToken(expression,token2);
+                        }
+                        else  {
+                          modifyToken(token1,SUB_SYMBOL);
+                          pushBackToken(expression,token2);
+                        }
+                        break;
+                        
+                      default :
+                        modifyToken(token1,SUB_SYMBOL);
+                        pushBackToken(expression,token2);
+                    }
+                    break;
+
+        case '*'  :   modifyToken(token1,MUL_SYMBOL);
+                      pushBackToken(expression,token2);
+                      break;
+
+        case '/'  :   modifyToken(token1,DIV_SYMBOL);
+                      pushBackToken(expression,token2);
+                      break;
+
+        case '%'  :   modifyToken(token1,MODULO_SYMBOL);
+                      pushBackToken(expression,token2);
+                      break;
+
+        case '&'  : switch(*(token2)->str) {
+                      case '&'  :
+                        if(verifyTokensBackToBack(token1,token2)) {
+                          modifyToken(token1,LOGICAL_AND_SYMBOL);
+                          freeToken(token2);
+                        }
+                        else {
+                         modifyToken(token1,BITWISE_AND_SYMBOL);
+                         pushBackToken(expression,token2);
+                       }
+                       break;
+
+                      default  :
+                        modifyToken(token1,BITWISE_AND_SYMBOL);
+                        pushBackToken(expression,token2);
+                    }
+                    break;
+
+        case '|'  : switch(*(token2)->str) {
+                      case '|'  :
+                        if(verifyTokensBackToBack(token1,token2)) {
+                          modifyToken(token1,LOGICAL_OR_SYMBOL);
+                          freeToken(token2);
+                        }
+                        else {
+                          modifyToken(token1,BITWISE_OR_SYMBOL);
+                          pushBackToken(expression,token2);
+                        }
+                        break;
+
+                      default :
+                          modifyToken(token1,BITWISE_OR_SYMBOL);
+                          pushBackToken(expression,token2);
+                    }
+                    break;
+
+        case '!'  : switch(*(token2)->str) {
+                      case '='  :
+                        if(verifyTokensBackToBack(token1,token2)) {
+                          modifyToken(token1,NOT_EQUALS_TO_SYMBOL);
+                          freeToken(token2);
+                        }
+                        else {
+                          modifyToken(token1,LOGICAL_NOT_SYMBOL);
+                          pushBackToken(expression,token2);
+                        }
+                        break;
+
+                      default :
+                          modifyToken(token1,LOGICAL_NOT_SYMBOL);
+                          pushBackToken(expression,token2);
+                    }
+                    break;
+
+        case '>'  : switch(*(token2)->str) {
+                      case  '>' :
+                        if(verifyTokensBackToBack(token1,token2)) {
+                          modifyToken(token1,BITWISE_RIGHT_SHIFTER);
+                          freeToken(token2);
+                        }
+                        else {
+                          modifyToken(token1,GREATER_SYMBOL);
+                          pushBackToken(expression,token2);
+                        }
+                        break;
+
+                      case  '=' :
+                        if(verifyTokensBackToBack(token1,token2)) {
+                          modifyToken(token1,GREATER_EQUALS_SYMBOL);
+                          freeToken(token2);
+                          }
+                        else {
+                          modifyToken(token1,GREATER_SYMBOL);
+                          pushBackToken(expression,token2);
+                        }
+                        break;
+
+                      default :
+                        modifyToken(token1,GREATER_SYMBOL);
+                        pushBackToken(expression,token2);
+                    }
+                    break;
+
+        case '<'  : switch(*(token2)->str) {
+                      case  '<' :
+                        if(verifyTokensBackToBack(token1,token2)) {
+                          modifyToken(token1,BITWISE_LEFT_SHIFTER);
+                          freeToken(token2);
+                        }
+                        else {
+                          modifyToken(token1,LESSER_SYMBOL);
+                          pushBackToken(expression,token2);
+                        }
+                        break;
+
+                      case  '=' :
+                        if(verifyTokensBackToBack(token1,token2)) {
+                          modifyToken(token1,LESSER_EQUALS_SYMBOL);
+                          freeToken(token2);
+                          }
+                        else {
+                          modifyToken(token1,LESSER_SYMBOL);
+                          pushBackToken(expression,token2);
+                        }
+                        break;
+
+                      default :
+                        modifyToken(token1,LESSER_SYMBOL);
+                        pushBackToken(expression,token2);
+                    }
+                    break;
+
+          case '~'  :   modifyToken(token1,BITWISE_NOT_SYMBOL);
+                        pushBackToken(expression,token2);
+                        break;
+
+          case '^'  :   modifyToken(token1,BITWISE_XOR_SYMBOL);
+                        pushBackToken(expression,token2);
+                        break;
+
+          case '('  :   modifyToken(token1,OPENING_BRACKET_SYMBOL);
+                        pushBackToken(expression,token2);
+                        break;
+
+          case ')'  :   modifyToken(token1,CLOSING_BRACKET_SYMBOL);
+                        pushBackToken(expression,token2);
+                        break;
+      }
+      return token1;
+  }
+
+  else if(token1->type == TOKEN_INTEGER_TYPE)
+    return modifyToken(token1,INTEGER_SYMBOL);
+
+  else if(token1->type == TOKEN_NULL_TYPE)
+    return modifyToken(token1,NULL_SYMBOL);
+
+}
+
+TokenInfo *getTokenInfo(Token *token) {
 
   if(token->type == TOKEN_INTEGER_TYPE)
     return &symbolMapTable[INTEGER_SYMBOL];
@@ -30,184 +225,31 @@ TokenInfo *getTokenInfo(Token *thistoken) {
     return &symbolMapTable[FLOAT_SYMBOL];*/
 
   else if(token->type == TOKEN_OPERATOR_TYPE)
-    return &symbolMapTable[token->str[0]];
+    return &symbolMapTable[token->symbol];
 
   else if(token->type == TOKEN_NULL_TYPE)
     return &symbolMapTable[NULL_SYMBOL];
 }
 
 Token *getNextToken(Tokenizer *expression) {
-  Token *token1, *token2;
+  Token *token1;
 
-  token1 = getToken(expression);
-
-    if(token1->type == TOKEN_OPERATOR_TYPE) {
-      token2 = getToken(expression);
-        switch (*(token1)->str) {
-          case '+'  : switch(token2->symbol)
-                        case INTEGER_SYMBOL  :
-                          if(verifyTokensBackToBack(token1,token2)) {
-                            modifyToken(token1,POSITIVE_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                          else  {
-                            modifyToken(token1,ADD_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                        break;
-
-          case '-'  : switch(token2->symbol)
-                        case INTEGER_SYMBOL  :
-                          if(verifyTokensBackToBack(token1,token2)) {
-                            modifyToken(token1,NEGATIVE_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                          else  {
-                            modifyToken(token1,SUB_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                        break;
-
-          case '*'  :   modifyToken(token1,MUL_SYMBOL);
-                        pushBackToken(expression,token2);
-                        break;
-
-          case '/'  :   modifyToken(token1,DIV_SYMBOL);
-                        pushBackToken(expression,token2);
-                        break;
-
-          case '%'  :   modifyToken(token1,MODULO_SYMBOL);
-                        pushBackToken(expression,token2);
-                        break;
-
-          case '&'  : switch(*(token2)->str)
-                        case '&'  :
-                          if(verifyTokensBackToBack(token1,token2)) {
-                            modifyToken(token1,LOGICAL_AND_SYMBOL);
-                            freeToken(token2);
-                          }
-                        else {
-                          modifyToken(token1,BITWISE_AND_SYMBOL);
-                          pushBackToken(expression,token2);
-                        }
-                        break;
-
-          case '|'  : switch(*(token2)->str)
-                        case '|'  :
-                          if(verifyTokensBackToBack(token1,token2)) {
-                            modifyToken(token1,LOGICAL_OR_SYMBOL);
-                            freeToken(token2);
-                          }
-                        else
-                          modifyToken(token1,BITWISE_OR_SYMBOL);
-                          pushBackToken(expression,token2);
-                        break;
-
-          case '!'  : switch(*(token2)->str)
-                        case '='  :
-                          if(verifyTokensBackToBack(token1,token2)) {
-                            modifyToken(token1,NOT_EQUALS_TO_SYMBOL);
-                            freeToken(token2);
-                          }
-                          else {
-                            modifyToken(token1,LOGICAL_NOT_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                        break;
-
-          case '>'  : if(*(token2)->str == '>') {
-                          if(verifyTokensBackToBack(token1,token2)) {
-                            modifyToken(token1,BITWISE_RIGHT_SHIFTER);
-                            freeToken(token2);
-                          }
-                          else {
-                            modifyToken(token1,GREATER_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                        }
-
-                      else if(*(token2)->str == '=') {
-                        if(verifyTokensBackToBack(token1,token2)) {
-                            modifyToken(token1,GREATER_EQUALS_SYMBOL);
-                            freeToken(token2);
-                            }
-                          else {
-                            modifyToken(token1,GREATER_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                        }
-                      else {
-                        modifyToken(token1,GREATER_SYMBOL);
-                        pushBackToken(expression,token2);
-                      }
-
-          case '<'  : if(*(token2)->str == '<') {
-                          if(verifyTokensBackToBack(token1,token2)) {
-                            modifyToken(token1,BITWISE_LEFT_SHIFTER);
-                            freeToken(token2);
-                          }
-                          else {
-                            modifyToken(token1,LESSER_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                        }
-
-                      else if(*(token2)->str == '=') {
-                        if(verifyTokensBackToBack(token1,token2)) {
-                            modifyToken(token1,LESSER_EQUALS_SYMBOL);
-                            freeToken(token2);
-                            }
-                          else {
-                            modifyToken(token1,LESSER_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                        }
-                      else {
-                        modifyToken(token1,LESSER_SYMBOL);
-                        pushBackToken(expression,token2);
-                      }
-
-            case '='  : if(*(token2)->str == '=') {
-                          if(verifyTokensBackToBack(token1,token2)) {
-                            modifyToken(token1,EQUALS_TO_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                          else  {
-                            modifyToken(token1,EQUALS_TO_SYMBOL);
-                            pushBackToken(expression,token2);
-                          }
-                        }
-                        else {
-                          modifyToken(token1,EQUALS_TO_SYMBOL);
-                          pushBackToken(expression,token2);
-                        }
-
-            case '~'  :   modifyToken(token1,BITWISE_NOT_SYMBOL);
-                          pushBackToken(expression,token2);
-                          break;
-
-            case '^'  :   modifyToken(token1,BITWISE_XOR_SYMBOL);
-                          pushBackToken(expression,token2);
-                          break;
-
-            case '('  :   modifyToken(token1,OPENING_BRACKET_SYMBOL);
-                          pushBackToken(expression,token2);
-                          break;
-
-            case ')'  :   modifyToken(token1,CLOSING_BRACKET_SYMBOL);
-                          pushBackToken(expression,token2);
-                          break;
-        }
-        return token1;
-    }
-
-    else
-      return token1;
+    token1 = getToken(expression);
+    token1 = getTokenSymbol(token1,expression);
+    return token1;
 }
 
 Token *modifyToken(Token *token, int symbol) {
 
   switch (symbol) {
+    case INTEGER_SYMBOL :
+      token->symbol = INTEGER_SYMBOL;
+      break;
+
+    case NULL_SYMBOL :
+      token->symbol = NULL_SYMBOL;
+      break;
+
     case ADD_SYMBOL :
       token->symbol = ADD_SYMBOL;
       break;
@@ -332,6 +374,8 @@ int verifyTokensBackToBack(Token *token1, Token *token2) {
       return 1;
     }
 
-    else
+    else {
+      token1->startColumn = token1->startColumn - token1->length;
       return 0;
+    }
 }

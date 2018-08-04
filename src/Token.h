@@ -6,7 +6,7 @@
 //#include "CException.h"
 //#include "Exception.h"
 typedef enum {
-  INTEGER_SYMBOL,
+  NULL_SYMBOL,
   ADD_SYMBOL,
   SUB_SYMBOL,
   MUL_SYMBOL,
@@ -33,7 +33,7 @@ typedef enum {
   CLOSING_BRACKET_SYMBOL,
   FLOAT_SYMBOL,
   IDENTIFIER_SYMBOL,
-  NULL_SYMBOL,
+  INTEGER_SYMBOL,
 } Symbols;
 
 typedef enum {

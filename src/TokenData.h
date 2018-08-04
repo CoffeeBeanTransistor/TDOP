@@ -17,7 +17,7 @@ struct TokenInfo {
 };
 TokenInfo *getTokenInfo(Token *thisToken);
 Token *getTokenType(Token *thisToken);
-Token *getTokenSymbol(Token *thisToken);
+Token *getTokenSymbol(Token *token1,Tokenizer *expression);
 Token *getNextToken(Tokenizer *expression);
 int verifyTokensBackToBack(Token *token1, Token *token2);
 Token *modifyToken(Token *token, int symbol);

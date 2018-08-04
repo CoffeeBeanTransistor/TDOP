@@ -14,29 +14,29 @@ void tearDown(void)
 {
 }
 
-/*void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
+void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
   Tokenizer *tokenizer;
   TokenInfo *tokenInfo;
   Token *token;
 
   tokenizer = createTokenizer("+");
-  token = getToken(tokenizer);
+  token = getNextToken(tokenizer);
   tokenInfo = getTokenInfo(token);
 
   TEST_ASSERT_EQUAL (ADDITION_BP, tokenInfo->bindingPower);
-}*/
+}
 
-/*void test_nudInt_given_1_should_return_1(void) {
+void test_nudInt_given_1_should_return_1(void) {
   Tokenizer *expression;
   Token *token;
   IntegerToken *intToken;
 
   expression = createTokenizer("1");
   token = getToken(expression);
-  intToken = (IntegerToken *)nudInt(token, expression);
+  intToken = (IntegerToken *)nudInt(token, expression,0);
 
   TEST_ASSERT_EQUAL (1,intToken->value);
-}*/
+}
 
 void test_getNextToken_given_expression_1_should_return_value_1(void) {
   Tokenizer *expression;
@@ -120,7 +120,7 @@ void test_getNextToken_given_subtract_54_expression_should_return_token_with_sub
   floatToken = (FloatToken *)nudFloat(token, expression);
 
   TEST_ASSERT_EQUAL (8.64,floatToken->value);
-}
+}*/
 
 void test_TDOP_given_2_plus_9_should_return_11(void) {
   Tokenizer *expression;
@@ -132,9 +132,9 @@ void test_TDOP_given_2_plus_9_should_return_11(void) {
   token = TDOP(expression);
   intToken = (IntegerToken *)token;
   TEST_ASSERT_EQUAL (11,intToken->value);
-}*/
+}
 
-/*void test_TDOP_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_return_6(void) {
+void test_TDOP_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_return_6(void) {
   Token *token;
   Tokenizer *expression;
   IntegerToken *intToken;
@@ -146,7 +146,7 @@ void test_TDOP_given_2_plus_9_should_return_11(void) {
   TEST_ASSERT_EQUAL (1 + 2 * 3 - -4 % 5, intToken->value);
 }
 
-void test_TDOP_given_logical_not_23_expect_0 (void) {
+/*void test_TDOP_given_logical_not_23_expect_0 (void) {
   Token *token;
   Tokenizer *expression;
   IntegerToken *intToken;
@@ -168,9 +168,9 @@ void test_TDOP_given_logical_not_0_expect_1 (void) {
   intToken = (IntegerToken *)token;
 
   TEST_ASSERT_EQUAL (!0, intToken->value);
-}
+}*/
 
-void test_TDOP_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_(void) {
+/*void test_TDOP_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_(void) {
   Token *token;
   Tokenizer *expression;
   IntegerToken *intToken;

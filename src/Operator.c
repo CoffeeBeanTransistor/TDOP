@@ -18,28 +18,41 @@ Token *nudPlus(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPowe
 }
 
 Token *ledPlus(Token *leftToken, Tokenizer *expression){
-  Token *intToken;
+  Token  *rightToken;
+  int v1, v2, ans;
 
-    ((IntegerToken *)intToken)->value = ((IntegerToken *)leftToken)->value + ((IntegerToken *)evaluate(expression, ADDITION_BP))->value;
+    rightToken = evaluate(expression, ADDITION_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 + v2;
+    ((IntegerToken *)leftToken)->value = ans;
 
-  return intToken;
+  return leftToken;
 }
 
 Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
-  Token *negtoken, *peepToken, *prefixToken;
+  Token *token;
+  int value;
 
-    negtoken = evaluate(expression, UNARY_MINUS_BP);
-    ((IntegerToken *)negtoken)->value = -(((IntegerToken *)negtoken)->value);
-    return negtoken;
+    token = evaluate(expression, UNARY_MINUS_BP);
+    value = ((IntegerToken *)token)->value;
+    value = -value;
+    ((IntegerToken *)token)->value = value;
+    return token;
 
 }
 
 Token *ledMinus(Token *leftToken, Tokenizer *expression) {
-  Token *intToken;
+  Token  *rightToken;
+  int v1, v2, ans;
 
-    ((IntegerToken *)intToken)->value = ((IntegerToken *)leftToken)->value - ((IntegerToken *)evaluate(expression, SUBTRACTION_BP))->value;
+    rightToken = evaluate(expression, SUBTRACTION_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 - v2;
+    ((IntegerToken *)leftToken)->value = ans;
 
-  return intToken;
+    return leftToken;
 }
 
 Token *nudAsterisk(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
@@ -47,27 +60,42 @@ Token *nudAsterisk(Token *thisToken, Tokenizer *expression, uint32_t leftBinding
 }
 
 Token *ledAsterisk(Token *leftToken, Tokenizer *expression) {
-  Token *intToken;
+  Token  *rightToken;
+  int v1, v2, ans;
 
-    ((IntegerToken *)intToken)->value = ((IntegerToken *)leftToken)->value * ((IntegerToken *)evaluate(expression, MULTIPLICATION_BP))->value;
+    rightToken = evaluate(expression, MULTIPLICATION_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 * v2;
+    ((IntegerToken *)leftToken)->value = ans;
 
-  return intToken;
+  return leftToken;
 }
 
 Token *ledSlash(Token *leftToken, Tokenizer *expression) {
-  Token *intToken;
+  Token  *rightToken;
+  int v1, v2, ans;
 
-    ((IntegerToken *)intToken)->value = ((IntegerToken *)leftToken)->value / ((IntegerToken *)evaluate(expression, DIVISION_BP))->value;
+    rightToken = evaluate(expression, DIVISION_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 / v2;
+    ((IntegerToken *)leftToken)->value = ans;
 
-  return intToken;
+  return leftToken;
 }
 
 Token *ledPercent(Token *leftToken, Tokenizer *expression) {
-  Token *intToken;
+  Token  *rightToken;
+  int v1, v2, ans;
 
-    ((IntegerToken *)intToken)->value = ((IntegerToken *)leftToken)->value % ((IntegerToken *)evaluate(expression, MULTIPLICATION_BP))->value;
+    rightToken = evaluate(expression, ADDITION_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 % v2;
+    ((IntegerToken *)leftToken)->value = ans;
 
-  return intToken;
+  return leftToken;
 }
 
 Token *nudExclamation(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
@@ -82,14 +110,14 @@ Token *nudExclamation(Token *thisToken, Tokenizer *expression, uint32_t leftBind
 }
 
 Token *nudLeftBracket(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
-    Token *expr = evaluate(expression, WEAKEST);
+    /*Token *expr = evaluate(expression, WEAKEST);
 
     if(matchBracket(expr, ')'));
-    return 1;
+    return 1;*/
 }
 
 int *matchBracket(Token *thisToken, char closing) {
-  Token *expr;
+  /*Token *expr;
   expr = thisToken;
-  return 1;
+  return 1;*/
 }
