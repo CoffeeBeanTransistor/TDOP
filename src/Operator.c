@@ -4,17 +4,18 @@
 #include "TDOP.h"
 #include "Token.h"
 
+Token *thisToken;
 
-Token *nudInt (Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
+Token *nudInt (Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
   return thisToken;
 }
 
-Token *nudFloat(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
+Token *nudFloat(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
   return thisToken;
 }
 
-Token *nudPlus(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
-  return evaluate(expression, UNARY_PLUS_BP);
+Token *nudPlus(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+  return evaluate(expression, ADDITION_BP);
 }
 
 Token *ledPlus(Token *leftToken, Tokenizer *expression){
@@ -30,7 +31,7 @@ Token *ledPlus(Token *leftToken, Tokenizer *expression){
   return leftToken;
 }
 
-Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
+Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
   Token *token;
   int value;
 
@@ -55,7 +56,7 @@ Token *ledMinus(Token *leftToken, Tokenizer *expression) {
     return leftToken;
 }
 
-Token *nudAsterisk(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
+Token *nudAsterisk(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
   //return evaluate(expression, UNARY_PLUS_BP);
 }
 
@@ -98,26 +99,43 @@ Token *ledPercent(Token *leftToken, Tokenizer *expression) {
   return leftToken;
 }
 
-Token *nudExclamation(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
+Token *nudExclamation(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
   Token *token;
 
   token = evaluate(expression, LOGICAL_NOT_BP);
+
   if(((IntegerToken *)token)->value > 0)
     ((IntegerToken *)thisToken)->value = 0;
 
   else
     ((IntegerToken *)thisToken)->value = 1;
+
+  return thisToken;
 }
 
-Token *nudLeftBracket(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower) {
-    /*Token *expr = evaluate(expression, WEAKEST);
+Token *nudLeftBracket(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+    Token *expr, *token;
+    TokenInfo *thisTokenInfo;
 
-    if(matchBracket(expr, ')'));
-    return 1;*/
+    expr = evaluate(expression, WEAKEST);
+    if(matchBracket(expression, ')', leftBindingPower)) {
+      freeToken(thisToken);
+      return expr;
+    }
+    else
+      return expr; //Throw exception
 }
 
-int *matchBracket(Token *thisToken, char closing) {
-  /*Token *expr;
-  expr = thisToken;
-  return 1;*/
+int matchBracket(Tokenizer *expression, char closing, uint32_t *leftBindingPower) {
+  TokenInfo *thisTokenInfo;
+
+  if(*(thisToken)->str == closing) {
+    freeToken(thisToken);
+    thisToken = getNextToken(expression);
+    thisTokenInfo = getTokenInfo(thisToken);
+    *leftBindingPower = thisTokenInfo->bindingPower;
+    return 1;
+  }
+  else
+    return 0;
 }

@@ -32,7 +32,7 @@ void test_nudInt_given_1_should_return_1(void) {
 
   expression = createTokenizer("1");
   token = getNextToken(expression);
-  token = nudInt(token, expression,0);
+  token = nudInt(token, expression, 0);
 
   TEST_ASSERT_EQUAL (1,((IntegerToken *)token)->value);
   TEST_ASSERT_EQUAL (INTEGER_SYMBOL, token->symbol);
@@ -143,84 +143,94 @@ void test_getNextToken_given_subtract_54_expression_should_return_token_with_sub
   TEST_ASSERT_EQUAL (SUB_SYMBOL, token->symbol);
 }
 
-/*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
-  Tokenizer *expression;
-  Token *token;
-  FloatToken *floatToken;
-
-  expression = createTokenizer("8.64");
-  token = getToken(expression);
-  floatToken = (FloatToken *)nudFloat(token, expression);
-
-  TEST_ASSERT_EQUAL (8.64,floatToken->value);
-}*/
-
 void test_TDOP_given_2_plus_9_should_return_11(void) {
   Tokenizer *expression;
   Token *token;
-  IntegerToken *intToken;
 
   expression = createTokenizer(" 2 + 9 ");
 
   token = TDOP(expression);
-  intToken = (IntegerToken *)token;
-  TEST_ASSERT_EQUAL (11,intToken->value);
+  TEST_ASSERT_EQUAL (11,((IntegerToken *)token)->value);
 }
 
 void test_TDOP_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_return_6(void) {
   Token *token;
   Tokenizer *expression;
-  IntegerToken *intToken;
 
   expression = createTokenizer(" 1 + 2 * 3 - -4 % 5 ");
   token = TDOP(expression);
-  intToken = (IntegerToken *)token;
 
-  TEST_ASSERT_EQUAL (1 + 2 * 3 - -4 % 5, intToken->value);
+  TEST_ASSERT_EQUAL (1 + 2 * 3 - -4 % 5, ((IntegerToken *)token)->value);
 }
 
-/*void test_TDOP_given_logical_not_23_expect_0 (void) {
+void test_TDOP_given_logical_not_23_expect_false (void) {
   Token *token;
   Tokenizer *expression;
-  IntegerToken *intToken;
 
   expression = createTokenizer(" !23 ");
   token = TDOP(expression);
-  intToken = (IntegerToken *)token;
 
-  TEST_ASSERT_EQUAL (!23, intToken->value);
+  TEST_ASSERT_FALSE (((IntegerToken *)token)->value);
 }
 
-void test_TDOP_given_logical_not_0_expect_1 (void) {
+void test_TDOP_given_logical_not_negative_23_expect_true (void) {
   Token *token;
   Tokenizer *expression;
-  IntegerToken *intToken;
+
+  expression = createTokenizer(" !-23 ");
+  token = TDOP(expression);
+
+  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+}
+
+void test_TDOP_given_logical_not_0_expect_true (void) {
+  Token *token;
+  Tokenizer *expression;
 
   expression = createTokenizer(" !0 ");
   token = TDOP(expression);
-  intToken = (IntegerToken *)token;
 
-  TEST_ASSERT_EQUAL (!0, intToken->value);
-}*/
+  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+}
 
-/*void test_TDOP_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_(void) {
+void test_TDOP_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_84(void) {
   Token *token;
   Tokenizer *expression;
-  IntegerToken *intToken;
 
   expression = createTokenizer(" 5 * ( 23 - 8 ) + 9 ");
   token = TDOP(expression);
-  intToken = (IntegerToken *)token;
 
-  TEST_ASSERT_EQUAL (5 * ( 23 - 8 ) + 9 , intToken->value);
-}*/
+  TEST_ASSERT_EQUAL (5 * ( 23 - 8 ) + 9,((IntegerToken *)token)->value);
+}
 
-/*void test_matchBracket_given_2_left_3_right_brackets_expect_return_0(void) {
-  Token *token1, *token2, *token3, *token4, *ans;
+void test_TDOP_given_2_bracketed_expression_with_multiplication_should_solve_correctly(void) {
+  Token *token;
   Tokenizer *expression;
 
-  expression = createTokenizer(" (() ");
-  ans = TDOP(expression);
+  expression = createTokenizer(" (7+9)*(1+2*6) ");
+  token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (')',ans->str[0]);
+  TEST_ASSERT_EQUAL ((7+9)*(1+2*6),((IntegerToken *)token)->value);
+}
+
+/*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer("8.64");
+  token = getNextToken(expression);
+  token = nudFloat(token, expression, 0);
+
+  TEST_ASSERT_EQUAL (8.64,((FloatToken *)token)->value);
+  TEST_ASSERT_EQUAL (FLOAT_SYMBOL, token->symbol);
+}*/
+
+/*void test_TDOP_given_2_point_32_minus_9_point_94_should_return_11(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer(" 2.32 - 9.94 ");
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL (2.32 - 9.94,((FloatToken *)token)->value);
 }*/

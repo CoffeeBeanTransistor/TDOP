@@ -6,15 +6,14 @@
 #include <string.h>
 #include <malloc.h>
 
-TokenInfo symbolMapTable[500] = {
-  [ADD_SYMBOL] = {.bindingPower = ADDITION_BP, .nud = NULL, .led = ledPlus},
-  [POSITIVE_SYMBOL] = {.bindingPower = UNARY_PLUS_BP, .nud = nudPlus, .led = NULL},
+TokenInfo symbolMapTable[256] = {
+  [ADD_SYMBOL] = {.bindingPower = ADDITION_BP, .nud = nudPlus, .led = ledPlus},
   [SUB_SYMBOL] = {.bindingPower = SUBTRACTION_BP, .nud = NULL, .led = ledMinus},
   [NEGATIVE_SYMBOL] = {.bindingPower = UNARY_MINUS_BP, .nud = nudMinus, .led = NULL},
   [MUL_SYMBOL] = {.bindingPower = MULTIPLICATION_BP, .nud = nudAsterisk, .led = ledAsterisk},
   [DIV_SYMBOL] = {.bindingPower = DIVISION_BP, .nud = NULL, .led = ledSlash},
   [MODULO_SYMBOL] = {.bindingPower = REMAINDER_BP, .nud = NULL, .led = ledPercent},
-  [LOGICAL_NOT_BP] = {.bindingPower = LOGICAL_NOT_BP, .nud = nudExclamation, .led = NULL},
+  [LOGICAL_NOT_SYMBOL] = {.bindingPower = LOGICAL_NOT_BP, .nud = nudExclamation, .led = NULL},
   [OPENING_BRACKET_SYMBOL] = {.bindingPower = WEAKEST, .nud = nudLeftBracket},
   [CLOSING_BRACKET_SYMBOL] = {.bindingPower = WEAKEST},
   [INTEGER_SYMBOL] = {.nud = nudInt},
@@ -28,24 +27,9 @@ Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
   if(token1->type == TOKEN_OPERATOR_TYPE) {
     token2 = getToken(expression);
       switch (*(token1)->str) {
-        case '+'  : switch (token2->type) {
-                      case  TOKEN_INTEGER_TYPE  :
-                        if(verifyTokensBackToBack(token1,token2)) {
-                          modifyToken(token1,POSITIVE_SYMBOL);
-                          pushBackToken(expression,token2);
-                        }
-                        else  {
-                          modifyToken(token1,ADD_SYMBOL);
-                          pushBackToken(expression,token2);
-                        }
-                        break;
-
-                      default :
-                        modifyToken(token1,ADD_SYMBOL);
-                        pushBackToken(expression,token2);
-                    }
+        case '+'  : modifyToken(token1,ADD_SYMBOL);
+                    pushBackToken(expression,token2);
                     break;
-
 
         case '-'  : switch (token2->type) {
                       case  TOKEN_INTEGER_TYPE  :
@@ -58,7 +42,7 @@ Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
                           pushBackToken(expression,token2);
                         }
                         break;
-                        
+
                       default :
                         modifyToken(token1,SUB_SYMBOL);
                         pushBackToken(expression,token2);
@@ -211,6 +195,9 @@ Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
   else if(token1->type == TOKEN_INTEGER_TYPE)
     return modifyToken(token1,INTEGER_SYMBOL);
 
+  else if(token1->type == TOKEN_FLOAT_TYPE)
+    return modifyToken(token1,FLOAT_SYMBOL);
+
   else if(token1->type == TOKEN_NULL_TYPE)
     return modifyToken(token1,NULL_SYMBOL);
 
@@ -221,8 +208,8 @@ TokenInfo *getTokenInfo(Token *token) {
   if(token->type == TOKEN_INTEGER_TYPE)
     return &symbolMapTable[INTEGER_SYMBOL];
 
-  /*else if(token->type == TOKEN_FLOAT_TYPE)
-    return &symbolMapTable[FLOAT_SYMBOL];*/
+  else if(token->type == TOKEN_FLOAT_TYPE)
+    return &symbolMapTable[FLOAT_SYMBOL];
 
   else if(token->type == TOKEN_OPERATOR_TYPE)
     return &symbolMapTable[token->symbol];
@@ -242,20 +229,20 @@ Token *getNextToken(Tokenizer *expression) {
 Token *modifyToken(Token *token, int symbol) {
 
   switch (symbol) {
-    case INTEGER_SYMBOL :
-      token->symbol = INTEGER_SYMBOL;
-      break;
-
     case NULL_SYMBOL :
       token->symbol = NULL_SYMBOL;
       break;
 
-    case ADD_SYMBOL :
-      token->symbol = ADD_SYMBOL;
+    case INTEGER_SYMBOL :
+      token->symbol = INTEGER_SYMBOL;
       break;
 
-    case POSITIVE_SYMBOL :
-      token->symbol = POSITIVE_SYMBOL;
+    case FLOAT_SYMBOL :
+      token->symbol = FLOAT_SYMBOL;
+      break;
+
+    case ADD_SYMBOL :
+      token->symbol = ADD_SYMBOL;
       break;
 
     case SUB_SYMBOL :

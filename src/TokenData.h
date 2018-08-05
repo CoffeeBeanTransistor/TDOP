@@ -11,7 +11,7 @@
 
 typedef struct TokenInfo TokenInfo;
 struct TokenInfo {
-  Token *(*nud)(Token *currToken, Tokenizer *tokenizer, uint32_t leftBindingPower);
+  Token *(*nud)(Token *currToken, Tokenizer *tokenizer, uint32_t *leftBindingPower);
   Token *(*led)(Token *leftToken, Tokenizer *tokenizer);
   uint32_t bindingPower;
 };

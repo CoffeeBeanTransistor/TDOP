@@ -4,7 +4,7 @@
 #include "Operator.h"
 
 Token *thisToken;
-uint32_t leftBindingPower = 0;
+uint32_t leftBindingPower;
 
 Token *TDOP(Tokenizer *expression) {
   thisToken = getNextToken(expression);
@@ -21,7 +21,7 @@ Token *evaluate(Tokenizer *expression, int rightBindingPower) {
   leftBindingPower = thisTokenInfo->bindingPower;
 
   tTokenInfo = getTokenInfo(t);
-  leftToken = tTokenInfo->nud(t, expression, leftBindingPower);
+  leftToken = tTokenInfo->nud(t, expression, &leftBindingPower);
 
   while (rightBindingPower < leftBindingPower) {
     t = thisToken;
