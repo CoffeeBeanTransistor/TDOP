@@ -31,7 +31,7 @@ Token *ledPlus(Token *leftToken, Tokenizer *expression){
   return leftToken;
 }
 
-Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudNegative(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
   Token *token;
   int value;
 
@@ -41,6 +41,17 @@ Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPo
     ((IntegerToken *)token)->value = value;
     return token;
 
+}
+
+Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+  Token *token;
+  int value;
+
+    token = evaluate(expression, SUBTRACTION_BP);
+    value = ((IntegerToken *)token)->value;
+    value = -value;
+    ((IntegerToken *)token)->value = value;
+    return token;
 }
 
 Token *ledMinus(Token *leftToken, Tokenizer *expression) {

@@ -203,14 +203,24 @@ void test_TDOP_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_84(
   TEST_ASSERT_EQUAL (5 * ( 23 - 8 ) + 9,((IntegerToken *)token)->value);
 }
 
-void test_TDOP_given_2_bracketed_expression_with_multiplication_should_solve_correctly(void) {
+void test_TDOP_given_complicated_expression_with_brackets_should_solve_correctly(void) {
   Token *token;
   Tokenizer *expression;
 
-  expression = createTokenizer(" (7+9)*(1+2*6) ");
+  expression = createTokenizer(" -(7+--9)*(-1+-2*---6) ");
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL ((7+9)*(1+2*6),((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (-176,((IntegerToken *)token)->value);
+}
+
+void test_TDOP_given_3_and_4_minuses_2_expression_should_return_value_5(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer(" 3----2 ");
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL (5, ((IntegerToken *)token)->value);
 }
 
 /*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
