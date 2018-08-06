@@ -207,12 +207,12 @@ int matchBracket(Tokenizer *expression, char closing, uint32_t *leftBindingPower
     return 0;
 }
 
-int convertIntToBinary(int number) {
+int convertToBinary(int number) {
 
     if(number == 0)
       return 0;
 
     else
-      return (number%2 + 10*convertIntToBinary(number/2));
+      return (number%2 + 10*convertToBinary(number/2));
 
 }
