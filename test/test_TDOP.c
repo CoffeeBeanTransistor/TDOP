@@ -249,6 +249,15 @@ void test_TDOP_testing_nudTilde_given_tilde_35_should_return_negative_36(void) {
   TEST_ASSERT_EQUAL (-36, ((IntegerToken *)token)->value);
 }
 
+void test_TDOP_given_tilde_containing_expression_should_solve_correctly(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( " ~(35 + 74) * 92 " );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL (~(35 + 74) * 92, ((IntegerToken *)token)->value);
+}
 /*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
   Tokenizer *expression;
   Token *token;
