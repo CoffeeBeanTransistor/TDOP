@@ -313,6 +313,46 @@ void test_TDOP_testing_bitwise_XOR_given_31_and_19_with_1_caret_in_between_shoul
   TEST_ASSERT_EQUAL (12, ((IntegerToken *)token)->value);
 }
 
+void test_TDOP_testing_left_shift_given_98_shifting_to_left_2_times_should_return_392(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( " 98 << 2 " );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL (392, ((IntegerToken *)token)->value);
+}
+
+void test_TDOP_testing_left_shift_given_complicated_expression_with_left_shift_involved_should_solve_correctly(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( " (21 ^12) | (41 << 8) " );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL ((21 ^12) | (41 << 8), ((IntegerToken *)token)->value);
+}
+
+void test_TDOP_testing_right_shift_given_63_shifting_to_right_8_times_should_return_0(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( " 63 >> 8 " );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL (0, ((IntegerToken *)token)->value);
+}
+
+void test_TDOP_testing_left_shift_given_complicated_expression_with_right_shift_involved_should_solve_correctly(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( " (59>>2)*92^32 " );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL ((59>>2)*92^32, ((IntegerToken *)token)->value);
+}
+
 /*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
   Tokenizer *expression;
   Token *token;

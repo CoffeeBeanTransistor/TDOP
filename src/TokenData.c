@@ -21,7 +21,7 @@ TokenInfo symbolMapTable[256] = {
   [BITWISE_OR_SYMBOL] = {.bindingPower = BITWISE_OR_BP, .nud = NULL, .led = ledVerticalBar},
   [BITWISE_XOR_SYMBOL] = {.bindingPower = BITWISE_XOR_BP, .nud = NULL, .led =ledCaret},
   [BITWISE_LEFT_SHIFTER_SYMBOL] = {.bindingPower = BITWISE_LEFT_SHIFTER_BP, .nud = NULL, .led = ledDoubleLeftArrows},
-  [BITWISE_LEFT_SHIFTER_SYMBOL] = {.bindingPower = BITWISE_RIGHT_SHIFTER_BP, .nud = NULL, .led = ledDoubleRightArrows},
+  [BITWISE_RIGHT_SHIFTER_SYMBOL] = {.bindingPower = BITWISE_RIGHT_SHIFTER_BP, .nud = NULL, .led = ledDoubleRightArrows},
   [GREATER_SYMBOL] = {.bindingPower = GREATER_BP, .nud = NULL, .led = ledLeftArrow},
   [LESSER_SYMBOL] = {.bindingPower = LESSER_BP, .nud = NULL, .led = ledRightArrow},
   [GREATER_EQUALS_SYMBOL] = {.bindingPower = GREATER_EQUALS_BP, .nud = NULL, .led = ledLeftArrowEqual},
