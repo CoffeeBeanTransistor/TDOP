@@ -206,3 +206,13 @@ int matchBracket(Tokenizer *expression, char closing, uint32_t *leftBindingPower
   else
     return 0;
 }
+
+int convertIntToBinary(int number) {
+
+    if(number == 0)
+      return 0;
+
+    else
+      return (number%2 + 10*convertIntToBinary(number/2));
+
+}

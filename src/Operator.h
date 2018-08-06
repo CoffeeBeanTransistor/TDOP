@@ -36,5 +36,6 @@ Token *ledExclamationEqual(Token *leftToken, Tokenizer *expression);
 Token *nudLeftBracket(Token *thisToken, Tokenizer *expression, uint32_t *eftBindingPower);
 //Token *nudRightBracket(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
 int matchBracket(Tokenizer *expression, char closing, uint32_t *leftBindingPower);
+int convertIntToBinary(int number);
 
 #endif // _TDOP_H

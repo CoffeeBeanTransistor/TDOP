@@ -14,7 +14,7 @@ void tearDown(void)
 {
 }
 
-void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
+/*void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
   Tokenizer *tokenizer;
   TokenInfo *tokenInfo;
   Token *token;
@@ -221,6 +221,22 @@ void test_TDOP_given_3_and_4_minuses_2_expression_should_return_value_5(void) {
   token = TDOP(expression);
 
   TEST_ASSERT_EQUAL (5, ((IntegerToken *)token)->value);
+}*/
+
+void test_convertIntToBinary_given_42_expect_return_101010(void) {
+  int num = 42, binaryNum;
+
+  binaryNum = convertIntToBinary(num);
+
+  TEST_ASSERT_EQUAL(101010,binaryNum);
+}
+
+void test_convertIntToBinary_given_negative_28_expect_return_negative_11100(void) {
+  int num = -28, binaryNum;
+
+  binaryNum = convertIntToBinary(num);
+
+  TEST_ASSERT_EQUAL(-11100,binaryNum);
 }
 
 /*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
