@@ -221,7 +221,7 @@ void test_TDOP_given_3_and_4_minuses_2_expression_should_return_value_5(void) {
   token = TDOP(expression);
 
   TEST_ASSERT_EQUAL (5, ((IntegerToken *)token)->value);
-}*/
+}
 
 void test_convertToBinary_given_42_expect_return_101010(void) {
   int num = 42, binaryNum;
@@ -237,6 +237,16 @@ void test_convertToBinary_given_negative_octal_025_expect_return_negative_10101(
   binaryNum = convertToBinary(num);
 
   TEST_ASSERT_EQUAL(-10101,binaryNum);
+}*/
+
+void test_TDOP_testing_nudTilde_given_tilde_35_should_return_negative_36(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( "~35" );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL (-36, ((IntegerToken *)token)->value);
 }
 
 /*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {

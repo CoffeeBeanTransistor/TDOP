@@ -126,6 +126,9 @@ Token *nudExclamation(Token *thisToken, Tokenizer *expression, uint32_t *leftBin
 
 Token *nudTilde(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
 
+  ((IntegerToken *)thisToken)->value = ~((IntegerToken *)evaluate(expression, BITWISE_NOT_BP))->value;
+  return thisToken;
+  
 }
 
 Token *ledDoubleAmpersand(Token *leftToken, Tokenizer *expression) {
@@ -207,12 +210,12 @@ int matchBracket(Tokenizer *expression, char closing, uint32_t *leftBindingPower
     return 0;
 }
 
-int convertToBinary(int number) {
+int convertToBinary(int number, int bitLength) {
 
     if(number == 0)
       return 0;
 
-    else
-      return (number%2 + 10*convertToBinary(number/2));
+    else if (bitLength != 0);
+      return (number%2 + 10*convertToBinary(number/2, bitLength - 1));
 
 }
