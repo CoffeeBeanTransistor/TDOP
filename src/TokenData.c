@@ -187,6 +187,24 @@ Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
                     }
                     break;
 
+          case '='  : switch(*(token2)->str) {
+                        case '='  :
+                          if(verifyTokensBackToBack(token1,token2)) {
+                            modifyToken(token1,EQUALS_TO_SYMBOL);
+                            freeToken(token2);
+                          }
+                          else {
+                            modifyToken(token1,EQUALS_TO_SYMBOL);
+                            pushBackToken(expression,token2);
+                          }
+                          break;
+
+                        default :
+                            modifyToken(token1,EQUALS_TO_SYMBOL);
+                            pushBackToken(expression,token2);
+                      }
+                      break;
+
           case '~'  :   modifyToken(token1,BITWISE_NOT_SYMBOL);
                         pushBackToken(expression,token2);
                         break;

@@ -261,7 +261,7 @@ Token *ledLeftArrowEqual(Token *leftToken, Tokenizer *expression) {
   Token  *rightToken;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, GREATER_BP);
+    rightToken = evaluate(expression, LESSER_EQUALS_BP);
     v1 = ((IntegerToken *)leftToken)->value;
     v2 = ((IntegerToken *)rightToken)->value;
     ans =  v1 <= v2;
@@ -274,7 +274,7 @@ Token *ledRightArrowEqual(Token *leftToken, Tokenizer *expression) {
   Token  *rightToken;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, GREATER_BP);
+    rightToken = evaluate(expression, GREATER_EQUALS_BP);
     v1 = ((IntegerToken *)leftToken)->value;
     v2 = ((IntegerToken *)rightToken)->value;
     ans =  v1 >= v2;
@@ -284,11 +284,29 @@ Token *ledRightArrowEqual(Token *leftToken, Tokenizer *expression) {
 }
 
 Token *ledDoubleEquals(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, EQUALS_TO_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 == v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *ledExclamationEqual(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, NOT_EQUALS_TO_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 != v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *nudLeftBracket(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {

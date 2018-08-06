@@ -24,13 +24,13 @@ Token *ledAmpersand(Token *leftToken, Tokenizer *expression);
 Token *ledDoubleVerticalBar(Token *leftToken, Tokenizer *expression);
 Token *ledVerticalBar(Token *leftToken, Tokenizer *expression);
 Token *ledCaret(Token *leftToken, Tokenizer *expression);
-
 Token *ledDoubleLeftArrows(Token *leftToken, Tokenizer *expression);
 Token *ledDoubleRightArrows(Token *leftToken, Tokenizer *expression);
 Token *ledLeftArrow(Token *leftToken, Tokenizer *expression);
 Token *ledLeftArrowEqual(Token *leftToken, Tokenizer *expression);
 Token *ledRightArrow(Token *leftToken, Tokenizer *expression);
 Token *ledRightArrowEqual(Token *leftToken, Tokenizer *expression);
+
 Token *ledDoubleEquals(Token *leftToken, Tokenizer *expression);
 Token *ledExclamationEqual(Token *leftToken, Tokenizer *expression);
 

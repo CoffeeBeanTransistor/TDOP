@@ -31,5 +31,4 @@ Token *evaluate(Tokenizer *expression, int rightBindingPower) {
   }
 
   return leftToken;
-
 }
