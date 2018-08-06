@@ -19,12 +19,12 @@ Token *ledSlash(Token *leftToken, Tokenizer *expression);
 Token *ledPercent(Token *leftToken, Tokenizer *expression);
 Token *nudExclamation(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower);
 Token *nudTilde(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower);
-
 Token *ledDoubleAmpersand(Token *leftToken, Tokenizer *expression);
 Token *ledAmpersand(Token *leftToken, Tokenizer *expression);
 Token *ledDoubleVerticalBar(Token *leftToken, Tokenizer *expression);
 Token *ledVerticalBar(Token *leftToken, Tokenizer *expression);
 Token *ledCaret(Token *leftToken, Tokenizer *expression);
+
 Token *ledDoubleLeftArrows(Token *leftToken, Tokenizer *expression);
 Token *ledDoubleRightArrows(Token *leftToken, Tokenizer *expression);
 Token *ledLeftArrow(Token *leftToken, Tokenizer *expression);

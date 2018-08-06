@@ -14,7 +14,7 @@ void tearDown(void)
 {
 }
 
-/*void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
+void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
   Tokenizer *tokenizer;
   TokenInfo *tokenInfo;
   Token *token;
@@ -223,22 +223,6 @@ void test_TDOP_given_3_and_4_minuses_2_expression_should_return_value_5(void) {
   TEST_ASSERT_EQUAL (5, ((IntegerToken *)token)->value);
 }
 
-void test_convertToBinary_given_42_expect_return_101010(void) {
-  int num = 42, binaryNum;
-
-  binaryNum = convertToBinary(num);
-
-  TEST_ASSERT_EQUAL(101010,binaryNum);
-}
-
-void test_convertToBinary_given_negative_octal_025_expect_return_negative_10101(void) {
-  int num = -025, binaryNum;
-
-  binaryNum = convertToBinary(num);
-
-  TEST_ASSERT_EQUAL(-10101,binaryNum);
-}
-
 void test_TDOP_testing_nudTilde_given_tilde_35_should_return_negative_36(void) {
   Tokenizer *expression;
   Token *token;
@@ -257,7 +241,7 @@ void test_TDOP_given_tilde_containing_expression_should_solve_correctly(void) {
   token = TDOP(expression);
 
   TEST_ASSERT_EQUAL (~(35 + 74) * 92, ((IntegerToken *)token)->value);
-}*/
+}
 
 void test_TDOP_testing_logical_AND_given_2_true_statements_with_double_ampersand_in_between_should_return_true(void) {
   Tokenizer *expression;
@@ -299,6 +283,35 @@ void test_TDOP_testing_bitwise_AND_given_2_statements_with_aan_ampersand_in_betw
   TEST_ASSERT_EQUAL ((29- 48) & (7*8), ((IntegerToken *)token)->value);
 }
 
+void test_TDOP_testing_logical_OR_given_1_true_statement_and_1_false_statement_with_double_vertical_lines_in_between_should_return_true(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( "(23 *(23-12)) || (0 / 62) " );
+  token = TDOP(expression);
+
+  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+}
+
+void test_TDOP_testing_bitwise_OR_given_2_statements_with_1_vertical_line_in_between_should_solve_correctly(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( " (2&19) | (4* 9)" );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL ((2&19) | (4* 9), ((IntegerToken *)token)->value);
+}
+
+void test_TDOP_testing_bitwise_XOR_given_31_and_19_with_1_caret_in_between_should_return_value_12(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( "31^19" );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL (12, ((IntegerToken *)token)->value);
+}
 
 /*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
   Tokenizer *expression;
@@ -320,4 +333,20 @@ void test_TDOP_testing_bitwise_AND_given_2_statements_with_aan_ampersand_in_betw
   token = TDOP(expression);
 
   TEST_ASSERT_EQUAL (2.32 - 9.94,((FloatToken *)token)->value);
+}
+
+void test_convertToBinary_given_42_expect_return_101010(void) {
+  int num = 42, binaryNum;
+
+  binaryNum = convertToBinary(num);
+
+  TEST_ASSERT_EQUAL(101010,binaryNum);
+}
+
+void test_convertToBinary_given_negative_octal_025_expect_return_negative_10101(void) {
+  int num = -025, binaryNum;
+
+  binaryNum = convertToBinary(num);
+
+  TEST_ASSERT_EQUAL(-10101,binaryNum);
 }*/

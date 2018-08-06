@@ -166,23 +166,68 @@ Token *ledAmpersand(Token *leftToken, Tokenizer *expression) {
 }
 
 Token *ledDoubleVerticalBar(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, LOGICAL_OR_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 || v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *ledVerticalBar(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, BITWISE_OR_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 | v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *ledCaret(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, BITWISE_XOR_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 ^ v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *ledDoubleLeftArrows(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, BITWISE_LEFT_SHIFTER_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 << v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *ledDoubleRightArrows(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, BITWISE_RIGHT_SHIFTER_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 >> v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *ledLeftArrow(Token *leftToken, Tokenizer *expression) {
