@@ -353,7 +353,7 @@ void test_TDOP_testing_left_shift_given_complicated_expression_with_right_shift_
   TEST_ASSERT_EQUAL ((59>>2)*92^32, ((IntegerToken *)token)->value);
 }
 
-void test_TDOP_testing_lesser_than_given_57_lesser_than_23_should_return_false(void) {
+void test_TDOP_testing_less_than_given_57_lesser_than_23_should_return_false(void) {
   Tokenizer *expression;
   Token *token;
 
@@ -363,7 +363,7 @@ void test_TDOP_testing_lesser_than_given_57_lesser_than_23_should_return_false(v
   TEST_ASSERT_FALSE (((IntegerToken *)token)->value);
 }
 
-void test_TDOP_testing_lesser_than_given_expression_involving_lesser_than_should_solve_correctly(void) {
+void test_TDOP_testing_less_than_given_expression_involving_lesser_than_should_solve_correctly(void) {
   Tokenizer *expression;
   Token *token;
 
@@ -380,7 +380,7 @@ void test_TDOP_testing_greater_than_given_238_greater_than_78_should_return_true
   expression = createTokenizer( "238>78" );
   token = TDOP(expression);
 
-  TEST_ASSERT_FALSE (((IntegerToken *)token)->value);
+  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
 }
 
 void test_TDOP_testing_greater_than_given_expression_involving_greater_than_should_solve_correctly(void) {
