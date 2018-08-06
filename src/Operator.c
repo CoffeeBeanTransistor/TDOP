@@ -258,11 +258,29 @@ Token *ledRightArrow(Token *leftToken, Tokenizer *expression) {
 
 
 Token *ledLeftArrowEqual(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, GREATER_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 <= v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *ledRightArrowEqual(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, GREATER_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 >= v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *ledDoubleEquals(Token *leftToken, Tokenizer *expression) {

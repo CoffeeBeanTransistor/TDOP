@@ -393,6 +393,48 @@ void test_TDOP_testing_greater_than_given_expression_involving_greater_than_shou
   TEST_ASSERT_EQUAL (23>9+-9|6^23-(12*54), ((IntegerToken *)token)->value);
 }
 
+void test_TDOP_testing_less_than_equal_to_given_922_less_than_equal_to_922_should_return_true(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( " 922<=922 " );
+  token = TDOP(expression);
+
+  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+}
+
+void test_TDOP_testing_less_than_equal_to_given_expression_involving_lesser_than_equal_to_should_solve_correctly(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( " 37<<4+(67<=(8^91)) " );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL (37<<4+(67<=(8^91)), ((IntegerToken *)token)->value);
+}
+
+void test_TDOP_testing_greater_than_equal_to_given_43_greater_than_equal_to_44_should_return_false(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( "43>=78" );
+  token = TDOP(expression);
+
+  TEST_ASSERT_FALSE (((IntegerToken *)token)->value);
+}
+
+void test_TDOP_testing_greater_than_equal_to_given_expression_involving_greater_than_equal_to_should_solve_correctly(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( " (8&9*73)<<(12>=6)" );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL ((8&9*73)<<(12>=6), ((IntegerToken *)token)->value);
+}
+
+
+
 
 /*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
   Tokenizer *expression;
