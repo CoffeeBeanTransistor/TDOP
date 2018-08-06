@@ -14,11 +14,25 @@ TokenInfo symbolMapTable[256] = {
   [DIV_SYMBOL] = {.bindingPower = DIVISION_BP, .nud = NULL, .led = ledSlash},
   [MODULO_SYMBOL] = {.bindingPower = REMAINDER_BP, .nud = NULL, .led = ledPercent},
   [LOGICAL_NOT_SYMBOL] = {.bindingPower = LOGICAL_NOT_BP, .nud = nudExclamation, .led = NULL},
-  [OPENING_BRACKET_SYMBOL] = {.bindingPower = WEAKEST, .nud = nudLeftBracket},
-  [CLOSING_BRACKET_SYMBOL] = {.bindingPower = WEAKEST},
+  [BITWISE_NOT_SYMBOL] = {.bindingPower = BITWISE_NOT_BP, .nud = nudTilde, .led = NULL},
+  [LOGICAL_AND_SYMBOL] = {.bindingPower = LOGICAL_AND_BP, .nud = NULL, .led = ledDoubleAmpersand},
+  [BITWISE_AND_SYMBOL] = {.bindingPower = BITWISE_AND_BP, .nud = NULL, .led = ledAmpersand},
+  [LOGICAL_OR_SYMBOL] = {.bindingPower = LOGICAL_OR_BP, .nud = NULL, .led = ledDoubleVerticalBar},
+  [BITWISE_OR_SYMBOL] = {.bindingPower = BITWISE_OR_BP, .nud = NULL, .led = ledVerticalBar},
+  [BITWISE_XOR_SYMBOL] = {.bindingPower = BITWISE_XOR_BP, .nud = NULL, .led =ledCaret},
+  [BITWISE_LEFT_SHIFTER_SYMBOL] = {.bindingPower = BITWISE_LEFT_SHIFTER_BP, .nud = NULL, .led = ledDoubleLeftArrows},
+  [BITWISE_LEFT_SHIFTER_SYMBOL] = {.bindingPower = BITWISE_RIGHT_SHIFTER_BP, .nud = NULL, .led = ledDoubleRightArrows},
+  [GREATER_SYMBOL] = {.bindingPower = GREATER_BP, .nud = NULL, .led = ledLeftArrow},
+  [LESSER_SYMBOL] = {.bindingPower = LESSER_BP, .nud = NULL, .led = ledRightArrow},
+  [GREATER_EQUALS_SYMBOL] = {.bindingPower = GREATER_EQUALS_BP, .nud = NULL, .led = ledLeftArrowEqual},
+  [LESSER_EQUALS_SYMBOL] = {.bindingPower = LESSER_EQUALS_BP, .nud = NULL, .led = ledRightArrowEqual},
+  [EQUALS_TO_SYMBOL] = {.bindingPower = EQUALS_TO_BP, .nud = NULL, .led = ledDoubleEquals},
+  [NOT_EQUALS_TO_SYMBOL] = {.bindingPower = NOT_EQUALS_TO_BP, .nud = NULL, .led = ledExclamationEqual},
+  [OPENING_BRACKET_SYMBOL] = {.bindingPower = OPENING_BRACKET_BP, .nud = nudLeftBracket},
+  [CLOSING_BRACKET_SYMBOL] = {.bindingPower = CLOSING_BRACKET_BP},
   [INTEGER_SYMBOL] = {.nud = nudInt},
   [FLOAT_SYMBOL] = {.nud = nudFloat},
-  [NULL_SYMBOL] = {.bindingPower = WEAKEST},
+  [NULL_SYMBOL] = {.bindingPower = WEAKEST_BP},
 };
 
 Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
@@ -118,7 +132,7 @@ Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
         case '>'  : switch(*(token2)->str) {
                       case  '>' :
                         if(verifyTokensBackToBack(token1,token2)) {
-                          modifyToken(token1,BITWISE_RIGHT_SHIFTER);
+                          modifyToken(token1,BITWISE_RIGHT_SHIFTER_SYMBOL);
                           freeToken(token2);
                         }
                         else {
@@ -147,7 +161,7 @@ Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
         case '<'  : switch(*(token2)->str) {
                       case  '<' :
                         if(verifyTokensBackToBack(token1,token2)) {
-                          modifyToken(token1,BITWISE_LEFT_SHIFTER);
+                          modifyToken(token1,BITWISE_LEFT_SHIFTER_SYMBOL);
                           freeToken(token2);
                         }
                         else {
@@ -313,14 +327,14 @@ Token *modifyToken(Token *token, int symbol) {
       token->symbol = CLOSING_BRACKET_SYMBOL;
       break;
 
-    case BITWISE_LEFT_SHIFTER  :
-      token->symbol = BITWISE_LEFT_SHIFTER;
+    case BITWISE_LEFT_SHIFTER_SYMBOL  :
+      token->symbol = BITWISE_LEFT_SHIFTER_SYMBOL;
       free(token->str);
       token->str = strdup("<<");
       break;
 
-    case BITWISE_RIGHT_SHIFTER  :
-      token->symbol = BITWISE_RIGHT_SHIFTER;
+    case BITWISE_RIGHT_SHIFTER_SYMBOL  :
+      token->symbol = BITWISE_RIGHT_SHIFTER_SYMBOL;
       free(token->str);
       token->str = strdup(">>");
       break;

@@ -8,7 +8,7 @@ uint32_t leftBindingPower;
 
 Token *TDOP(Tokenizer *expression) {
   thisToken = getNextToken(expression);
-  return evaluate(expression, 0);
+  return evaluate(expression, WEAKEST_BP);
 }
 
 Token *evaluate(Tokenizer *expression, int rightBindingPower) {
