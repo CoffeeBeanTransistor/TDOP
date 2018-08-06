@@ -237,7 +237,7 @@ void test_convertToBinary_given_negative_octal_025_expect_return_negative_10101(
   binaryNum = convertToBinary(num);
 
   TEST_ASSERT_EQUAL(-10101,binaryNum);
-}*/
+}
 
 void test_TDOP_testing_nudTilde_given_tilde_35_should_return_negative_36(void) {
   Tokenizer *expression;
@@ -257,7 +257,49 @@ void test_TDOP_given_tilde_containing_expression_should_solve_correctly(void) {
   token = TDOP(expression);
 
   TEST_ASSERT_EQUAL (~(35 + 74) * 92, ((IntegerToken *)token)->value);
+}*/
+
+void test_TDOP_testing_logical_AND_given_2_true_statements_with_double_ampersand_in_between_should_return_true(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( "(23 - 54) && (1-2) " );
+  token = TDOP(expression);
+
+  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
 }
+
+void test_TDOP_testing_logical_AND_given_1_true_statement_and_1_zero_valued_statement_with_double_ampersand_should_return_false(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( "2*5 && 23 - 23 " );
+  token = TDOP(expression);
+
+  TEST_ASSERT_FALSE (((IntegerToken *)token)->value);
+}
+
+void test_TDOP_testing_bitwise_AND_given_7_ampersand_in_between_12_should_return_4(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( "7&4" );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL (7&4, ((IntegerToken *)token)->value);
+}
+
+void test_TDOP_testing_bitwise_AND_given_2_statements_with_aan_ampersand_in_between_shuould_solve_correctly(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( "(29- 48) & (7*8)" );
+  token = TDOP(expression);
+
+  TEST_ASSERT_EQUAL ((29- 48) & (7*8), ((IntegerToken *)token)->value);
+}
+
+
 /*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
   Tokenizer *expression;
   Token *token;

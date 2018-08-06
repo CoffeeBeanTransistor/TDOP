@@ -11,6 +11,7 @@ Token *nudFloat (Token *thisToken, Tokenizer *expression, uint32_t *leftBindingP
 Token *nudPlus(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower);
 Token *ledPlus (Token *leftToken, Tokenizer *expression);
 Token *nudNegative(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *ledNegative (Token *leftToken, Tokenizer *expression);
 Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower);
 Token *ledMinus (Token *leftToken, Tokenizer *expression);
 Token *ledAsterisk (Token *leftToken, Tokenizer *expression);

@@ -9,7 +9,7 @@
 TokenInfo symbolMapTable[256] = {
   [ADD_SYMBOL] = {.bindingPower = ADDITION_BP, .nud = nudPlus, .led = ledPlus},
   [SUB_SYMBOL] = {.bindingPower = SUBTRACTION_BP, .nud = nudMinus, .led = ledMinus},
-  [NEGATIVE_SYMBOL] = {.bindingPower = UNARY_MINUS_BP, .nud = nudNegative, .led = NULL},
+  [NEGATIVE_SYMBOL] = {.bindingPower = UNARY_MINUS_BP, .nud = nudNegative, .led = ledNegative},
   [MUL_SYMBOL] = {.bindingPower = MULTIPLICATION_BP, .nud = NULL, .led = ledAsterisk},
   [DIV_SYMBOL] = {.bindingPower = DIVISION_BP, .nud = NULL, .led = ledSlash},
   [MODULO_SYMBOL] = {.bindingPower = REMAINDER_BP, .nud = NULL, .led = ledPercent},

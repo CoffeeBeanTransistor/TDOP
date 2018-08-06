@@ -40,7 +40,19 @@ Token *nudNegative(Token *thisToken, Tokenizer *expression, uint32_t *leftBindin
     value = -value;
     ((IntegerToken *)token)->value = value;
     return token;
+}
 
+Token *ledNegative (Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
+
+    rightToken = evaluate(expression, SUBTRACTION_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 - v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+    return leftToken;
 }
 
 Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
@@ -65,10 +77,6 @@ Token *ledMinus(Token *leftToken, Tokenizer *expression) {
     ((IntegerToken *)leftToken)->value = ans;
 
     return leftToken;
-}
-
-Token *nudAsterisk(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
-  //return evaluate(expression, UNARY_PLUS_BP);
 }
 
 Token *ledAsterisk(Token *leftToken, Tokenizer *expression) {
@@ -128,15 +136,33 @@ Token *nudTilde(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPo
 
   ((IntegerToken *)thisToken)->value = ~((IntegerToken *)evaluate(expression, BITWISE_NOT_BP))->value;
   return thisToken;
-  
+
 }
 
 Token *ledDoubleAmpersand(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, LOGICAL_AND_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 && v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *ledAmpersand(Token *leftToken, Tokenizer *expression) {
+  Token  *rightToken;
+  int v1, v2, ans;
 
+    rightToken = evaluate(expression, BITWISE_AND_BP);
+    v1 = ((IntegerToken *)leftToken)->value;
+    v2 = ((IntegerToken *)rightToken)->value;
+    ans =  v1 & v2;
+    ((IntegerToken *)leftToken)->value = ans;
+
+  return leftToken;
 }
 
 Token *ledDoubleVerticalBar(Token *leftToken, Tokenizer *expression) {
