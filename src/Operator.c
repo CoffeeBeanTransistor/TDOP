@@ -19,103 +19,100 @@ Token *nudPlus(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPow
 }
 
 Token *ledPlus(Token *leftToken, Tokenizer *expression){
-  Token  *rightToken;
-  int v1, v2, ans;
+  Token  *rightToken, *token;
+  double v1, v2, ans;
 
     rightToken = evaluate(expression, ADDITION_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
+    v1 = getTokenValue(leftToken);
+    v2 = getTokenValue(rightToken);
     ans =  v1 + v2;
-    ((IntegerToken *)leftToken)->value = ans;
+    token = newFloatToken(ans,token);
 
-  return leftToken;
+  return token;
 }
 
 Token *nudNegative(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+  double value;
   Token *token;
-  int value;
 
     token = evaluate(expression, UNARY_MINUS_BP);
-    value = ((IntegerToken *)token)->value;
+    value = getTokenValue(token);
     value = -value;
-    ((IntegerToken *)token)->value = value;
+    token = newFloatToken(value,token);
     return token;
 }
 
 Token *ledNegative (Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
-  int v1, v2, ans;
+  Token  *rightToken, *token;
+  double v1, v2, ans;
 
     rightToken = evaluate(expression, SUBTRACTION_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
+    v1 = getTokenValue(leftToken);
+    v2 = getTokenValue(rightToken);
     ans =  v1 - v2;
-    ((IntegerToken *)leftToken)->value = ans;
-
-    return leftToken;
+    token = newFloatToken(ans,token);
+    return token;
 }
 
 Token *nudMinus(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+  double value;
   Token *token;
-  int value;
 
     token = evaluate(expression, SUBTRACTION_BP);
-    value = ((IntegerToken *)token)->value;
+    value = getTokenValue(token);
     value = -value;
-    ((IntegerToken *)token)->value = value;
+    token = newFloatToken(value,token);
     return token;
 }
 
 Token *ledMinus(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
-  int v1, v2, ans;
+  Token  *rightToken, *token;
+  double v1, v2, ans;
 
     rightToken = evaluate(expression, SUBTRACTION_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
+    v1 = getTokenValue(leftToken);
+    v2 = getTokenValue(rightToken);
     ans =  v1 - v2;
-    ((IntegerToken *)leftToken)->value = ans;
-
-    return leftToken;
+    token = newFloatToken(ans,token);
+    return token;
 }
 
 Token *ledAsterisk(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
-  int v1, v2, ans;
+  Token  *rightToken, *token;
+  double v1, v2, ans;
 
     rightToken = evaluate(expression, MULTIPLICATION_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
+    v1 = getTokenValue(leftToken);
+    v2 = getTokenValue(rightToken);
     ans =  v1 * v2;
-    ((IntegerToken *)leftToken)->value = ans;
-
-  return leftToken;
+    token = newFloatToken(ans,token);
+    return token;
 }
 
 Token *ledSlash(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
-  int v1, v2, ans;
+  Token  *rightToken, *token;
+  double v1, v2, ans;
 
     rightToken = evaluate(expression, DIVISION_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
+    v1 = getTokenValue(leftToken);
+    v2 = getTokenValue(rightToken);
     ans =  v1 / v2;
-    ((IntegerToken *)leftToken)->value = ans;
-
-  return leftToken;
+    token = newFloatToken(ans,token);
+    return token;
 }
 
 Token *ledPercent(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, ADDITION_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 % v2;
-    ((IntegerToken *)leftToken)->value = ans;
+    rightToken = evaluate(expression, REMAINDER_BP);
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 % v2;
+    token = newFloatToken(ans, NULL);
+
+    return token;
 }
 
 Token *nudExclamation(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
@@ -123,190 +120,198 @@ Token *nudExclamation(Token *thisToken, Tokenizer *expression, uint32_t *leftBin
 
   token = evaluate(expression, LOGICAL_NOT_BP);
 
-  if(((IntegerToken *)token)->value > 0)
-    ((IntegerToken *)thisToken)->value = 0;
+  if(getTokenIntegerValue(token) != 0)
+    token = newFloatToken(0, NULL);
 
   else
-    ((IntegerToken *)thisToken)->value = 1;
+    token = newFloatToken(1, NULL);
 
-  return thisToken;
+  return token;
 }
 
 Token *nudTilde(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+  Token *token;
+  int value;
 
-  ((IntegerToken *)thisToken)->value = ~((IntegerToken *)evaluate(expression, BITWISE_NOT_BP))->value;
-  return thisToken;
+  token = evaluate(expression, BITWISE_NOT_BP);
+
+  value = getTokenIntegerValue(token);
+  value = ~value;
+  token = newFloatToken(value,NULL);
+  return token;
 
 }
 
 Token *ledDoubleAmpersand(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, LOGICAL_AND_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 && v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 && v2;
+    token = newFloatToken(ans, NULL);
+
+  return token;
 }
 
 Token *ledAmpersand(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, BITWISE_AND_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 & v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 & v2;
+    token = newFloatToken(ans, NULL);
+
+    return token;
 }
 
 Token *ledDoubleVerticalBar(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, LOGICAL_OR_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 || v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 || v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 Token *ledVerticalBar(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, BITWISE_OR_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 | v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 | v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 Token *ledCaret(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, BITWISE_XOR_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 ^ v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 ^ v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 Token *ledDoubleLeftArrows(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, BITWISE_LEFT_SHIFTER_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 << v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 << v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 Token *ledDoubleRightArrows(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, BITWISE_RIGHT_SHIFTER_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 >> v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 >> v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 Token *ledLeftArrow(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, LESSER_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 < v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 < v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 Token *ledRightArrow(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, GREATER_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 > v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 > v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 
 Token *ledLeftArrowEqual(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, LESSER_EQUALS_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 <= v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 <= v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 Token *ledRightArrowEqual(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, GREATER_EQUALS_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 >= v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 >= v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 Token *ledDoubleEquals(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, EQUALS_TO_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 == v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 == v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 Token *ledExclamationEqual(Token *leftToken, Tokenizer *expression) {
-  Token  *rightToken;
+  Token  *rightToken, *token;
   int v1, v2, ans;
 
     rightToken = evaluate(expression, NOT_EQUALS_TO_BP);
-    v1 = ((IntegerToken *)leftToken)->value;
-    v2 = ((IntegerToken *)rightToken)->value;
-    ans =  v1 != v2;
-    ((IntegerToken *)leftToken)->value = ans;
 
-  return leftToken;
+    v1 = getTokenIntegerValue(leftToken);
+    v2 = getTokenIntegerValue(rightToken);
+    ans =  v1 != v2;
+    token = newFloatToken(ans, NULL);
+    return token;
 }
 
 Token *nudLeftBracket(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
@@ -315,7 +320,6 @@ Token *nudLeftBracket(Token *thisToken, Tokenizer *expression, uint32_t *leftBin
 
     expr = evaluate(expression, WEAKEST_BP);
     if(matchBracket(expression, ')', leftBindingPower)) {
-      freeToken(thisToken);
       return expr;
     }
     else
@@ -334,14 +338,4 @@ int matchBracket(Tokenizer *expression, char closing, uint32_t *leftBindingPower
   }
   else
     return 0;
-}
-
-int convertToBinary(int number, int bitLength) {
-
-    if(number == 0)
-      return 0;
-
-    else if (bitLength != 0);
-      return (number%2 + 10*convertToBinary(number/2, bitLength - 1));
-
 }

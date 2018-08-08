@@ -35,6 +35,29 @@ TokenInfo symbolMapTable[256] = {
   [NULL_SYMBOL] = {.bindingPower = WEAKEST_BP},
 };
 
+TokenInfo *getTokenInfo(Token *token) {
+
+  if(token->type == TOKEN_INTEGER_TYPE)
+    return &symbolMapTable[INTEGER_SYMBOL];
+
+  else if(token->type == TOKEN_FLOAT_TYPE)
+    return &symbolMapTable[FLOAT_SYMBOL];
+
+  else if(token->type == TOKEN_OPERATOR_TYPE)
+    return &symbolMapTable[token->symbol];
+
+  else if(token->type == TOKEN_NULL_TYPE)
+    return &symbolMapTable[NULL_SYMBOL];
+}
+
+Token *getNextToken(Tokenizer *expression) {
+  Token *token1;
+
+    token1 = getToken(expression);
+    token1 = getTokenSymbol(token1,expression);
+    return token1;
+}
+
 Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
   Token *token2;
 
@@ -235,29 +258,6 @@ Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
 
 }
 
-TokenInfo *getTokenInfo(Token *token) {
-
-  if(token->type == TOKEN_INTEGER_TYPE)
-    return &symbolMapTable[INTEGER_SYMBOL];
-
-  else if(token->type == TOKEN_FLOAT_TYPE)
-    return &symbolMapTable[FLOAT_SYMBOL];
-
-  else if(token->type == TOKEN_OPERATOR_TYPE)
-    return &symbolMapTable[token->symbol];
-
-  else if(token->type == TOKEN_NULL_TYPE)
-    return &symbolMapTable[NULL_SYMBOL];
-}
-
-Token *getNextToken(Tokenizer *expression) {
-  Token *token1;
-
-    token1 = getToken(expression);
-    token1 = getTokenSymbol(token1,expression);
-    return token1;
-}
-
 Token *modifyToken(Token *token, int symbol) {
 
   switch (symbol) {
@@ -384,6 +384,28 @@ Token *modifyToken(Token *token, int symbol) {
   return token;
 }
 
+Token *newFloatToken(double value, Token *token) {
+  token = createFloatToken(value, NULL);
+  token = modifyToken(token, FLOAT_SYMBOL);
+  return token;
+}
+
+int getTokenIntegerValue(Token *token) {
+  int value, tokenvalue;
+
+  if(getTokenType(token)) {
+    if(token->type == TOKEN_FLOAT_TYPE) {
+      tokenvalue = ((FloatToken *)token)->value;
+      value = (int)tokenvalue;
+    }
+    else if (token->type == TOKEN_INTEGER_TYPE)
+      return ((IntegerToken *)token)->value;
+  }
+
+  else
+    return 0; //throw error
+}
+
 int verifyTokensBackToBack(Token *token1, Token *token2) {
 
     token1->startColumn = token1->startColumn + token1->length;
@@ -397,4 +419,40 @@ int verifyTokensBackToBack(Token *token1, Token *token2) {
       token1->startColumn = token1->startColumn - token1->length;
       return 0;
     }
+}
+
+int getTokenType(Token *token) {
+  double d;
+  int i;
+
+  if(token->type == TOKEN_INTEGER_TYPE)
+    d = ((IntegerToken *)token)->value;
+
+  else if(token->type == TOKEN_FLOAT_TYPE)
+    d = ((FloatToken *)token)->value;
+
+  i = (int)d;
+
+  if(d == i)
+      return 1;
+
+  else
+      return 0;
+}
+
+double getTokenValue(Token *token) {
+  double value;
+
+  switch (token->type) {
+    case TOKEN_INTEGER_TYPE :
+      value = ((IntegerToken *)token)->value;
+      break;
+    case TOKEN_FLOAT_TYPE :
+      value = ((FloatToken *)token)->value;
+      break;
+    default :
+      value = ((IntegerToken *)token)->value; //Throw error
+  }
+
+  return value;
 }

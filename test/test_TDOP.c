@@ -150,7 +150,7 @@ void test_TDOP_given_2_plus_9_should_return_11(void) {
   expression = createTokenizer(" 2 + 9 ");
 
   token = TDOP(expression);
-  TEST_ASSERT_EQUAL (11,((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL_FLOAT (11,((FloatToken *)token)->value);
 }
 
 void test_TDOP_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_return_6(void) {
@@ -160,7 +160,7 @@ void test_TDOP_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_return_6
   expression = createTokenizer(" 1 + 2 * 3 - -4 % 5 ");
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (1 + 2 * 3 - -4 % 5, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL_FLOAT (1 + 2 * 3 - -4 % 5, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_given_logical_not_23_expect_false (void) {
@@ -170,17 +170,17 @@ void test_TDOP_given_logical_not_23_expect_false (void) {
   expression = createTokenizer(" !23 ");
   token = TDOP(expression);
 
-  TEST_ASSERT_FALSE (((IntegerToken *)token)->value);
+  TEST_ASSERT_FALSE (((FloatToken *)token)->value);
 }
 
-void test_TDOP_given_logical_not_negative_23_expect_true (void) {
+void test_TDOP_given_logical_not_negative_23_expect_false (void) {
   Token *token;
   Tokenizer *expression;
 
   expression = createTokenizer(" !-23 ");
   token = TDOP(expression);
 
-  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+  TEST_ASSERT_FALSE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_given_logical_not_0_expect_true (void) {
@@ -190,7 +190,7 @@ void test_TDOP_given_logical_not_0_expect_true (void) {
   expression = createTokenizer(" !0 ");
   token = TDOP(expression);
 
-  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+  TEST_ASSERT_TRUE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_84(void) {
@@ -200,7 +200,7 @@ void test_TDOP_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_84(
   expression = createTokenizer(" 5 * ( 23 - 8 ) + 9 ");
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (5 * ( 23 - 8 ) + 9,((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (5 * ( 23 - 8 ) + 9,((FloatToken *)token)->value);
 }
 
 void test_TDOP_given_complicated_expression_with_brackets_should_solve_correctly(void) {
@@ -210,7 +210,7 @@ void test_TDOP_given_complicated_expression_with_brackets_should_solve_correctly
   expression = createTokenizer(" -(7+--9)*(-1+-2*---6) ");
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (-176,((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL_FLOAT (-176,((FloatToken *)token)->value);
 }
 
 void test_TDOP_given_3_and_4_minuses_2_expression_should_return_value_5(void) {
@@ -220,7 +220,7 @@ void test_TDOP_given_3_and_4_minuses_2_expression_should_return_value_5(void) {
   expression = createTokenizer(" 3----2 ");
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (5, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (5, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_nudTilde_given_tilde_35_should_return_negative_36(void) {
@@ -230,7 +230,7 @@ void test_TDOP_testing_nudTilde_given_tilde_35_should_return_negative_36(void) {
   expression = createTokenizer( "~35" );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (-36, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (-36, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_given_tilde_containing_expression_should_solve_correctly(void) {
@@ -240,7 +240,7 @@ void test_TDOP_given_tilde_containing_expression_should_solve_correctly(void) {
   expression = createTokenizer( " ~(35 + 74) * 92 " );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (~(35 + 74) * 92, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (~(35 + 74) * 92, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_logical_AND_given_2_true_statements_with_double_ampersand_in_between_should_return_true(void) {
@@ -250,7 +250,7 @@ void test_TDOP_testing_logical_AND_given_2_true_statements_with_double_ampersand
   expression = createTokenizer( "(23 - 54) && (1-2) " );
   token = TDOP(expression);
 
-  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+  TEST_ASSERT_TRUE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_logical_AND_given_1_true_statement_and_1_zero_valued_statement_with_double_ampersand_should_return_false(void) {
@@ -260,7 +260,7 @@ void test_TDOP_testing_logical_AND_given_1_true_statement_and_1_zero_valued_stat
   expression = createTokenizer( "2*5 && 23 - 23 " );
   token = TDOP(expression);
 
-  TEST_ASSERT_FALSE (((IntegerToken *)token)->value);
+  TEST_ASSERT_FALSE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_bitwise_AND_given_7_ampersand_in_between_12_should_return_4(void) {
@@ -270,7 +270,7 @@ void test_TDOP_testing_bitwise_AND_given_7_ampersand_in_between_12_should_return
   expression = createTokenizer( "7&4" );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (7&4, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (7&4, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_bitwise_AND_given_2_statements_with_aan_ampersand_in_between_shuould_solve_correctly(void) {
@@ -280,7 +280,7 @@ void test_TDOP_testing_bitwise_AND_given_2_statements_with_aan_ampersand_in_betw
   expression = createTokenizer( "(29- 48) & (7*8)" );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL ((29- 48) & (7*8), ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL ((29- 48) & (7*8), ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_logical_OR_given_1_true_statement_and_1_false_statement_with_double_vertical_lines_in_between_should_return_true(void) {
@@ -290,7 +290,7 @@ void test_TDOP_testing_logical_OR_given_1_true_statement_and_1_false_statement_w
   expression = createTokenizer( "(23 *(23-12)) || (0 / 62) " );
   token = TDOP(expression);
 
-  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+  TEST_ASSERT_TRUE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_bitwise_OR_given_2_statements_with_1_vertical_line_in_between_should_solve_correctly(void) {
@@ -300,7 +300,7 @@ void test_TDOP_testing_bitwise_OR_given_2_statements_with_1_vertical_line_in_bet
   expression = createTokenizer( " (2&19) | (4* 9)" );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL ((2&19) | (4* 9), ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL ((2&19) | (4* 9), ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_bitwise_XOR_given_31_and_19_with_1_caret_in_between_should_return_value_12(void) {
@@ -310,7 +310,7 @@ void test_TDOP_testing_bitwise_XOR_given_31_and_19_with_1_caret_in_between_shoul
   expression = createTokenizer( "31^19" );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (12, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (12, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_left_shift_given_98_shifting_to_left_2_times_should_return_392(void) {
@@ -320,7 +320,7 @@ void test_TDOP_testing_left_shift_given_98_shifting_to_left_2_times_should_retur
   expression = createTokenizer( " 98 << 2 " );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (392, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (392, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_left_shift_given_complicated_expression_with_left_shift_involved_should_solve_correctly(void) {
@@ -330,7 +330,7 @@ void test_TDOP_testing_left_shift_given_complicated_expression_with_left_shift_i
   expression = createTokenizer( " (21 ^12) | (41 << 8) " );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL ((21 ^12) | (41 << 8), ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL ((21 ^12) | (41 << 8), ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_right_shift_given_63_shifting_to_right_8_times_should_return_0(void) {
@@ -340,7 +340,7 @@ void test_TDOP_testing_right_shift_given_63_shifting_to_right_8_times_should_ret
   expression = createTokenizer( " 63 >> 8 " );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (0, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (0, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_left_shift_given_complicated_expression_with_right_shift_involved_should_solve_correctly(void) {
@@ -350,7 +350,7 @@ void test_TDOP_testing_left_shift_given_complicated_expression_with_right_shift_
   expression = createTokenizer( " (59>>2)*92^32 " );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL ((59>>2)*92^32, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL ((59>>2)*92^32, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_less_than_given_57_lesser_than_23_should_return_false(void) {
@@ -360,7 +360,7 @@ void test_TDOP_testing_less_than_given_57_lesser_than_23_should_return_false(voi
   expression = createTokenizer( " 57 < 23 " );
   token = TDOP(expression);
 
-  TEST_ASSERT_FALSE (((IntegerToken *)token)->value);
+  TEST_ASSERT_FALSE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_less_than_given_expression_involving_lesser_than_should_solve_correctly(void) {
@@ -370,7 +370,7 @@ void test_TDOP_testing_less_than_given_expression_involving_lesser_than_should_s
   expression = createTokenizer( " (74 <(63-2)) + 23%6 " );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL ((74 <(63-2)) + 23%6, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL ((74 <(63-2)) + 23%6, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_greater_than_given_238_greater_than_78_should_return_true(void) {
@@ -380,7 +380,7 @@ void test_TDOP_testing_greater_than_given_238_greater_than_78_should_return_true
   expression = createTokenizer( "238>78" );
   token = TDOP(expression);
 
-  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+  TEST_ASSERT_TRUE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_greater_than_given_expression_involving_greater_than_should_solve_correctly(void) {
@@ -390,7 +390,7 @@ void test_TDOP_testing_greater_than_given_expression_involving_greater_than_shou
   expression = createTokenizer( " 23>9+-9|6^23-(12*54) " );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (23>9+-9|6^23-(12*54), ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (23>9+-9|6^23-(12*54), ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_less_than_equal_to_given_922_less_than_equal_to_922_should_return_true(void) {
@@ -400,7 +400,7 @@ void test_TDOP_testing_less_than_equal_to_given_922_less_than_equal_to_922_shoul
   expression = createTokenizer( " 922<=922 " );
   token = TDOP(expression);
 
-  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+  TEST_ASSERT_TRUE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_less_than_equal_to_given_expression_involving_lesser_than_equal_to_should_solve_correctly(void) {
@@ -410,7 +410,7 @@ void test_TDOP_testing_less_than_equal_to_given_expression_involving_lesser_than
   expression = createTokenizer( " 37<<4+(67<=(8^91)) " );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (37<<4+(67<=(8^91)), ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (37<<4+(67<=(8^91)), ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_greater_than_equal_to_given_43_greater_than_equal_to_44_should_return_false(void) {
@@ -420,7 +420,7 @@ void test_TDOP_testing_greater_than_equal_to_given_43_greater_than_equal_to_44_s
   expression = createTokenizer( "43>=78" );
   token = TDOP(expression);
 
-  TEST_ASSERT_FALSE (((IntegerToken *)token)->value);
+  TEST_ASSERT_FALSE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_greater_than_equal_to_given_expression_involving_greater_than_equal_to_should_solve_correctly(void) {
@@ -430,7 +430,7 @@ void test_TDOP_testing_greater_than_equal_to_given_expression_involving_greater_
   expression = createTokenizer( " (8&9*73)<<(12>=6)" );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL ((8&9*73)<<(12>=6), ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL ((8&9*73)<<(12>=6), ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_equal_to_given_777_equals_to_777_should_return_true(void) {
@@ -440,7 +440,7 @@ void test_TDOP_testing_equal_to_given_777_equals_to_777_should_return_true(void)
   expression = createTokenizer( "777 == 777" );
   token = TDOP(expression);
 
-  TEST_ASSERT_TRUE (((IntegerToken *)token)->value);
+  TEST_ASSERT_TRUE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_equal_to_given_expression_involving_equal_to_should_solve_correctly(void) {
@@ -450,7 +450,7 @@ void test_TDOP_testing_equal_to_given_expression_involving_equal_to_should_solve
   expression = createTokenizer( " 23==9 * 7|2" );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (23==9 * 7|2, ((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (23==9 * 7|2, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_not_equal_to_given_157_not_equals_to_157_should_return_false(void) {
@@ -460,7 +460,7 @@ void test_TDOP_testing_not_equal_to_given_157_not_equals_to_157_should_return_fa
   expression = createTokenizer( "157 != 157" );
   token = TDOP(expression);
 
-  TEST_ASSERT_FALSE (((IntegerToken *)token)->value);
+  TEST_ASSERT_FALSE (((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_not_equal_to_given_expression_involving_not_equal_to_should_solve_correctly(void) {
@@ -470,14 +470,10 @@ void test_TDOP_testing_not_equal_to_given_expression_involving_not_equal_to_shou
   expression = createTokenizer( "6&&2/(92^8!=54) + 9" );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (6&&2/(92^8!=54) + 9, ((IntegerToken *)token)->value);
+  TEST_ASSERT_FALSE(((FloatToken *)token)->value);
 }
 
-
-
-
-
-/*void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
+void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
   Tokenizer *expression;
   Token *token;
 
@@ -485,32 +481,71 @@ void test_TDOP_testing_not_equal_to_given_expression_involving_not_equal_to_shou
   token = getNextToken(expression);
   token = nudFloat(token, expression, 0);
 
-  TEST_ASSERT_EQUAL (8.64,((FloatToken *)token)->value);
-  TEST_ASSERT_EQUAL (FLOAT_SYMBOL, token->symbol);
+  TEST_ASSERT_EQUAL_FLOAT(8.64,((FloatToken *)token)->value);
+  TEST_ASSERT_EQUAL(FLOAT_SYMBOL, token->symbol);
+}
+
+void test_getTokenType_given_a_floating_number_should_return_true(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer("8.3");
+  token = getNextToken(expression);
+
+  TEST_ASSERT_FALSE(getTokenType(token));
+  TEST_ASSERT_EQUAL(TOKEN_FLOAT_TYPE, token->type);
 }
 
 void test_TDOP_given_2_point_32_minus_9_point_94_should_return_11(void) {
   Tokenizer *expression;
   Token *token;
 
-  expression = createTokenizer(" 2.32 - 9.94 ");
+  expression = createTokenizer(" 2.2 - -9 ");
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (2.32 - 9.94,((FloatToken *)token)->value);
+  TEST_ASSERT_EQUAL_FLOAT (2.20 - -9, ((FloatToken *)token)->value);
 }
 
-void test_convertToBinary_given_42_expect_return_101010(void) {
-  int num = 42, binaryNum;
+void test_getTokenIntegerValue_given_a_token_with_float_value_with_no_fractional_part_expect_an_integer_number_will_return(void) {
+  Token *token;
+  int value;
 
-  binaryNum = convertToBinary(num);
+  token = newFloatToken(8.0000, token);
+  value = getTokenIntegerValue(token);
 
-  TEST_ASSERT_EQUAL(101010,binaryNum);
+  TEST_ASSERT_EQUAL (8,value);
 }
 
-void test_convertToBinary_given_negative_octal_025_expect_return_negative_10101(void) {
-  int num = -025, binaryNum;
+void test_getTokenIntegerValue_given_a_token_with_float_value_fractional_part_expect_return_false(void) {
+  Token *token;
 
-  binaryNum = convertToBinary(num);
+  token = newFloatToken(8.832, token);
 
-  TEST_ASSERT_EQUAL(-10101,binaryNum);
-}*/
+  TEST_ASSERT_FALSE(getTokenIntegerValue(token));
+}
+
+void test_getTokenValue_given_an_integer_number_should_return_value_correctly(void) {
+  Tokenizer *expression;
+  Token *token;
+  double value;
+
+  expression = createTokenizer(" 6 ");
+  token = getNextToken(expression);
+
+  value = getTokenValue(token);
+
+  TEST_ASSERT_EQUAL_FLOAT(6.000, value);
+}
+
+void test_getTokenValue_given_a_floating_point_number_should_return_its_own_value(void) {
+  Tokenizer *expression;
+  Token *token;
+  double value;
+
+  expression = createTokenizer(" 834.1 ");
+  token = getNextToken(expression);
+
+  value = getTokenValue(token);
+
+  TEST_ASSERT_EQUAL_FLOAT(834.1, value);
+}

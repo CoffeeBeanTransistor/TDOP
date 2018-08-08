@@ -30,13 +30,10 @@ Token *ledLeftArrow(Token *leftToken, Tokenizer *expression);
 Token *ledLeftArrowEqual(Token *leftToken, Tokenizer *expression);
 Token *ledRightArrow(Token *leftToken, Tokenizer *expression);
 Token *ledRightArrowEqual(Token *leftToken, Tokenizer *expression);
-
 Token *ledDoubleEquals(Token *leftToken, Tokenizer *expression);
 Token *ledExclamationEqual(Token *leftToken, Tokenizer *expression);
-
 Token *nudLeftBracket(Token *thisToken, Tokenizer *expression, uint32_t *eftBindingPower);
-//Token *nudRightBracket(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
 int matchBracket(Tokenizer *expression, char closing, uint32_t *leftBindingPower);
-int convertToBinary(int number, int bitLength);
+//Token *nudRightBracket(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
 
 #endif // _TDOP_H

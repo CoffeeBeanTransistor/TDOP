@@ -7,8 +7,11 @@ Token *thisToken;
 uint32_t leftBindingPower;
 
 Token *TDOP(Tokenizer *expression) {
+  Token *token;
   thisToken = getNextToken(expression);
-  return evaluate(expression, WEAKEST_BP);
+  token = evaluate(expression, WEAKEST_BP);
+  freeTokenizer(expression);
+  return token;
 }
 
 Token *evaluate(Tokenizer *expression, int rightBindingPower) {
@@ -29,6 +32,5 @@ Token *evaluate(Tokenizer *expression, int rightBindingPower) {
     thisToken = getNextToken(expression);
     leftToken = tTokenInfo->led(leftToken, expression);
   }
-
   return leftToken;
 }
