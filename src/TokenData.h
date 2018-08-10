@@ -15,11 +15,13 @@ struct TokenInfo {
 TokenInfo *getTokenInfo(Token *thisToken);
 int getTokenType(Token *thisToken);
 Token *getTokenSymbol(Token *token1,Tokenizer *expression);
-Token *getNextToken(Tokenizer *expression);
+Token *getAdvanceToken(Tokenizer *expression);
 int verifyTokensBackToBack(Token *token1, Token *token2);
 Token *modifyToken(Token *token, int symbol);
 double getTokenValue(Token *token);
-Token *newFloatToken(double value, Token *token);
+Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightToken);
 int getTokenIntegerValue(Token *token);
+int checkTokenIfItsNULL(Token *token);
+Token *getNud(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower);
 
 #endif // _TokenData_H

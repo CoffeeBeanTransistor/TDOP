@@ -5,33 +5,35 @@
 #include <stdint.h>
 #include <string.h>
 #include <malloc.h>
+#include "Exception.h"
+#include "Error.h"
 
 TokenInfo symbolMapTable[256] = {
   [ADD_SYMBOL] = {.bindingPower = ADDITION_BP, .nud = nudPlus, .led = ledPlus},
   [SUB_SYMBOL] = {.bindingPower = SUBTRACTION_BP, .nud = nudMinus, .led = ledMinus},
   [NEGATIVE_SYMBOL] = {.bindingPower = UNARY_MINUS_BP, .nud = nudNegative, .led = ledNegative},
-  [MUL_SYMBOL] = {.bindingPower = MULTIPLICATION_BP, .nud = NULL, .led = ledAsterisk},
-  [DIV_SYMBOL] = {.bindingPower = DIVISION_BP, .nud = NULL, .led = ledSlash},
-  [MODULO_SYMBOL] = {.bindingPower = REMAINDER_BP, .nud = NULL, .led = ledPercent},
-  [LOGICAL_NOT_SYMBOL] = {.bindingPower = LOGICAL_NOT_BP, .nud = nudExclamation, .led = NULL},
-  [BITWISE_NOT_SYMBOL] = {.bindingPower = BITWISE_NOT_BP, .nud = nudTilde, .led = NULL},
-  [LOGICAL_AND_SYMBOL] = {.bindingPower = LOGICAL_AND_BP, .nud = NULL, .led = ledDoubleAmpersand},
-  [BITWISE_AND_SYMBOL] = {.bindingPower = BITWISE_AND_BP, .nud = NULL, .led = ledAmpersand},
-  [LOGICAL_OR_SYMBOL] = {.bindingPower = LOGICAL_OR_BP, .nud = NULL, .led = ledDoubleVerticalBar},
-  [BITWISE_OR_SYMBOL] = {.bindingPower = BITWISE_OR_BP, .nud = NULL, .led = ledVerticalBar},
-  [BITWISE_XOR_SYMBOL] = {.bindingPower = BITWISE_XOR_BP, .nud = NULL, .led =ledCaret},
-  [BITWISE_LEFT_SHIFTER_SYMBOL] = {.bindingPower = BITWISE_LEFT_SHIFTER_BP, .nud = NULL, .led = ledDoubleLeftArrows},
-  [BITWISE_RIGHT_SHIFTER_SYMBOL] = {.bindingPower = BITWISE_RIGHT_SHIFTER_BP, .nud = NULL, .led = ledDoubleRightArrows},
-  [GREATER_SYMBOL] = {.bindingPower = GREATER_BP, .nud = NULL, .led = ledRightArrow},
-  [LESSER_SYMBOL] = {.bindingPower = LESSER_BP, .nud = NULL, .led = ledLeftArrow},
-  [GREATER_EQUALS_SYMBOL] = {.bindingPower = GREATER_EQUALS_BP, .nud = NULL, .led = ledRightArrowEqual},
-  [LESSER_EQUALS_SYMBOL] = {.bindingPower = LESSER_EQUALS_BP, .nud = NULL, .led = ledLeftArrowEqual},
-  [EQUALS_TO_SYMBOL] = {.bindingPower = EQUALS_TO_BP, .nud = NULL, .led = ledDoubleEquals},
-  [NOT_EQUALS_TO_SYMBOL] = {.bindingPower = NOT_EQUALS_TO_BP, .nud = NULL, .led = ledExclamationEqual},
+  [MUL_SYMBOL] = {.bindingPower = MULTIPLICATION_BP, .nud = nudAsterisk, .led = ledAsterisk},
+  [DIV_SYMBOL] = {.bindingPower = DIVISION_BP, .nud = nudSlash, .led = ledSlash},
+  [MODULO_SYMBOL] = {.bindingPower = REMAINDER_BP, .nud = nudPercent, .led = ledPercent},
+  [LOGICAL_NOT_SYMBOL] = {.bindingPower = LOGICAL_NOT_BP, .nud = nudExclamation, .led = ledExclamation},
+  [BITWISE_NOT_SYMBOL] = {.bindingPower = BITWISE_NOT_BP, .nud = nudTilde, .led = ledTilde},
+  [LOGICAL_AND_SYMBOL] = {.bindingPower = LOGICAL_AND_BP, .nud = nudDoubleAmpersand, .led = ledDoubleAmpersand},
+  [BITWISE_AND_SYMBOL] = {.bindingPower = BITWISE_AND_BP, .nud = nudAmpersand, .led = ledAmpersand},
+  [LOGICAL_OR_SYMBOL] = {.bindingPower = LOGICAL_OR_BP, .nud = nudDoubleVerticalBar, .led = ledDoubleVerticalBar},
+  [BITWISE_OR_SYMBOL] = {.bindingPower = BITWISE_OR_BP, .nud = nudVerticalBar, .led = ledVerticalBar},
+  [BITWISE_XOR_SYMBOL] = {.bindingPower = BITWISE_XOR_BP, .nud = nudCaret, .led =ledCaret},
+  [BITWISE_LEFT_SHIFTER_SYMBOL] = {.bindingPower = BITWISE_LEFT_SHIFTER_BP, .nud = nudDoubleLeftArrows, .led = ledDoubleLeftArrows},
+  [BITWISE_RIGHT_SHIFTER_SYMBOL] = {.bindingPower = BITWISE_RIGHT_SHIFTER_BP, .nud = nudDoubleRightArrows, .led = ledDoubleRightArrows},
+  [GREATER_SYMBOL] = {.bindingPower = GREATER_BP, .nud = nudRightArrow, .led = ledRightArrow},
+  [LESSER_SYMBOL] = {.bindingPower = LESSER_BP, .nud = nudLeftArrow, .led = ledLeftArrow},
+  [GREATER_EQUALS_SYMBOL] = {.bindingPower = GREATER_EQUALS_BP, .nud = nudRightArrowEqual, .led = ledRightArrowEqual},
+  [LESSER_EQUALS_SYMBOL] = {.bindingPower = LESSER_EQUALS_BP, .nud = nudLeftArrowEqual, .led = ledLeftArrowEqual},
+  [EQUALS_TO_SYMBOL] = {.bindingPower = EQUALS_TO_BP, .nud = nudDoubleEquals, .led = ledDoubleEquals},
+  [NOT_EQUALS_TO_SYMBOL] = {.bindingPower = NOT_EQUALS_TO_BP, .nud = nudExclamationEqual, .led = ledExclamationEqual},
   [OPENING_BRACKET_SYMBOL] = {.bindingPower = OPENING_BRACKET_BP, .nud = nudLeftBracket},
   [CLOSING_BRACKET_SYMBOL] = {.bindingPower = CLOSING_BRACKET_BP},
-  [INTEGER_SYMBOL] = {.nud = nudInt},
-  [FLOAT_SYMBOL] = {.nud = nudFloat},
+  [INTEGER_SYMBOL] = {.nud = nudInt, .led = ledInt},
+  [FLOAT_SYMBOL] = {.nud = nudFloat, .led = ledFloat},
   [NULL_SYMBOL] = {.bindingPower = WEAKEST_BP},
 };
 
@@ -48,9 +50,10 @@ TokenInfo *getTokenInfo(Token *token) {
 
   else if(token->type == TOKEN_NULL_TYPE)
     return &symbolMapTable[NULL_SYMBOL];
+
 }
 
-Token *getNextToken(Tokenizer *expression) {
+Token *getAdvanceToken(Tokenizer *expression) {
   Token *token1;
 
     token1 = getToken(expression);
@@ -243,6 +246,8 @@ Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
           case ')'  :   modifyToken(token1,CLOSING_BRACKET_SYMBOL);
                         pushBackToken(expression,token2);
                         break;
+
+          default   :   throwException(ERR_INVALID_SYMBOL, token1, "Unknown character, '%s'",token1->str);
       }
       return token1;
   }
@@ -384,10 +389,23 @@ Token *modifyToken(Token *token, int symbol) {
   return token;
 }
 
-Token *newFloatToken(double value, Token *token) {
-  token = createFloatToken(value, NULL);
-  token = modifyToken(token, FLOAT_SYMBOL);
-  return token;
+Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightToken) {
+
+  if(leftToken == NULL || rightToken == NULL) {
+    token = createFloatToken(value, NULL);
+    token = modifyToken(token, FLOAT_SYMBOL);
+    return token;
+  } else {
+    token = createFloatToken(value, NULL);
+    token = modifyToken(token, FLOAT_SYMBOL);
+    token->originalStr = leftToken->originalStr;
+    token->startColumn = leftToken->startColumn;
+    token->length = (rightToken->startColumn + rightToken->length) - leftToken->startColumn;
+    token->str = malloc(token->length);
+    strncpy(token->str,leftToken->originalStr+token->startColumn,token->length + 1);
+    token->str[token->length] = '\0';
+    return token;
+  }
 }
 
 int getTokenIntegerValue(Token *token) {
@@ -403,7 +421,7 @@ int getTokenIntegerValue(Token *token) {
   }
 
   else
-    return 0; //throw error
+    throwException(ERR_EXPECTING_INTEGER, token, "Expecting an integer, but %f is met.",((FloatToken *)token)->value);//Throw exception
 }
 
 int verifyTokensBackToBack(Token *token1, Token *token2) {
@@ -451,8 +469,29 @@ double getTokenValue(Token *token) {
       value = ((FloatToken *)token)->value;
       break;
     default :
-      value = ((IntegerToken *)token)->value; //Throw error
+      throwException(ERR_INVALID_OPERAND, token, "Invalid");//Throw
   }
-
   return value;
+}
+
+int checkTokenIfItsNULL(Token *token) {
+  if(token->type == TOKEN_NULL_TYPE)
+    return 1;
+
+  else
+    return 0;
+}
+
+Token *getNud(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+  TokenInfo *thisTokenInfo;
+  Token *nudToken;
+
+  thisTokenInfo = getTokenInfo(thisToken);
+  if(thisTokenInfo->nud == NULL) {
+    throwException(SYSTEM_ERROR, thisToken, "nud %s is NULL.", thisToken->str);
+  }
+  else {
+    nudToken = thisTokenInfo->nud(thisToken, expression, leftBindingPower);
+    return nudToken;
+  }
 }

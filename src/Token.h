@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 #include "Common.h"
-//#include "CException.h"
-//#include "Exception.h"
+#include "CException.h"
+#include "Exception.h"
 typedef enum {
   NULL_SYMBOL,
   ADD_SYMBOL,
@@ -138,6 +138,6 @@ Token *createIdentifierToken(char *str, char *originalString);
 Token *createStringToken(char *str, char *originalString);
 Token *createOperatorToken(char *str, char *originalString);
 void freeToken(void *token);
-//void dumpTokenErrorMessage(CEXCEPTION_T ex, int lineNo);
+void dumpTokenErrorMessage(CEXCEPTION_T ex, int lineNo);
 
 #endif // Token_H

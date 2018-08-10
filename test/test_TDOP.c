@@ -3,8 +3,13 @@
 #include "Tokenizer.h"
 #include "Token.h"
 #include "TokenData.h"
-#include "IndirectTDOP.h"
+//#include "IndirectTDOP.h"
 #include "Operator.h"
+#include "Exception.h"
+#include "CException.h"
+#include "Error.h"
+
+CEXCEPTION_T e;
 
 void setUp(void)
 {
@@ -20,7 +25,7 @@ void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_
   Token *token;
 
   tokenizer = createTokenizer("+");
-  token = getNextToken(tokenizer);
+  token = getAdvanceToken(tokenizer);
   tokenInfo = getTokenInfo(token);
 
   TEST_ASSERT_EQUAL (ADDITION_BP, tokenInfo->bindingPower);
@@ -31,32 +36,33 @@ void test_nudInt_given_1_should_return_1(void) {
   Token *token;
 
   expression = createTokenizer("1");
-  token = getNextToken(expression);
+  token = getAdvanceToken(expression);
   token = nudInt(token, expression, 0);
 
   TEST_ASSERT_EQUAL (1,((IntegerToken *)token)->value);
   TEST_ASSERT_EQUAL (INTEGER_SYMBOL, token->symbol);
 }
 
-void test_getNextToken_given_expression_1_should_return_token_with_symbol_1(void) {
+void test_getAdvanceToken_given_expression_1_should_return_token_with_symbol_1(void) {
   Tokenizer *expression;
   Token *token;
 
   expression = createTokenizer(" 1 ");
-  token = getNextToken(expression);
+  token = getAdvanceToken(expression);
 
+  TEST_ASSERT_EQUAL (TOKEN_INTEGER_TYPE, token->type);
   TEST_ASSERT_EQUAL (1,((IntegerToken *)token)->value);
   TEST_ASSERT_EQUAL (INTEGER_SYMBOL, token->symbol);
 }
 
-void test_getNextToken_given_expression_23_plus_98_should_return_3_tokens_23_plus_98(void) {
+void test_getAdvanceToken_given_expression_23_plus_98_should_return_3_tokens_23_plus_98(void) {
   Tokenizer *expression;
   Token *v1Token, *v2Token, *opToken;
 
   expression = createTokenizer(" 23 + 98 ");
-  v1Token = getNextToken(expression);
-  opToken = getNextToken(expression);
-  v2Token = getNextToken(expression);
+  v1Token = getAdvanceToken(expression);
+  opToken = getAdvanceToken(expression);
+  v2Token = getAdvanceToken(expression);
 
   TEST_ASSERT_EQUAL (23,((IntegerToken *)v1Token)->value);
   TEST_ASSERT_EQUAL (INTEGER_SYMBOL, v1Token->symbol);
@@ -101,44 +107,44 @@ void test_modifyToken_given_logical_AND_symbol_should_return_double_AND_str_in_t
   TEST_ASSERT_EQUAL(LOGICAL_AND_SYMBOL, token->symbol);
 }
 
-void test_getNextToken_given_NOT_EQUAL_expression_should_return_token_str_NOT_EQUAL(void) {
+void test_getAdvanceToken_given_NOT_EQUAL_expression_should_return_token_str_NOT_EQUAL(void) {
   Tokenizer *expression;
   Token *token;
 
   expression = createTokenizer(" != ");
-  token = getNextToken(expression);
+  token = getAdvanceToken(expression);
 
   TEST_ASSERT_EQUAL_STRING ("!=", token->str);
   TEST_ASSERT_EQUAL(NOT_EQUALS_TO_SYMBOL, token->symbol);
 }
 
-void test_getNextToken_given_separated_AND_expression_should_return_token_str_BITWISE_OR(void) {
+void test_getAdvanceToken_given_separated_AND_expression_should_return_token_str_BITWISE_OR(void) {
   Tokenizer *expression;
   Token *token;
 
   expression = createTokenizer(" &   & ");
-  token = getNextToken(expression);
+  token = getAdvanceToken(expression);
 
   TEST_ASSERT_EQUAL_STRING ("&", token->str);
   TEST_ASSERT_EQUAL(BITWISE_AND_SYMBOL, token->symbol);
 }
 
-void test_getNextToken_given_negative_2_expression_should_return_token_with_negative_symbol(void) {
+void test_getAdvanceToken_given_negative_2_expression_should_return_token_with_negative_symbol(void) {
   Tokenizer *expression;
   Token *token;
 
   expression = createTokenizer(" -2 ");
-  token = getNextToken(expression);
+  token = getAdvanceToken(expression);
 
   TEST_ASSERT_EQUAL (NEGATIVE_SYMBOL, token->symbol);
 }
 
-void test_getNextToken_given_subtract_54_expression_should_return_token_with_sub_symbol(void) {
+void test_getAdvanceToken_given_subtract_54_expression_should_return_token_with_sub_symbol(void) {
   Tokenizer *expression;
   Token *token;
 
   expression = createTokenizer(" - 54 ");
-  token = getNextToken(expression);
+  token = getAdvanceToken(expression);
 
   TEST_ASSERT_EQUAL (SUB_SYMBOL, token->symbol);
 }
@@ -191,6 +197,24 @@ void test_TDOP_given_logical_not_0_expect_true (void) {
   token = TDOP(expression);
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
+}
+
+void test_getTokenIntegerValue_given_a_token_with_float_value_with_no_fractional_part_expect_an_integer_number_will_return(void) {
+  Token *token;
+  int value;
+
+  token = newFloatToken(8.0000,token,NULL,NULL);
+  value = getTokenIntegerValue(token);
+
+  TEST_ASSERT_EQUAL (8,value);
+}
+
+void test_getTokenIntegerValue_given_a_token_with_float_value_fractional_part_expect_return_false(void) {
+  Token *token;
+  token = newFloatToken(8.832, token, NULL,NULL);
+
+  TEST_ASSERT_EQUAL_FLOAT (8.832,((FloatToken *)token)->value);
+  TEST_ASSERT_EQUAL (TOKEN_FLOAT_TYPE, token->type);
 }
 
 void test_TDOP_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_84(void) {
@@ -400,17 +424,17 @@ void test_TDOP_testing_less_than_equal_to_given_922_less_than_equal_to_922_shoul
   expression = createTokenizer( " 922<=922 " );
   token = TDOP(expression);
 
-  TEST_ASSERT_TRUE (((FloatToken *)token)->value);
+  TEST_ASSERT_EQUAL (1, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_less_than_equal_to_given_expression_involving_lesser_than_equal_to_should_solve_correctly(void) {
   Tokenizer *expression;
   Token *token;
 
-  expression = createTokenizer( " 37<<4+(67<=(8^91)) " );
+  expression = createTokenizer( " 37 <= 2 + 1 " );
   token = TDOP(expression);
 
-  TEST_ASSERT_EQUAL (37<<4+(67<=(8^91)), ((FloatToken *)token)->value);
+  TEST_ASSERT_EQUAL (37 <= 2 + 1, ((FloatToken *)token)->value);
 }
 
 void test_TDOP_testing_greater_than_equal_to_given_43_greater_than_equal_to_44_should_return_false(void) {
@@ -463,22 +487,12 @@ void test_TDOP_testing_not_equal_to_given_157_not_equals_to_157_should_return_fa
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
 }
 
-void test_TDOP_testing_not_equal_to_given_expression_involving_not_equal_to_should_solve_correctly(void) {
-  Tokenizer *expression;
-  Token *token;
-
-  expression = createTokenizer( "6&&2/(92^8!=54) + 9" );
-  token = TDOP(expression);
-
-  TEST_ASSERT_FALSE(((FloatToken *)token)->value);
-}
-
 void test_nudInt_given_8_point_64_should_return_8_point_64_token(void) {
   Tokenizer *expression;
   Token *token;
 
   expression = createTokenizer("8.64");
-  token = getNextToken(expression);
+  token = getAdvanceToken(expression);
   token = nudFloat(token, expression, 0);
 
   TEST_ASSERT_EQUAL_FLOAT(8.64,((FloatToken *)token)->value);
@@ -490,7 +504,7 @@ void test_getTokenType_given_a_floating_number_should_return_true(void) {
   Token *token;
 
   expression = createTokenizer("8.3");
-  token = getNextToken(expression);
+  token = getAdvanceToken(expression);
 
   TEST_ASSERT_FALSE(getTokenType(token));
   TEST_ASSERT_EQUAL(TOKEN_FLOAT_TYPE, token->type);
@@ -506,22 +520,23 @@ void test_TDOP_given_2_point_32_minus_9_point_94_should_return_11(void) {
   TEST_ASSERT_EQUAL_FLOAT (2.20 - -9, ((FloatToken *)token)->value);
 }
 
-void test_getTokenIntegerValue_given_a_token_with_float_value_with_no_fractional_part_expect_an_integer_number_will_return(void) {
-  Token *token;
-  int value;
 
-  token = newFloatToken(8.0000, token);
-  value = getTokenIntegerValue(token);
+void test_newFloatToken_given_a_float_number_should_display_correctly(void) {
+  Tokenizer *expression;
+  Token *leftToken, *rightToken, *token;
 
-  TEST_ASSERT_EQUAL (8,value);
-}
+  expression = createTokenizer(" 7.4  5.6 ");
+  leftToken = getAdvanceToken(expression);
+  rightToken = getAdvanceToken(expression);
+  token = newFloatToken(13,token,leftToken, rightToken);
 
-void test_getTokenIntegerValue_given_a_token_with_float_value_fractional_part_expect_return_false(void) {
-  Token *token;
+  TEST_ASSERT_EQUAL(TOKEN_FLOAT_TYPE, token->type);
+  TEST_ASSERT_EQUAL(FLOAT_SYMBOL, token->symbol);
+  TEST_ASSERT_EQUAL_STRING(" 7.4  5.6 ", token->originalStr);
+  TEST_ASSERT_EQUAL(1, token->startColumn);
+  TEST_ASSERT_EQUAL(8, token->length);
+  TEST_ASSERT_EQUAL_STRING("7.4  5.6", token->str);
 
-  token = newFloatToken(8.832, token);
-
-  TEST_ASSERT_FALSE(getTokenIntegerValue(token));
 }
 
 void test_getTokenValue_given_an_integer_number_should_return_value_correctly(void) {
@@ -530,7 +545,7 @@ void test_getTokenValue_given_an_integer_number_should_return_value_correctly(vo
   double value;
 
   expression = createTokenizer(" 6 ");
-  token = getNextToken(expression);
+  token = getAdvanceToken(expression);
 
   value = getTokenValue(token);
 
@@ -543,9 +558,112 @@ void test_getTokenValue_given_a_floating_point_number_should_return_its_own_valu
   double value;
 
   expression = createTokenizer(" 834.1 ");
-  token = getNextToken(expression);
+  token = getAdvanceToken(expression);
 
   value = getTokenValue(token);
 
   TEST_ASSERT_EQUAL_FLOAT(834.1, value);
 }
+
+/*void test_TDOP_testing_not_equal_to_given_expression_involving_not_equal_to_should_solve_correctly(void) {
+  Tokenizer *expression;
+  Token *token;
+  Try {
+  expression = createTokenizer( "6&&2/(92^8!=54) + 9" );
+  token = TDOP(expression);
+  }Catch(e) {
+    dumpTokenErrorMessage(e,1);
+    TEST_ASSERT_EQUAL (ERR_EXPECTING_INTEGER, e->errorCode);
+    freeException(e);
+  }
+}
+
+void test_TDOP_given_unmatched_bracket_expression_should_throw_ERR_MISSING_BRACKET(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  Try {
+  expression = createTokenizer( "(7 + 6 ");
+  token = TDOP(expression);
+  TEST_FAIL_MESSAGE ("Expected ERR_MISSING_BRACKET to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_MISSING_BRACKET, e->errorCode);
+  freeException(e);
+  }
+}
+
+void test_TDOP_given_fractional_number_in_logical_operation_should_throw_ERR_NOT_AN_INTEGER(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  Try {
+  expression = createTokenizer( " 8.23 << 5");
+  token = TDOP(expression);
+  TEST_FAIL_MESSAGE ("Expected ERR_EXPECTING_INTEGER to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_EXPECTING_INTEGER, e->errorCode);
+  freeException(e);
+  }
+}
+
+void test_given_unknown_character_expect_ERR_INVALID_SYMBOL(void) {
+Tokenizer *expression;
+Token *token;
+
+  Try {
+  expression = createTokenizer( " 7.24 ? 2");
+  token = TDOP(expression);
+  TEST_FAIL_MESSAGE ("Expected ERR_INVALID_SYMBOL to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_INVALID_SYMBOL, e->errorCode);
+  freeException(e);
+  }
+}
+
+void test_given_invalid_expression_should_return_ERR_INVALID_EXPRESSION(void) {
+Tokenizer *expression;
+Token *token;
+
+  Try {
+  expression = createTokenizer( " 3 = =2 ");
+  token = TDOP(expression);
+  TEST_FAIL_MESSAGE ("Expected ERR_INVALID_SYMBOL to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_INVALID_EXPRESSION, e->errorCode);
+  freeException(e);
+  }
+}
+
+void test_given_invalid_symbol_placement_nud_is_NULL_should_return_SYSTEM_ERROR(void) {
+Tokenizer *expression;
+Token *token;
+
+  Try {
+  expression = createTokenizer( " *2 ");
+  token = TDOP(expression);
+  TEST_FAIL_MESSAGE ("Expected SYSTEM_ERROR to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (SYSTEM_ERROR, e->errorCode);
+  freeException(e);
+  }
+}
+
+void test_given_invalid_symbol_placement_should_return_INVALID_SYMBOL_PLACEMENT(void) {
+Tokenizer *expression;
+Token *token;
+
+  Try {
+  expression = createTokenizer( " /2 ");
+  token = TDOP(expression);
+  TEST_FAIL_MESSAGE ("Expected INVALID_SYMBOL_PLACEMENT to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (INVALID_SYMBOL_PLACEMENT, e->errorCode);
+  freeException(e);
+  }
+}*/
