@@ -69,6 +69,9 @@ Token *ledLeftArrowEqual(Token *leftToken, Tokenizer *expression);
 Token *nudRightArrowEqual(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower);
 Token *ledRightArrowEqual(Token *leftToken, Tokenizer *expression);
 
+Token *nudEqual(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *ledEqual(Token *leftToken, Tokenizer *expression);
+
 Token *nudDoubleEquals(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower);
 Token *ledDoubleEquals(Token *leftToken, Tokenizer *expression);
 

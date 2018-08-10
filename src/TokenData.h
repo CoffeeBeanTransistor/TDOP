@@ -23,5 +23,6 @@ Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightT
 int getTokenIntegerValue(Token *token);
 int checkTokenIfItsNULL(Token *token);
 Token *getNud(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *getLed(Token *thisToken, Token *leftToken, Tokenizer *expression);
 
 #endif // _TokenData_H

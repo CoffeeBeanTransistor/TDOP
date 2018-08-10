@@ -29,6 +29,7 @@ TokenInfo symbolMapTable[256] = {
   [GREATER_EQUALS_SYMBOL] = {.bindingPower = GREATER_EQUALS_BP, .nud = nudRightArrowEqual, .led = ledRightArrowEqual},
   [LESSER_EQUALS_SYMBOL] = {.bindingPower = LESSER_EQUALS_BP, .nud = nudLeftArrowEqual, .led = ledLeftArrowEqual},
   [EQUALS_TO_SYMBOL] = {.bindingPower = EQUALS_TO_BP, .nud = nudDoubleEquals, .led = ledDoubleEquals},
+  [EQUAL_SYMBOL] = {.bindingPower = EQUAL_BP, .nud = nudEqual, .led = ledEqual},
   [NOT_EQUALS_TO_SYMBOL] = {.bindingPower = NOT_EQUALS_TO_BP, .nud = nudExclamationEqual, .led = ledExclamationEqual},
   [OPENING_BRACKET_SYMBOL] = {.bindingPower = OPENING_BRACKET_BP, .nud = nudLeftBracket},
   [CLOSING_BRACKET_SYMBOL] = {.bindingPower = CLOSING_BRACKET_BP},
@@ -220,13 +221,13 @@ Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
                             freeToken(token2);
                           }
                           else {
-                            modifyToken(token1,EQUALS_TO_SYMBOL);
+                            modifyToken(token1,EQUAL_SYMBOL);
                             pushBackToken(expression,token2);
                           }
                           break;
 
                         default :
-                            modifyToken(token1,EQUALS_TO_SYMBOL);
+                            modifyToken(token1,EQUAL_SYMBOL);
                             pushBackToken(expression,token2);
                       }
                       break;
@@ -348,6 +349,10 @@ Token *modifyToken(Token *token, int symbol) {
 
     case CLOSING_BRACKET_SYMBOL :
       token->symbol = CLOSING_BRACKET_SYMBOL;
+      break;
+
+    case EQUAL_SYMBOL :
+      token->symbol = EQUAL_SYMBOL;
       break;
 
     case BITWISE_LEFT_SHIFTER_SYMBOL  :
@@ -493,5 +498,19 @@ Token *getNud(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPowe
   else {
     nudToken = thisTokenInfo->nud(thisToken, expression, leftBindingPower);
     return nudToken;
+  }
+}
+
+Token *getLed(Token *thisToken, Token *leftToken, Tokenizer *expression) {
+  TokenInfo *thisTokenInfo;
+  Token *ledToken;
+
+  thisTokenInfo = getTokenInfo(thisToken);
+  if(thisTokenInfo->led == NULL) {
+    throwException(SYSTEM_ERROR, thisToken, "led %s is NULL.", thisToken->str);
+  }
+  else {
+    ledToken = thisTokenInfo->led(leftToken, expression);
+    return ledToken;
   }
 }

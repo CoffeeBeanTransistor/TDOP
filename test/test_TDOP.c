@@ -608,7 +608,7 @@ void test_TDOP_given_fractional_number_in_logical_operation_should_throw_ERR_NOT
   }
 }
 
-void test_given_unknown_character_expect_ERR_INVALID_SYMBOL(void) {
+void test_given_unknown_character_should_throw_ERR_INVALID_SYMBOL(void) {
 Tokenizer *expression;
 Token *token;
 
@@ -623,37 +623,23 @@ Token *token;
   }
 }
 
-void test_given_invalid_expression_should_return_ERR_INVALID_EXPRESSION(void) {
+void test_given_a_not_supported_operator_should_throw_ERR_UNSUPPORTED_SYMBOL(void) {
 Tokenizer *expression;
 Token *token;
 
   Try {
   expression = createTokenizer( " 3 = =2 ");
   token = TDOP(expression);
-  TEST_FAIL_MESSAGE ("Expected ERR_INVALID_SYMBOL to be thrown! But no exception is thrown.");
+  TEST_FAIL_MESSAGE ("Expected UNSUPPORTED_SYMBOL to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
-  TEST_ASSERT_EQUAL (ERR_INVALID_EXPRESSION, e->errorCode);
+  TEST_ASSERT_EQUAL (UNSUPPORTED_SYMBOL, e->errorCode);
   freeException(e);
   }
 }
 
-void test_given_invalid_symbol_placement_nud_is_NULL_should_return_SYSTEM_ERROR(void) {
-Tokenizer *expression;
-Token *token;
 
-  Try {
-  expression = createTokenizer( " *2 ");
-  token = TDOP(expression);
-  TEST_FAIL_MESSAGE ("Expected SYSTEM_ERROR to be thrown! But no exception is thrown.");
-  } Catch(e) {
-  dumpTokenErrorMessage(e,1);
-  TEST_ASSERT_EQUAL (SYSTEM_ERROR, e->errorCode);
-  freeException(e);
-  }
-}
-
-void test_given_invalid_symbol_placement_should_return_INVALID_SYMBOL_PLACEMENT(void) {
+void test_given_invalid_symbol_placement_should_throw_INVALID_SYMBOL_PLACEMENT(void) {
 Tokenizer *expression;
 Token *token;
 
@@ -664,6 +650,36 @@ Token *token;
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
   TEST_ASSERT_EQUAL (INVALID_SYMBOL_PLACEMENT, e->errorCode);
+  freeException(e);
+  }
+}
+
+/*void test_given_2_brackets_expression_with_no_operator_in_between_should_throw_ERR_EXPECTING_OPERATOR(void) {
+Tokenizer *expression;
+Token *token;
+
+  Try {
+  expression = createTokenizer( " 5 5 ");
+  token = TDOP(expression);
+  TEST_FAIL_MESSAGE ("Expected ERR_EXPECTING_OPERATOR to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_EXPECTING_OPERATOR, e->errorCode);
+  freeException(e);
+  }
+}
+
+void test_given_invalid_symbol_placement_nud_is_NULL_should_throw_SYSTEM_ERROR(void) {
+Tokenizer *expression;
+Token *token;
+
+  Try {
+  expression = createTokenizer( " *2 ");
+  token = TDOP(expression);
+  TEST_FAIL_MESSAGE ("Expected SYSTEM_ERROR to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (SYSTEM_ERROR, e->errorCode);
   freeException(e);
   }
 }*/
