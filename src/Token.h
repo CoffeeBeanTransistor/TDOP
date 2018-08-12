@@ -77,7 +77,7 @@ typedef enum {
   LOGICAL_AND_BP = 5,
   LOGICAL_OR_BP = 4,
   EQUAL_BP = 2,
-  OPENING_BRACKET_BP = 0,
+  OPENING_BRACKET_BP = 1,
   CLOSING_BRACKET_BP = 0,
   WEAKEST_BP = 0,
 } BindingPower;

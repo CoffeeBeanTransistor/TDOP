@@ -31,7 +31,7 @@ TokenInfo symbolMapTable[256] = {
   [EQUALS_TO_SYMBOL] = {.bindingPower = EQUALS_TO_BP, .nud = nudDoubleEquals, .led = ledDoubleEquals},
   [EQUAL_SYMBOL] = {.bindingPower = EQUAL_BP, .nud = nudEqual, .led = ledEqual},
   [NOT_EQUALS_TO_SYMBOL] = {.bindingPower = NOT_EQUALS_TO_BP, .nud = nudExclamationEqual, .led = ledExclamationEqual},
-  [OPENING_BRACKET_SYMBOL] = {.bindingPower = OPENING_BRACKET_BP, .nud = nudLeftBracket},
+  [OPENING_BRACKET_SYMBOL] = {.bindingPower = OPENING_BRACKET_BP, .nud = nudLeftBracket, .led = ledLeftBracket},
   [CLOSING_BRACKET_SYMBOL] = {.bindingPower = CLOSING_BRACKET_BP},
   [INTEGER_SYMBOL] = {.nud = nudInt, .led = ledInt},
   [FLOAT_SYMBOL] = {.nud = nudFloat, .led = ledFloat},
@@ -426,7 +426,7 @@ int getTokenIntegerValue(Token *token) {
   }
 
   else
-    throwException(ERR_EXPECTING_INTEGER, token, "Expecting an integer, but %f is met.",((FloatToken *)token)->value);//Throw exception
+    throwException(ERR_NOT_AN_INTEGER, token, "Expecting an integer, but %f is met.",((FloatToken *)token)->value);//Throw exception
 }
 
 int verifyTokensBackToBack(Token *token1, Token *token2) {
@@ -487,7 +487,20 @@ int checkTokenIfItsNULL(Token *token) {
     return 0;
 }
 
-Token *getNud(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+int checkNextTokenIfItsInteger(Tokenizer *expression) {
+  Token *nextTok;
+  nextTok = getAdvanceToken(expression);
+  if(nextTok->type == TOKEN_FLOAT_TYPE || nextTok->type == TOKEN_INTEGER_TYPE) {
+    pushBackToken(expression, nextTok);
+    return 1;
+  }
+  else {
+    pushBackToken(expression, nextTok);
+    return 0;
+  }
+}
+
+Token *getNud(Token *thisToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
   TokenInfo *thisTokenInfo;
   Token *nudToken;
 
@@ -496,7 +509,7 @@ Token *getNud(Token *thisToken, Tokenizer *expression, uint32_t *leftBindingPowe
     throwException(SYSTEM_ERROR, thisToken, "nud %s is NULL.", thisToken->str);
   }
   else {
-    nudToken = thisTokenInfo->nud(thisToken, expression, leftBindingPower);
+    nudToken = thisTokenInfo->nud(thisToken, nextToken, expression, leftBindingPower);
     return nudToken;
   }
 }
@@ -510,7 +523,7 @@ Token *getLed(Token *thisToken, Token *leftToken, Tokenizer *expression) {
     throwException(SYSTEM_ERROR, thisToken, "led %s is NULL.", thisToken->str);
   }
   else {
-    ledToken = thisTokenInfo->led(leftToken, expression);
+    ledToken = thisTokenInfo->led(leftToken, thisToken, expression);
     return ledToken;
   }
 }
