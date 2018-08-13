@@ -576,8 +576,6 @@ void test_getTokenValue_given_a_floating_point_number_should_return_its_own_valu
   TEST_ASSERT_EQUAL_FLOAT(834.1, value);
 }
 
-
-
 void test_TDOP_given_unmatched_bracket_expression_should_throw_ERR_MISSING_BRACKET(void) {
   Tokenizer *expression;
   Token *token;
@@ -709,6 +707,21 @@ Token *token;
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
   TEST_ASSERT_EQUAL (ERR_EXPECTING_OPERATOR, e->errorCode);
+  freeException(e);
+  }
+}
+
+void test_TDOP_given_a_left_number_an_operator_but_no_right_token_should_throw_ERR_EXPECTING_OPERAND(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  Try {
+  expression = createTokenizer( " 7 <<  " );
+  token = TDOP(expression);
+  TEST_FAIL_MESSAGE ("Expected ERR_EXPECTING_OPERAND to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_EXPECTING_OPERAND, e->errorCode);
   freeException(e);
   }
 }

@@ -32,10 +32,10 @@ TokenInfo symbolMapTable[256] = {
   [EQUAL_SYMBOL] = {.bindingPower = EQUAL_BP, .nud = nudEqual, .led = ledEqual},
   [NOT_EQUALS_TO_SYMBOL] = {.bindingPower = NOT_EQUALS_TO_BP, .nud = nudExclamationEqual, .led = ledExclamationEqual},
   [OPENING_BRACKET_SYMBOL] = {.bindingPower = OPENING_BRACKET_BP, .nud = nudLeftBracket, .led = ledLeftBracket},
-  [CLOSING_BRACKET_SYMBOL] = {.bindingPower = CLOSING_BRACKET_BP},
+  [CLOSING_BRACKET_SYMBOL] = {.bindingPower = CLOSING_BRACKET_BP, .nud = nudRightBracket},
   [INTEGER_SYMBOL] = {.nud = nudInt, .led = ledInt},
   [FLOAT_SYMBOL] = {.nud = nudFloat, .led = ledFloat},
-  [NULL_SYMBOL] = {.bindingPower = WEAKEST_BP},
+  [NULL_SYMBOL] = {.bindingPower = WEAKEST_BP, .nud = nudNULL},
 };
 
 TokenInfo *getTokenInfo(Token *token) {
@@ -474,7 +474,7 @@ double getTokenValue(Token *token) {
       value = ((FloatToken *)token)->value;
       break;
     default :
-      throwException(ERR_INVALID_OPERAND, token, "Invalid");//Throw
+      throwException(ERR_INVALID_OPERAND, token, "Invalid operand : '%s'.", token->str);//Throw
   }
   return value;
 }

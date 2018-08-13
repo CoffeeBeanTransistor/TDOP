@@ -78,8 +78,11 @@ Token *ledDoubleEquals(Token *leftToken, Token *thisToken, Tokenizer *expression
 Token *nudExclamationEqual(Token *exclEquToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
 Token *ledExclamationEqual(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudLeftBracket(Token *leftBracket, Token *nextToken, Tokenizer *expression, uint32_t *eftBindingPower);
-Token *ledLeftBracket(Token *leftBracket, Token *thisToken, Tokenizer *expression);
+Token *nudLeftBracket(Token *leftBracketToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *ledLeftBracket(Token *leftToken, Token *leftBracketToken, Tokenizer *expression);
+
+Token *nudRightBracket(Token *rightBracketToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudNULL(Token *nullToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
 
 int matchBracket(Tokenizer *expression, uint32_t *leftBindingPower);
 //Token *nudRightBracket(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);

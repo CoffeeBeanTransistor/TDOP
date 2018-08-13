@@ -11,6 +11,7 @@
 #define ERR_UNDEFINED             37
 #define ERR_INVALID_EXPRESSION    20
 #define ERR_EXPECTING_OPERATOR    26
-
+#define ERR_EXPECTING_OPERAND     31
+#define ERR_INVALID_OPERAND       35
 
 #endif // Error_H
