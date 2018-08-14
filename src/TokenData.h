@@ -19,11 +19,10 @@ Token *getAdvanceToken(Tokenizer *expression);
 int verifyTokensBackToBack(Token *token1, Token *token2);
 Token *modifyToken(Token *token, int symbol);
 double getTokenValue(Token *token);
-Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightToken);
 int getTokenIntegerValue(Token *token);
+Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightToken);
 int checkTokenIfItsNULL(Token *token);
 Token *getNud(Token *thisToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
 Token *getLed(Token *thisToken, Token *leftToken, Tokenizer *expression);
-int checkNextTokenIfItsInteger(Tokenizer *expression);
 
 #endif // _TokenData_H

@@ -218,7 +218,6 @@ Token *getTokenSymbol(Token *token1, Tokenizer *expression) {
                         case '='  :
                           if(verifyTokensBackToBack(token1,token2)) {
                             modifyToken(token1,EQUALS_TO_SYMBOL);
-                            freeToken(token2);
                           }
                           else {
                             modifyToken(token1,EQUAL_SYMBOL);
@@ -485,19 +484,6 @@ int checkTokenIfItsNULL(Token *token) {
 
   else
     return 0;
-}
-
-int checkNextTokenIfItsInteger(Tokenizer *expression) {
-  Token *nextTok;
-  nextTok = getAdvanceToken(expression);
-  if(nextTok->type == TOKEN_FLOAT_TYPE || nextTok->type == TOKEN_INTEGER_TYPE) {
-    pushBackToken(expression, nextTok);
-    return 1;
-  }
-  else {
-    pushBackToken(expression, nextTok);
-    return 0;
-  }
 }
 
 Token *getNud(Token *thisToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {

@@ -14,7 +14,6 @@ Token *TDOP(Tokenizer *expression) {
     throwException(ERR_INVALID_EXPRESSION,thisToken,"The expression is empty!");
   else {
     token = evaluate(expression, WEAKEST_BP);
-    freeTokenizer(expression);
     return token;
   }
 }
