@@ -88,13 +88,15 @@ void test_createString_given_expression_of_2_back_to_back_ampersand_expect_strin
   Token *token;
   char *newTokenStr;
 
-  expression = createTokenizer (" && ");
+  expression = createTokenizer (" && +");
   token = getToken(expression);
   newTokenStr = createString(&token->originalStr[token->startColumn], 2);
 
   TEST_ASSERT_EQUAL_STRING ("&&",newTokenStr);
+  free(newTokenStr);
 }
-/*void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
+
+void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
   Tokenizer *tokenizer;
   TokenInfo *tokenInfo;
   Token *token;
@@ -108,15 +110,14 @@ void test_createString_given_expression_of_2_back_to_back_ampersand_expect_strin
 
 void test_nudInt_given_1_should_return_1(void) {
   Tokenizer *expression;
-  Token *token, *token1, *token2;
+  Token *token;
 
   expression = createTokenizer("1");
-  token1 = getAdvanceToken(expression);
-  token2 = getAdvanceToken(expression);
-  token = nudInt(token1, token2, expression, 0);
+  token = getAdvanceToken(expression);
+  token = nudInt(token, expression);
 
-  TEST_ASSERT_EQUAL (1,((IntegerToken *)token1)->value);
-  TEST_ASSERT_EQUAL (INTEGER_SYMBOL, token1->symbol);
+  TEST_ASSERT_EQUAL (1,((IntegerToken *)token)->value);
+  TEST_ASSERT_EQUAL (INTEGER_SYMBOL, token->symbol);
   freeTokenizer(expression);
 }
 
@@ -175,7 +176,7 @@ void test_verifyTokenBackToBack_given_double_separated_EQUALS_should_return_fals
   freeTokenizer(expression);
 }
 
-void test_modifyToken_given_logical_AND_symbol_should_return_double_AND_str_in_token(void) {
+/*void test_modifyToken_given_logical_AND_symbol_should_return_double_AND_str_in_token(void) {
   Tokenizer *expression;
   Token *token, *token1;
 
@@ -186,7 +187,7 @@ void test_modifyToken_given_logical_AND_symbol_should_return_double_AND_str_in_t
   TEST_ASSERT_EQUAL_STRING ("&&", token->str);
   TEST_ASSERT_EQUAL(LOGICAL_AND_SYMBOL, token->symbol);
   freeTokenizer(expression);
-}
+}*/
 
 void test_getAdvanceToken_given_NOT_EQUAL_expression_should_return_token_str_NOT_EQUAL(void) {
   Tokenizer *expression;
@@ -223,7 +224,7 @@ void test_getAdvanceToken_given_negative_2_expression_should_return_token_with_n
   freeTokenizer(expression);
 }
 
-void test_getAdvanceToken_given_subtract_54_expression_should_return_token_with_sub_symbol(void) {
+/*void test_getAdvanceToken_given_subtract_54_expression_should_return_token_with_sub_symbol(void) {
   Tokenizer *expression;
   Token *token;
 

@@ -9,10 +9,7 @@
 
 Token *thisToken;
 
-Token *nudInt (Token *thisToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
-    if(nextToken->type == TOKEN_INTEGER_TYPE || nextToken->type == TOKEN_FLOAT_TYPE)
-      throwException(ERR_EXPECTING_OPERATOR, nextToken, "Expecting an operator, but '%s' is met.", nextToken->str);
-    else
+Token *nudInt (Token *thisToken, Tokenizer *expression) {
       return thisToken;
 }
 
@@ -20,7 +17,7 @@ Token *ledInt (Token *intToken, Token *thisToken, Tokenizer *expression) {
     throwException(INVALID_SYMBOL_PLACEMENT, intToken, "''%s'' should not appear at here.", intToken->str);
 }
 
-Token *nudFloat(Token *floatToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudFloat(Token *floatToken, Tokenizer *expression) {
   return floatToken;
 }
 
@@ -28,7 +25,7 @@ Token *ledFloat (Token *leftToken, Token *thisToken, Tokenizer *expression) {
     throwException(INVALID_SYMBOL_PLACEMENT, leftToken, "''%s'' should not appear at here.", leftToken->str);
 }
 
-Token *nudPlus(Token *plusToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudPlus(Token *plusToken, Tokenizer *expression) {
   return evaluate(expression, ADDITION_BP);
 }
 
@@ -45,37 +42,17 @@ Token *ledPlus(Token *leftToken, Token *thisToken, Tokenizer *expression){
   return token;
 }
 
-Token *nudNegative(Token *negToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudNegative(Token *minusToken, Tokenizer *expression) {
   double value;
   Token *token;
+
 
     token = evaluate(expression, UNARY_MINUS_BP);
     value = getTokenValue(token);
     value = -value;
-    token = newFloatToken(value,token,negToken,token);
-    return token;
-}
-
-Token *ledNegative (Token *leftToken, Token *thisToken, Tokenizer *expression) {
-  Token  *rightToken, *token;
-  double v1, v2, ans;
-
-    rightToken = evaluate(expression, SUBTRACTION_BP);
-    v1 = getTokenValue(leftToken);
-    v2 = getTokenValue(rightToken);
-    ans =  v1 - v2;
-    token = newFloatToken(ans, token, leftToken, rightToken);
-    return token;
-}
-
-Token *nudMinus(Token *minusToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
-  double value;
-  Token *token;
-
-    token = evaluate(expression, SUBTRACTION_BP);
-    value = getTokenValue(token);
-    value = -value;
     token = newFloatToken(value,token,minusToken,token);
+    token->symbol = NEGATIVE_SYMBOL;
+    freeToken(minusToken);
     return token;
 }
 
@@ -91,7 +68,7 @@ Token *ledMinus(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     return token;
 }
 
-Token *nudAsterisk (Token *astToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudAsterisk (Token *astToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, astToken, "'%s' should not appear at here.", astToken->str);
 }
 
@@ -107,7 +84,7 @@ Token *ledAsterisk(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     return token;
 }
 
-Token *nudSlash (Token *slashToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudSlash (Token *slashToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, slashToken, "'%s' should not appear at here.", slashToken->str);
 }
 
@@ -128,7 +105,7 @@ Token *ledSlash(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     }
 }
 
-Token *nudPercent (Token *percToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudPercent (Token *percToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, percToken, "'%s' should not appear at here.", percToken->str);
 }
 
@@ -149,7 +126,7 @@ Token *ledPercent(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     }
 }
 
-Token *nudExclamation(Token *exclToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudExclamation(Token *exclToken, Tokenizer *expression) {
   Token *token;
 
   token = evaluate(expression, LOGICAL_NOT_BP);
@@ -167,7 +144,7 @@ Token *ledExclamation(Token *leftToken, Token *thisToken, Tokenizer *expression)
   throwException(INVALID_SYMBOL_PLACEMENT, thisToken, "'%s' should not appear at here.", thisToken->str);
 }
 
-Token *nudTilde(Token *tildeToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudTilde(Token *tildeToken, Tokenizer *expression) {
   Token *token;
   int value;
 
@@ -184,7 +161,7 @@ Token *ledTilde(Token *leftToken, Token *thisToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, thisToken, "'%s' should not appear at here.", thisToken->str);
 }
 
-Token *nudDoubleAmpersand(Token *doublAampToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudDoubleAmpersand(Token *doublAampToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, doublAampToken, "'%s' should not appear at here.", doublAampToken->str);
 }
 
@@ -202,7 +179,7 @@ Token *ledDoubleAmpersand(Token *leftToken, Token *thisToken, Tokenizer *express
   return token;
 }
 
-Token *nudAmpersand(Token *ampToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudAmpersand(Token *ampToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, ampToken, "'%s' should not appear at here.", ampToken->str);
 }
 
@@ -220,7 +197,7 @@ Token *ledAmpersand(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     return token;
 }
 
-Token *nudDoubleVerticalBar(Token *doubleVertToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudDoubleVerticalBar(Token *doubleVertToken, Tokenizer *expression) {
     throwException(INVALID_SYMBOL_PLACEMENT, doubleVertToken, "'%s' should not appear at here.", doubleVertToken->str);
 }
 
@@ -237,7 +214,7 @@ Token *ledDoubleVerticalBar(Token *leftToken, Token *thisToken, Tokenizer *expre
     return token;
 }
 
-Token *nudVerticalBar(Token *vertToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudVerticalBar(Token *vertToken, Tokenizer *expression) {
     throwException(INVALID_SYMBOL_PLACEMENT, vertToken, "'%s' should not appear at here.", vertToken->str);
 }
 
@@ -254,7 +231,7 @@ Token *ledVerticalBar(Token *leftToken, Token *thisToken, Tokenizer *expression)
     return token;
 }
 
-Token *nudCaret(Token *caretToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudCaret(Token *caretToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, caretToken, "'%s' should not appear at here.", caretToken->str);
 }
 
@@ -271,7 +248,7 @@ Token *ledCaret(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     return token;
 }
 
-Token *nudDoubleLeftArrows(Token *doubleLeftArrToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudDoubleLeftArrows(Token *doubleLeftArrToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, doubleLeftArrToken, "'%s' should not appear at here.", doubleLeftArrToken->str);
 }
 
@@ -288,7 +265,7 @@ Token *ledDoubleLeftArrows(Token *leftToken, Token *thisToken, Tokenizer *expres
     return token;
 }
 
-Token *nudDoubleRightArrows(Token *doubleRightArrToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudDoubleRightArrows(Token *doubleRightArrToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, doubleRightArrToken, "'%s' should not appear at here.", doubleRightArrToken->str);
 }
 
@@ -305,7 +282,7 @@ Token *ledDoubleRightArrows(Token *leftToken, Token *thisToken, Tokenizer *expre
     return token;
 }
 
-Token *nudLeftArrow(Token *leftArrToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudLeftArrow(Token *leftArrToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, leftArrToken, "'%s' should not appear at here.", leftArrToken->str);
 }
 
@@ -322,7 +299,7 @@ Token *ledLeftArrow(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     return token;
 }
 
-Token *nudRightArrow(Token *rightArrToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudRightArrow(Token *rightArrToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, rightArrToken, "'%s' should not appear at here.", rightArrToken->str);
 }
 
@@ -339,7 +316,7 @@ Token *ledRightArrow(Token *leftToken, Token *thisToken, Tokenizer *expression) 
     return token;
 }
 
-Token *nudLeftArrowEqual(Token *leftArrEquToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudLeftArrowEqual(Token *leftArrEquToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, leftArrEquToken, "'%s' should not appear at here.", leftArrEquToken->str);
 }
 
@@ -356,7 +333,7 @@ Token *ledLeftArrowEqual(Token *leftToken, Token *thisToken, Tokenizer *expressi
     return token;
 }
 
-Token *nudRightArrowEqual(Token *rightArrEquToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudRightArrowEqual(Token *rightArrEquToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, rightArrEquToken, "'%s' should not appear at here.", rightArrEquToken->str);
 }
 
@@ -373,7 +350,7 @@ Token *ledRightArrowEqual(Token *leftToken, Token *thisToken, Tokenizer *express
     return token;
 }
 
-Token *nudEqual(Token *equToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudEqual(Token *equToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, equToken, "'%s' should not appear at here.", equToken->str);
 }
 
@@ -381,7 +358,7 @@ Token *ledEqual(Token *leftToken, Token *thisToken, Tokenizer *expression) {
   throwException(UNSUPPORTED_SYMBOL, thisToken, "'%s' is not supported.", thisToken->str);
 }
 
-Token *nudDoubleEquals(Token *doubleEquToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudDoubleEquals(Token *doubleEquToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, doubleEquToken, "'%s' should not appear at here.", doubleEquToken->str);
 }
 
@@ -398,7 +375,7 @@ Token *ledDoubleEquals(Token *leftToken, Token *thisToken, Tokenizer *expression
     return token;
 }
 
-Token *nudExclamationEqual(Token *exclEquToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudExclamationEqual(Token *exclEquToken, Tokenizer *expression) {
   throwException(INVALID_SYMBOL_PLACEMENT, exclEquToken, "'%s' should not appear at here.", exclEquToken->str);
 }
 
@@ -415,12 +392,12 @@ Token *ledExclamationEqual(Token *leftToken, Token *thisToken, Tokenizer *expres
     return token;
 }
 
-Token *nudLeftBracket(Token *leftBracketToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudLeftBracket(Token *leftBracketToken, Tokenizer *expression) {
     Token *expr;
 
     expr = evaluate(expression, WEAKEST_BP);
 
-    if(matchBracket(expression, leftBindingPower)) {
+    if(matchBracket(expression)) {
       freeToken(leftBracketToken);
       return expr;
     }
@@ -430,11 +407,11 @@ Token *ledLeftBracket(Token *leftToken, Token *leftBracketToken, Tokenizer *expr
   throwException(ERR_EXPECTING_OPERATOR, leftBracketToken, "Expecting an operator, '%s' is invalid here.", leftBracketToken->str);
 }
 
-Token *nudRightBracket(Token *rightBracketToken, Token *nextToken, Tokenizer *expression, uint32_t *eftBindingPower) {
+Token *nudRightBracket(Token *rightBracketToken, Tokenizer *expression) {
   throwException(ERR_EXPECTING_OPERAND, rightBracketToken, "Expecting an operand, but '%s' is met.", rightBracketToken->str);
 }
 
-int matchBracket(Tokenizer *expression, uint32_t *leftBindingPower) {
+int matchBracket(Tokenizer *expression) {
   TokenInfo *thisTokenInfo;
 
   if(checkTokenIfItsNULL(thisToken))
@@ -442,16 +419,12 @@ int matchBracket(Tokenizer *expression, uint32_t *leftBindingPower) {
 
   else if(*(thisToken)->str == ')') {
       freeToken(thisToken);
-      thisToken = getAdvanceToken(expression);
-      thisTokenInfo = getTokenInfo(thisToken);
-      *leftBindingPower = thisTokenInfo->bindingPower;
-      //pushBackToken(expression,thisToken);
       return 1;
   }
   else
     throwException(ERR_MISSING_BRACKET, thisToken, "Expected ')', but ''%s'' is met.", thisToken->str);//Throw exception
 }
 
-Token *nudNULL(Token *nullToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *nudNULL(Token *nullToken, Tokenizer *expression) {
     throwException(ERR_EXPECTING_OPERAND, nullToken, "Expecting an operand, but '%s' is met.", nullToken->str);
 }

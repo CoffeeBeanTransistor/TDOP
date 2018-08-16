@@ -6,85 +6,82 @@
 #include "TDOP.h"
 #include "Token.h"
 
-Token *nudInt (Token *intToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudInt (Token *intToken, Tokenizer *expression);
 Token *ledInt (Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudFloat (Token *floatToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudFloat (Token *floatToken, Tokenizer *expression);
 Token *ledFloat (Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudPlus(Token *plusToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudPlus(Token *plusToken, Tokenizer *expression);
 Token *ledPlus (Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudNegative(Token *negToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
-Token *ledNegative (Token *leftToken, Token *thisToken, Tokenizer *expression);
-
-Token *nudMinus(Token *minusToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudNegative(Token *minusToken, Tokenizer *expression);
 Token *ledMinus (Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudAsterisk (Token *astToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudAsterisk (Token *astToken, Tokenizer *expression);
 Token *ledAsterisk (Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudSlash (Token *slashToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudSlash (Token *slashToken, Tokenizer *expression);
 Token *ledSlash(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudPercent (Token *percToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudPercent (Token *percToken, Tokenizer *expression);
 Token *ledPercent(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudExclamation(Token *exclToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudExclamation(Token *exclToken, Tokenizer *expression);
 Token *ledExclamation(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudTilde(Token *tildeToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudTilde(Token *tildeToken, Tokenizer *expression);
 Token *ledTilde(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudDoubleAmpersand(Token *doublAampToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudDoubleAmpersand(Token *doublAampToken, Tokenizer *expression);
 Token *ledDoubleAmpersand(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudAmpersand(Token *ampToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudAmpersand(Token *ampToken, Tokenizer *expression);
 Token *ledAmpersand(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudDoubleVerticalBar(Token *doubleVertToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudDoubleVerticalBar(Token *doubleVertToken, Tokenizer *expression);
 Token *ledDoubleVerticalBar(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudVerticalBar(Token *vertToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudVerticalBar(Token *vertToken, Tokenizer *expression);
 Token *ledVerticalBar(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudCaret(Token *caretToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudCaret(Token *caretToken, Tokenizer *expression);
 Token *ledCaret(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudDoubleLeftArrows(Token *doubleLeftArrToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudDoubleLeftArrows(Token *doubleLeftArrToken, Tokenizer *expression);
 Token *ledDoubleLeftArrows(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudDoubleRightArrows(Token *doubleRightArrToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudDoubleRightArrows(Token *doubleRightArrToken, Tokenizer *expression);
 Token *ledDoubleRightArrows(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudLeftArrow(Token *leftArrToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudLeftArrow(Token *leftArrToken, Tokenizer *expression);
 Token *ledLeftArrow(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudRightArrow(Token *rightArrToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudRightArrow(Token *rightArrToken, Tokenizer *expression);
 Token *ledRightArrow(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudLeftArrowEqual(Token *leftArrEquToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudLeftArrowEqual(Token *leftArrEquToken, Tokenizer *expression);
 Token *ledLeftArrowEqual(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudRightArrowEqual(Token *rightArrEquToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudRightArrowEqual(Token *rightArrEquToken, Tokenizer *expression);
 Token *ledRightArrowEqual(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudEqual(Token *equToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudEqual(Token *equToken, Tokenizer *expression);
 Token *ledEqual(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudDoubleEquals(Token *doubleEquToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudDoubleEquals(Token *doubleEquToken, Tokenizer *expression);
 Token *ledDoubleEquals(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudExclamationEqual(Token *exclEquToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudExclamationEqual(Token *exclEquToken, Tokenizer *expression);
 Token *ledExclamationEqual(Token *leftToken, Token *thisToken, Tokenizer *expression);
 
-Token *nudLeftBracket(Token *leftBracketToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudLeftBracket(Token *leftBracketToken, Tokenizer *expression);
 Token *ledLeftBracket(Token *leftToken, Token *leftBracketToken, Tokenizer *expression);
 
-Token *nudRightBracket(Token *rightBracketToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
-Token *nudNULL(Token *nullToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *nudRightBracket(Token *rightBracketToken, Tokenizer *expression);
+Token *nudNULL(Token *nullToken, Tokenizer *expression);
 
-int matchBracket(Tokenizer *expression, uint32_t *leftBindingPower);
+int matchBracket(Tokenizer *expression);
 //Token *nudRightBracket(Token *thisToken, Tokenizer *expression, uint32_t leftBindingPower);
 
 #endif // _TDOP_H

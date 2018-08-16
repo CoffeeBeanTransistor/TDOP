@@ -7,7 +7,7 @@
 
 typedef struct TokenInfo TokenInfo;
 struct TokenInfo {
-  Token *(*nud)(Token *thisToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+  Token *(*nud)(Token *thisToken, Tokenizer *expression);
   Token *(*led)(Token *leftToken, Token *thisToken, Tokenizer *expression);
   uint32_t bindingPower;
 };
@@ -20,7 +20,7 @@ double getTokenValue(Token *token);
 int getTokenIntegerValue(Token *token);
 Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightToken);
 int checkTokenIfItsNULL(Token *token);
-Token *getNud(Token *thisToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
+Token *getNud(Token *thisToken, Tokenizer *expression);
 Token *getLed(Token *thisToken, Token *leftToken, Tokenizer *expression);
 Token *handleSignEqualAndRepeat(Tokenizer *expression, Token *token1);
 int verifyTokensRepeated(Token *token1, Token *token2);

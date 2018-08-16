@@ -10,8 +10,8 @@
 
 TokenInfo symbolMapTable[256] = {
   [ADD_SYMBOL] = {.bindingPower = ADDITION_BP, .nud = nudPlus, .led = ledPlus},
-  [SUB_SYMBOL] = {.bindingPower = SUBTRACTION_BP, .nud = nudMinus, .led = ledMinus},
-  [NEGATIVE_SYMBOL] = {.bindingPower = UNARY_MINUS_BP, .nud = nudNegative, .led = ledNegative},
+  [SUB_SYMBOL] = {.bindingPower = SUBTRACTION_BP, .nud = nudNegative, .led = ledMinus},
+  [NEGATIVE_SYMBOL] = {.bindingPower = UNARY_MINUS_BP, .nud = NULL, .led = NULL},
   [MUL_SYMBOL] = {.bindingPower = MULTIPLICATION_BP, .nud = nudAsterisk, .led = ledAsterisk},
   [DIV_SYMBOL] = {.bindingPower = DIVISION_BP, .nud = nudSlash, .led = ledSlash},
   [MODULO_SYMBOL] = {.bindingPower = REMAINDER_BP, .nud = nudPercent, .led = ledPercent},
@@ -58,7 +58,19 @@ Token *getAdvanceToken(Tokenizer *expression) {
   Token *token1;
 
     token1 = getToken(expression);
-    //token1 = getTokenSymbol(token1,expression);
+
+    if(token1->type == TOKEN_OPERATOR_TYPE)
+      token1 = handleSignEqualAndRepeat(expression, token1);
+
+    else if (token1->type == TOKEN_INTEGER_TYPE)
+      token1->symbol = INTEGER_SYMBOL;
+
+    else if (token1->type == TOKEN_FLOAT_TYPE)
+      token1->symbol = FLOAT_SYMBOL;
+
+    else if (token1->type == TOKEN_NULL_TYPE)
+      token1->symbol = NULL_SYMBOL;
+
     return token1;
 }
 
@@ -70,12 +82,28 @@ Token *handleSignEqualAndRepeat(Tokenizer *expression, Token *token1) {
 
     token1IsoInfo = getOperatorIsotopeInfo(token1);
 
-      if(verifyTokensBackToBack(token1,token2))
-        if(verifyTokensRepeated(token1, token2))
-          token1->symbol =  token1IsoInfo->symbolTable[1];
+    if (token2->type == TOKEN_NULL_TYPE) {
+      token1->symbol =  token1IsoInfo->symbolTable[0];
+      pushBackToken(expression, token2);
+      return token1;
+    }
 
-        else if(verifyTokenIsEqualSign(token2))
-          token1->symbol =  token1IsoInfo->symbolTable[2];
+    if(verifyTokensBackToBack(token1,token2)) {
+      if(verifyTokensRepeated(token1, token2)) {
+        token1->symbol =  token1IsoInfo->symbolTable[1];
+        free(token1->str);
+        token1->str = createString(&token1->originalStr[token1->startColumn], 2);
+      }
+      else if(verifyTokenIsEqualSign(token2)) {
+        token1->symbol =  token1IsoInfo->symbolTable[2];
+        free(token1->str);
+        token1->str = createString(&token1->originalStr[token1->startColumn], 2);
+      }
+    } else
+        token1->symbol =  token1IsoInfo->symbolTable[0];
+
+    pushBackToken(expression, token2);
+    return token1;
  }
 
 Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightToken) {
@@ -99,16 +127,13 @@ Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightT
 
 char* createString(char *ptr, int size) {
 
-  char* newStr, oriStrPtr;
-
+  char *newStr, *strPtr;
   newStr = malloc(size + 1);
-  oriStrPtr = newStr;
-  *newStr = *ptr;
-  newStr++;
-  ptr++;
-  *newStr = *ptr;
-  newStr++;
-  *newStr = '\0';
+
+  strPtr = newStr;
+  *(strPtr)++ = *(ptr)++;
+  *(strPtr)++ = *(ptr)++;
+  *(strPtr) = '\0';
 
   return newStr;
 }
@@ -202,7 +227,7 @@ int checkTokenIfItsNULL(Token *token) {
     return 0;
 }
 
-Token *getNud(Token *thisToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower) {
+Token *getNud(Token *thisToken, Tokenizer *expression) {
   TokenInfo *thisTokenInfo;
   Token *nudToken;
 
@@ -211,7 +236,7 @@ Token *getNud(Token *thisToken, Token *nextToken, Tokenizer *expression, uint32_
     throwException(SYSTEM_ERROR, thisToken, "nud %s is NULL.", thisToken->str);
   }
   else {
-    nudToken = thisTokenInfo->nud(thisToken, nextToken, expression, leftBindingPower);
+    nudToken = thisTokenInfo->nud(thisToken, expression);
     return nudToken;
   }
 }
