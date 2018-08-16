@@ -19,7 +19,82 @@ void tearDown(void)
 {
 }
 
-void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
+void test_verifyTokensRepeated_given_2_same_character_tokens_should_return_true(void) {
+  Tokenizer *expression;
+  Token *token1, *token2;
+
+  expression = createTokenizer(" && ");
+  token1 = getToken(expression);
+  token2 = getToken(expression);
+
+  TEST_ASSERT_TRUE(verifyTokensRepeated(token1,token2));
+  freeTokenizer(expression);
+}
+
+void test_verifyTokensRepeated_given_2_different_character_tokens_should_return_false(void) {
+  Tokenizer *expression;
+  Token *token1, *token2;
+
+  expression = createTokenizer(" <= ");
+  token1 = getToken(expression);
+  token2 = getToken(expression);
+
+  TEST_ASSERT_FALSE(verifyTokensRepeated(token1,token2));
+  freeTokenizer(expression);
+}
+
+
+void test_verifyTokenIsEqual_given_not_equal_token_should_return_equal(void) {
+  Tokenizer *expression;
+  Token *token1, *token2;
+
+  expression = createTokenizer(" != ");
+  token1 = getToken(expression);
+  token2 = getToken(expression);
+
+  TEST_ASSERT_TRUE(verifyTokenIsEqualSign(token2));
+  freeTokenizer(expression);
+}
+
+void test_verifyTokenIsEqual_given_logical_OR_token_should_return_false(void) {
+  Tokenizer *expression;
+  Token *token1, *token2;
+
+  expression = createTokenizer(" || ");
+  token1 = getToken(expression);
+  token2 = getToken(expression);
+
+  TEST_ASSERT_FALSE(verifyTokenIsEqualSign(token2));
+  freeTokenizer(expression);
+}
+
+void test_getOperatorIsotopeInfo_given_a_plus_sign_should_return_info_of_3_isotope_symbols(void) {
+  Tokenizer *expression;
+  Token *token;
+  OperatorIsotope *tokenIsoInfo;
+
+  expression = createTokenizer(" + ");
+  token = getToken(expression);
+  tokenIsoInfo = getOperatorIsotopeInfo(token);
+
+  TEST_ASSERT_EQUAL(ADD_SYMBOL, tokenIsoInfo->symbolTable[0]);
+  TEST_ASSERT_EQUAL(INCREMENT_SYMBOL, tokenIsoInfo->symbolTable[1]);
+  TEST_ASSERT_EQUAL(ADD_ASSIGN_SYMBOL, tokenIsoInfo->symbolTable[2]);
+  freeTokenizer(expression);
+}
+
+void test_createString_given_expression_of_2_back_to_back_ampersand_expect_string_of_logical_AND(void) {
+  Tokenizer *expression;
+  Token *token;
+  char *newTokenStr;
+
+  expression = createTokenizer (" && ");
+  token = getToken(expression);
+  newTokenStr = createString(&token->originalStr[token->startColumn], 2);
+
+  TEST_ASSERT_EQUAL_STRING ("&&",newTokenStr);
+}
+/*void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
   Tokenizer *tokenizer;
   TokenInfo *tokenInfo;
   Token *token;

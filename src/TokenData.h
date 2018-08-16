@@ -12,17 +12,19 @@ struct TokenInfo {
   uint32_t bindingPower;
 };
 
-TokenInfo *getTokenInfo(Token *thisToken);
+TokenInfo *getTokenInfo(Token *token);
 int getTokenType(Token *thisToken);
-Token *getTokenSymbol(Token *token1,Tokenizer *expression);
 Token *getAdvanceToken(Tokenizer *expression);
 int verifyTokensBackToBack(Token *token1, Token *token2);
-Token *modifyToken(Token *token, int symbol);
 double getTokenValue(Token *token);
 int getTokenIntegerValue(Token *token);
 Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightToken);
 int checkTokenIfItsNULL(Token *token);
 Token *getNud(Token *thisToken, Token *nextToken, Tokenizer *expression, uint32_t *leftBindingPower);
 Token *getLed(Token *thisToken, Token *leftToken, Tokenizer *expression);
+Token *handleSignEqualAndRepeat(Tokenizer *expression, Token *token1);
+int verifyTokensRepeated(Token *token1, Token *token2);
+int verifyTokenIsEqualSign(Token *token2);
+char* createString(char *ptr, int size);
 
 #endif // _TokenData_H

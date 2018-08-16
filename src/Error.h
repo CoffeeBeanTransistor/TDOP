@@ -13,5 +13,6 @@
 #define ERR_EXPECTING_OPERATOR    26
 #define ERR_EXPECTING_OPERAND     31
 #define ERR_INVALID_OPERAND       35
+#define ERR_INVALID_OPERATOR      65
 
 #endif // Error_H
