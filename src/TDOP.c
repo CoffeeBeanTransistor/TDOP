@@ -19,6 +19,8 @@ Token *evaluate(Tokenizer *expression, int rightBindingPower) {
   while (rightBindingPower < leftBindingPower) {
     leftToken = getLed(thisToken, leftToken, expression);
     thisToken = getAdvanceToken(expression);
+    thisTokenInfo = getTokenInfo(thisToken);
+    leftBindingPower = thisTokenInfo->bindingPower;
   }
   pushBackToken(expression, thisToken);
   return leftToken;

@@ -38,6 +38,7 @@ Token *ledPlus(Token *leftToken, Token *thisToken, Tokenizer *expression){
     v2 = getTokenValue(rightToken);
     ans =  v1 + v2;
     token = newFloatToken(ans, token, leftToken, rightToken);
+    freeToken(leftToken);
 
   return token;
 }
