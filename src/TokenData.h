@@ -27,5 +27,6 @@ int verifyTokensRepeated(Token *token1, Token *token2);
 int verifyTokenIsEqualSign(Token *token2);
 char* createString(char *ptr, int size);
 int checkIfUndefined(OperatorIsotope *token1IsoInfo, int indexNum);
+void checkIfNextTokenIsInteger(Tokenizer *expression);
 
 #endif // _TokenData_H

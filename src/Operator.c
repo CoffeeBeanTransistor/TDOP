@@ -119,7 +119,7 @@ Token *ledPercent(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     if(v2 == 0)
-      throwException(ERR_UNDEFINED, NULL, "The expression cannot be divided by 0!");
+      throwException(ERR_UNDEFINED, rightToken, "The expression cannot be modulo by 0!");
     else {
     ans =  v1 % v2;
     token = newFloatToken(ans, NULL, leftToken, rightToken);

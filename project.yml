@@ -98,6 +98,7 @@
                                         #link libraries
 #      - -Llib/x86                       #Indicate where the user defined libraries reside
 #      - -Llib/x64_7_3_0
+#      - -Llib/x64_5_3_0
       - -Llib/x64_TDM_5_1_0
       - -lm                             #Link with math library
       - -ltokenizer                     #Link with Tokenizer library

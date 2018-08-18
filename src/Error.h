@@ -3,7 +3,7 @@
 
 // !!!Example error code. Please replace them with yours.!!!
 #define ERR_MISSING_BRACKET       10
-#define ERR_INVALID_SYMBOL        60
+#define ERR_UNDEFINED_SYMBOL        60
 #define ERR_NOT_AN_INTEGER        51
 #define SYSTEM_ERROR              36
 #define INVALID_SYMBOL_PLACEMENT  19

@@ -290,15 +290,7 @@ void test_getTokenIntegerValue_given_a_token_with_float_value_with_no_fractional
   free(token);
 }
 
-void test_getTokenIntegerValue_given_a_token_with_float_value_fractional_part_expect_return_false(void) {
-  Token *token;
-  token = newFloatToken(8.832, token, NULL,NULL);
 
-  TEST_ASSERT_EQUAL_FLOAT (8.832,((FloatToken *)token)->value);
-  TEST_ASSERT_EQUAL (TOKEN_FLOAT_TYPE, token->type);
-  free(token);
-
-}
 
 void test_evaluate_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_84(void) {
   Token *token;
@@ -342,7 +334,9 @@ void test_evaluate_testing_nudTilde_given_tilde_35_should_return_negative_36(voi
 
   TEST_ASSERT_EQUAL (-36, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  freeToken(token);
 }
+
 
 void test_evaluate_given_tilde_containing_expression_should_solve_correctly(void) {
   Tokenizer *expression;
@@ -386,6 +380,7 @@ void test_evaluate_testing_bitwise_AND_given_7_ampersand_in_between_12_should_re
 
   TEST_ASSERT_EQUAL (7&4, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_evaluate_testing_bitwise_AND_given_2_statements_with_aan_ampersand_in_between_shuould_solve_correctly(void) {
@@ -441,6 +436,7 @@ void test_evaluate_testing_left_shift_given_98_shifting_to_left_2_times_should_r
 
   TEST_ASSERT_EQUAL (392, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_evaluate_testing_left_shift_given_complicated_expression_with_left_shift_involved_should_solve_correctly(void) {
@@ -463,6 +459,7 @@ void test_evaluate_testing_right_shift_given_63_shifting_to_right_8_times_should
 
   TEST_ASSERT_EQUAL (0, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_evaluate_testing_left_shift_given_complicated_expression_with_right_shift_involved_should_solve_correctly(void) {
@@ -485,6 +482,7 @@ void test_evaluate_testing_less_than_given_57_lesser_than_23_should_return_false
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_evaluate_testing_less_than_given_expression_involving_lesser_than_should_solve_correctly(void) {
@@ -507,6 +505,7 @@ void test_evaluate_testing_greater_than_given_238_greater_than_78_should_return_
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 
@@ -541,17 +540,7 @@ void test_evaluate_testing_not_equal_to_given_157_not_equals_to_157_should_retur
 
   TEST_ASSERT_EQUAL (0,((FloatToken *)token)->value);
   freeTokenizer(expression);
-}
-
-void test_getTokenType_given_a_floating_number_should_return_true(void) {
-  Tokenizer *expression;
-  Token *token;
-
-  expression = createTokenizer("8.3");
-  token = getAdvanceToken(expression);
-
-  TEST_ASSERT_EQUAL(TOKEN_FLOAT_TYPE, token->type);
-  freeTokenizer(expression);
+  freeToken(token);
 }
 
 void xtest_evaluate_testingw_bitwise_OR_given_2_statements_with_1_vertical_line_in_between_should_solve_correctly(void) {
@@ -581,7 +570,9 @@ void test_newFloatToken_given_a_float_number_should_display_correctly(void) {
   TEST_ASSERT_EQUAL(8, token->length);
   TEST_ASSERT_EQUAL_STRING("7.4  5.6", token->str);
   freeTokenizer(expression);
-  free(token);
+  freeToken(token);
+  freeToken(rightToken);
+  freeToken(leftToken);
 }
 
 void test_getTokenValue_given_an_integer_number_should_return_value_correctly(void) {
@@ -641,17 +632,16 @@ void test_evaluate_testing_greater_than_equal_to_given_expression_involving_grea
 
 void test_nudFloat_given_8_point_64_should_return_8_point_64_token(void) {
   Tokenizer *expression;
-  Token *token, *token1, *token2;
+  Token *token;
 
   expression = createTokenizer("8.64");
-  token1 = getAdvanceToken(expression);
-  token2 = getAdvanceToken(expression);
-  token = nudFloat(token1, token2, expression, 0);
+  token = getAdvanceToken(expression);
+  token = nudFloat(token, expression);
 
-  TEST_ASSERT_EQUAL_FLOAT(8.64,((FloatToken *)token1)->value);
-  TEST_ASSERT_EQUAL(FLOAT_SYMBOL, token1->symbol);
+  TEST_ASSERT_EQUAL_FLOAT(8.64,((FloatToken *)token)->value);
+  TEST_ASSERT_EQUAL(FLOAT_SYMBOL, token->symbol);
   freeTokenizer(expression);
-  free(token);
+  freeToken(token);
 }
 
 void test_evaluate_given_2_point_32_minus_9_point_94_should_return_11(void) {
@@ -690,6 +680,27 @@ void test_evaluate_testing_equal_to_given_expression_involving_equal_to_should_s
   freeToken(token);
 }
 
+void test_getTokenIntegerValue_given_a_token_with_float_value_fractional_part_should_throw_ERR_NOT_AN_INTEGER(void) {
+  Token *token, *token1, *token2;
+  Tokenizer *expression;
+
+    Try {
+    expression = createTokenizer( "8.232 +");
+    token1 = getToken(expression);
+    token2 = getToken(expression);
+    token = newFloatToken(8.232,token,token1,token2);
+    getTokenIntegerValue(token);
+    TEST_FAIL_MESSAGE ("Expected ERR_NOT_AN_INTEGER to be thrown! But no exception is thrown.");
+    } Catch(e) {
+    dumpTokenErrorMessage(e,1);
+    TEST_ASSERT_EQUAL (ERR_NOT_AN_INTEGER, e->errorCode);
+    freeException(e);
+    freeTokenizer(expression);
+    freeToken(token);
+    }
+  }
+
+
 void test_evaluate_given_unmatched_bracket_expression_should_throw_ERR_MISSING_BRACKET(void) {
   Tokenizer *expression;
   Token *token;
@@ -722,17 +733,17 @@ void test_evaluate_given_fractional_number_in_logical_operation_should_throw_ERR
   }
 }
 
-void test_given_unknown_character_should_throw_ERR_INVALID_SYMBOL(void) {
+void test_given_unknown_character_should_throw_ERR_UNDEFINED_SYMBOL(void) {
   Tokenizer *expression;
   Token *token;
 
   Try {
   expression = createTokenizer( " 7.24 ? 2");
   token = evaluate(expression,0);
-  TEST_FAIL_MESSAGE ("Expected ERR_INVALID_SYMBOL to be thrown! But no exception is thrown.");
+  TEST_FAIL_MESSAGE ("Expected ERR_UNDEFINED_SYMBOL to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
-  TEST_ASSERT_EQUAL (ERR_INVALID_SYMBOL, e->errorCode);
+  TEST_ASSERT_EQUAL (ERR_UNDEFINED_SYMBOL, e->errorCode);
   freeException(e);
   freeTokenizer(expression);
   }
@@ -776,6 +787,22 @@ void test_given_numbers_divided_by_zero_should_throw_ERR_UNDEFINED(void) {
 
   Try {
   expression = createTokenizer( " 10/(0*9) ");
+  token = evaluate(expression,0);
+  TEST_FAIL_MESSAGE ("Expected ERR_UNDEFINED to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_UNDEFINED, e->errorCode);
+  freeException(e);
+  freeTokenizer(expression);
+  }
+}
+
+void test_given_number_modulo_by_zero_should_throw_ERR_UNDEFINED(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  Try {
+  expression = createTokenizer( " 7 % 0");
   token = evaluate(expression,0);
   TEST_FAIL_MESSAGE ("Expected ERR_UNDEFINED to be thrown! But no exception is thrown.");
   } Catch(e) {
