@@ -7,7 +7,6 @@
 #include "Error.h"
 
 
-Token *thisToken;
 
 Token *nudInt (Token *thisToken, Tokenizer *expression) {
       return thisToken;
@@ -414,7 +413,9 @@ Token *nudRightBracket(Token *rightBracketToken, Tokenizer *expression) {
 
 int matchBracket(Tokenizer *expression) {
   TokenInfo *thisTokenInfo;
+  Token *thisToken;
 
+  thisToken = getAdvanceToken(expression);
   if(checkTokenIfItsNULL(thisToken))
     throwException(ERR_MISSING_BRACKET, thisToken, "Expected ')', but '%s' is met.", thisToken->str);//Throw exception
 

@@ -185,6 +185,7 @@ void test_evaluate_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_retu
 
   TEST_ASSERT_EQUAL_FLOAT ( 2 * 3 - -4, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_getAdvanceToken_given_NOT_EQUAL_expression_should_return_token_str_NOT_EQUAL(void) {
@@ -197,6 +198,7 @@ void test_getAdvanceToken_given_NOT_EQUAL_expression_should_return_token_str_NOT
   TEST_ASSERT_EQUAL_STRING ("!=", token->str);
   TEST_ASSERT_EQUAL(NOT_EQUALS_TO_SYMBOL, token->symbol);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_getAdvanceToken_given_separated_AND_expression_should_return_token_str_BITWISE_OR(void) {
@@ -209,6 +211,7 @@ void test_getAdvanceToken_given_separated_AND_expression_should_return_token_str
   TEST_ASSERT_EQUAL_STRING ("&", token->str);
   TEST_ASSERT_EQUAL(BITWISE_AND_SYMBOL, token->symbol);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_getAdvanceToken_given_negative_2_expression_should_return_token_with_negative_symbol(void) {
@@ -220,6 +223,7 @@ void test_getAdvanceToken_given_negative_2_expression_should_return_token_with_n
 
   TEST_ASSERT_EQUAL (SUB_SYMBOL, token->symbol);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_getAdvanceToken_given_subtract_54_expression_should_return_token_with_sub_symbol(void) {
@@ -231,7 +235,9 @@ void test_getAdvanceToken_given_subtract_54_expression_should_return_token_with_
 
   TEST_ASSERT_EQUAL (SUB_SYMBOL, token->symbol);
   freeTokenizer(expression);
+  freeToken(token);
 }
+
 
 void test_evaluate_given_2_plus_9_should_return_11(void) {
   Tokenizer *expression;
@@ -243,6 +249,7 @@ void test_evaluate_given_2_plus_9_should_return_11(void) {
   TEST_ASSERT_EQUAL_FLOAT (11,((FloatToken *)token)->value);
 
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 
@@ -255,6 +262,7 @@ void test_evaluate_given_logical_not_23_expect_false (void) {
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_evaluate_given_logical_not_negative_23_expect_false (void) {
@@ -266,6 +274,7 @@ void test_evaluate_given_logical_not_negative_23_expect_false (void) {
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_evaluate_given_logical_not_0_expect_true (void) {
@@ -277,6 +286,7 @@ void test_evaluate_given_logical_not_0_expect_true (void) {
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
   freeTokenizer(expression);
+  freeToken(token);
 }
 
 void test_getTokenIntegerValue_given_a_token_with_float_value_with_no_fractional_part_expect_an_integer_number_will_return(void) {
@@ -289,8 +299,6 @@ void test_getTokenIntegerValue_given_a_token_with_float_value_with_no_fractional
   TEST_ASSERT_EQUAL (8,value);
   free(token);
 }
-
-
 
 void test_evaluate_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return_84(void) {
   Token *token;
