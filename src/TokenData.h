@@ -18,7 +18,7 @@ Token *getAdvanceToken(Tokenizer *expression);
 int verifyTokensBackToBack(Token *token1, Token *token2);
 double getTokenValue(Token *token);
 int getTokenIntegerValue(Token *token);
-Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightToken);
+Token *newFloatToken(double value, Token *leftToken, Token *rightToken);
 int checkTokenIfItsNULL(Token *token);
 Token *getNud(Token *thisToken, Tokenizer *expression);
 Token *getLed(Token *thisToken, Token *leftToken, Tokenizer *expression);

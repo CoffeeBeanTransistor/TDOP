@@ -3,8 +3,8 @@
 
 
 OperatorIsotope opIsotopeTable[256] = {
-  ['+'] = {ADD_SYMBOL, ADD_SYMBOL, ADD_ASSIGN_SYMBOL},
-  ['-'] = {SUB_SYMBOL, SUB_SYMBOL, SUB_ASSIGN_SYMBOL},
+  ['+'] = {ADD_SYMBOL, UNDEFINED_SYMBOL, ADD_ASSIGN_SYMBOL},
+  ['-'] = {SUB_SYMBOL, UNDEFINED_SYMBOL, SUB_ASSIGN_SYMBOL},
   ['*'] = {MUL_SYMBOL, UNDEFINED_SYMBOL, MUL_ASSIGN_SYMBOL},
   ['/'] = {DIV_SYMBOL, UNDEFINED_SYMBOL, DIV_ASSIGN_SYMBOL},
   ['%'] = {MODULO_SYMBOL, UNDEFINED_SYMBOL, MODULO_ASSIGN_SYMBOL},
@@ -21,10 +21,12 @@ OperatorIsotope opIsotopeTable[256] = {
 };
 
 OperatorIsotope *getOperatorIsotopeInfo(Token *token) {
+  OperatorIsotope *tokenIsoInfo;
 
-  if(token->type == TOKEN_OPERATOR_TYPE)
-    return &opIsotopeTable[token->str[0]];
+  tokenIsoInfo = &opIsotopeTable[token->str[0]];
 
+  if(tokenIsoInfo->symbolTable[0] == 0)
+    throwException(ERR_UNKNOWN_OPERATOR, token, "Unknown operator,'%s'",token->str);
   else
-    throwException(ERR_INVALID_OPERATOR,token,"Invalid Operator! - '%s'", token->str);
+    return tokenIsoInfo;
 }

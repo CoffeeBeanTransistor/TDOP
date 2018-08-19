@@ -36,8 +36,7 @@ Token *ledPlus(Token *leftToken, Token *thisToken, Tokenizer *expression){
     v1 = getTokenValue(leftToken);
     v2 = getTokenValue(rightToken);
     ans =  v1 + v2;
-    token = newFloatToken(ans, token, leftToken, rightToken);
-    freeToken(leftToken);
+    token = newFloatToken(ans, leftToken, rightToken);
 
   return token;
 }
@@ -50,7 +49,7 @@ Token *nudNegative(Token *minusToken, Tokenizer *expression) {
     token = evaluate(expression, UNARY_MINUS_BP);
     value = getTokenValue(token);
     value = -value;
-    token = newFloatToken(value,token,minusToken,token);
+    token = newFloatToken(value,minusToken,token);
     token->symbol = NEGATIVE_SYMBOL;
     freeToken(minusToken);
     return token;
@@ -64,7 +63,7 @@ Token *ledMinus(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     v1 = getTokenValue(leftToken);
     v2 = getTokenValue(rightToken);
     ans =  v1 - v2;
-    token = newFloatToken(ans, token, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -80,7 +79,7 @@ Token *ledAsterisk(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     v1 = getTokenValue(leftToken);
     v2 = getTokenValue(rightToken);
     ans =  v1 * v2;
-    token = newFloatToken(ans, token, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -100,7 +99,7 @@ Token *ledSlash(Token *leftToken, Token *thisToken, Tokenizer *expression) {
       throwException(ERR_UNDEFINED, rightToken, "The expression cannot be divided by 0!");
     else {
     ans =  v1 / v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
     }
 }
@@ -121,7 +120,7 @@ Token *ledPercent(Token *leftToken, Token *thisToken, Tokenizer *expression) {
       throwException(ERR_UNDEFINED, rightToken, "The expression cannot be modulo by 0!");
     else {
     ans =  v1 % v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
     }
 }
@@ -132,10 +131,10 @@ Token *nudExclamation(Token *exclToken, Tokenizer *expression) {
   token = evaluate(expression, LOGICAL_NOT_BP);
 
   if(getTokenIntegerValue(token) != 0)
-    token = newFloatToken(0, NULL, exclToken, token);
+    token = newFloatToken(0, exclToken, token);
 
   else
-    token = newFloatToken(1, NULL, exclToken, token);
+    token = newFloatToken(1, exclToken, token);
 
   return token;
 }
@@ -152,7 +151,7 @@ Token *nudTilde(Token *tildeToken, Tokenizer *expression) {
 
   value = getTokenIntegerValue(token);
   value = ~value;
-  token = newFloatToken(value, NULL, tildeToken, token);
+  token = newFloatToken(value, tildeToken, token);
   return token;
 
 }
@@ -174,7 +173,7 @@ Token *ledDoubleAmpersand(Token *leftToken, Token *thisToken, Tokenizer *express
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 && v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
 
   return token;
 }
@@ -192,7 +191,7 @@ Token *ledAmpersand(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 & v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
 
     return token;
 }
@@ -210,7 +209,7 @@ Token *ledDoubleVerticalBar(Token *leftToken, Token *thisToken, Tokenizer *expre
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 || v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -227,7 +226,7 @@ Token *ledVerticalBar(Token *leftToken, Token *thisToken, Tokenizer *expression)
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 | v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -244,7 +243,7 @@ Token *ledCaret(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 ^ v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -261,7 +260,7 @@ Token *ledDoubleLeftArrows(Token *leftToken, Token *thisToken, Tokenizer *expres
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 << v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -278,7 +277,7 @@ Token *ledDoubleRightArrows(Token *leftToken, Token *thisToken, Tokenizer *expre
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 >> v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -295,7 +294,7 @@ Token *ledLeftArrow(Token *leftToken, Token *thisToken, Tokenizer *expression) {
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 < v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -312,7 +311,7 @@ Token *ledRightArrow(Token *leftToken, Token *thisToken, Tokenizer *expression) 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 > v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -329,7 +328,7 @@ Token *ledLeftArrowEqual(Token *leftToken, Token *thisToken, Tokenizer *expressi
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 <= v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -346,7 +345,7 @@ Token *ledRightArrowEqual(Token *leftToken, Token *thisToken, Tokenizer *express
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 >= v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -371,7 +370,7 @@ Token *ledDoubleEquals(Token *leftToken, Token *thisToken, Tokenizer *expression
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 == v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 
@@ -388,7 +387,7 @@ Token *ledExclamationEqual(Token *leftToken, Token *thisToken, Tokenizer *expres
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
     ans =  v1 != v2;
-    token = newFloatToken(ans, NULL, leftToken, rightToken);
+    token = newFloatToken(ans, leftToken, rightToken);
     return token;
 }
 

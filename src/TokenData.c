@@ -92,37 +92,45 @@ Token *handleSignEqualAndRepeat(Tokenizer *expression, Token *token1) {
 
     if(verifyTokensBackToBack(token1,token2)) {
       if(verifyTokensRepeated(token1, token2)) {
-        if(checkIfUndefined(token1IsoInfo, 1))
-          throwException(ERR_UNDEFINED_SYMBOL, token1, "Undefined operator, '%s'",token1->str);
-        else {
-          token1->symbol =  token1IsoInfo->symbolTable[1];
-          free(token1->str);
-          token1->str = createString(&token1->originalStr[token1->startColumn], 2);
-          freeToken(token2);
-        }
-      } else if(verifyTokenIsEqualSign(token2)) {
-        if(checkIfUndefined(token1IsoInfo, 2))
-          throwException(ERR_UNDEFINED_SYMBOL, token1, "Undefined operator, '%s'",token1->str);
-        else {
-          token1->symbol =  token1IsoInfo->symbolTable[2];
-          free(token1->str);
-          token1->str = createString(&token1->originalStr[token1->startColumn], 2);
-          freeToken(token2);
-        }
+        if(checkIfUndefined(token1IsoInfo, 1)) {
+          token1->symbol =  token1IsoInfo->symbolTable[0];
+          pushBackToken(expression, token2);
+          return token1;
+        } else {
+            token1->symbol =  token1IsoInfo->symbolTable[1];
+            free(token1->str);
+            token1->str = createString(&token1->originalStr[token1->startColumn], 2);
+            freeToken(token2);
+          }
+        } else if(verifyTokenIsEqualSign(token2)) {
+            if(checkIfUndefined(token1IsoInfo, 2)) {
+              token1->symbol =  token1IsoInfo->symbolTable[0];
+              pushBackToken(expression, token2);
+              return token1;
+            } else {
+              token1->symbol =  token1IsoInfo->symbolTable[2];
+              free(token1->str);
+              token1->str = createString(&token1->originalStr[token1->startColumn], 2);
+              freeToken(token2);
+            }
       } else {
-          if(checkIfUndefined(token1IsoInfo, 0))
-            throwException(ERR_UNDEFINED_SYMBOL, token1, "Undefined operator, '%s'",token1->str);
-          else {
+          if(checkIfUndefined(token1IsoInfo, 0)) {
+            token1->symbol =  token1IsoInfo->symbolTable[0];
+            pushBackToken(expression, token2);
+            return token1;
+          } else {
             token1->symbol =  token1IsoInfo->symbolTable[0];
             pushBackToken(expression, token2);
           }
-      }
+        }
     }
 
     else {
-      if(checkIfUndefined(token1IsoInfo, 0))
-        throwException(ERR_UNDEFINED_SYMBOL, token1, "Undefined operator, '%s'",token1->str);
-      else {
+      if(checkIfUndefined(token1IsoInfo, 0)) {
+        token1->symbol =  token1IsoInfo->symbolTable[0];
+        pushBackToken(expression, token2);
+        return token1;
+      } else {
         token1->symbol =  token1IsoInfo->symbolTable[0];
         pushBackToken(expression, token2);
       }
@@ -130,8 +138,9 @@ Token *handleSignEqualAndRepeat(Tokenizer *expression, Token *token1) {
     return token1;
  }
 
-Token *newFloatToken(double value, Token *token, Token *leftToken, Token *rightToken) {
-
+Token *newFloatToken(double value, Token *leftToken, Token *rightToken) {
+  Token *token;
+  
   if(leftToken == NULL || rightToken == NULL) {
     token = createFloatToken(value, NULL);
     token->symbol = FLOAT_SYMBOL;
@@ -195,7 +204,7 @@ int verifyTokensBackToBack(Token *token1, Token *token2) {
 
 int checkIfUndefined(OperatorIsotope *token1IsoInfo, int indexNum) {
 
-  if(token1IsoInfo->symbolTable[indexNum] == 0 || token1IsoInfo->symbolTable[indexNum] == UNDEFINED_SYMBOL)
+  if(token1IsoInfo->symbolTable[indexNum] == UNDEFINED_SYMBOL)
     return 1;
   else
     return 0;

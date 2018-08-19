@@ -17,13 +17,3 @@ void setUp(void)
 void tearDown(void)
 {
 }
-void test_evaluate_given_complicated_expression_with_brackets_should_solve_correctly(void) {
-  Token *token;
-  Tokenizer *expression;
-
-  expression = createTokenizer(" -(7+--9)*(-1+-2*---6) ");
-  token = evaluate(expression,0);
-
-  TEST_ASSERT_EQUAL_FLOAT (-176,((FloatToken *)token)->value);
-  freeTokenizer(expression);
-}

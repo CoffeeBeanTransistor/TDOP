@@ -29,6 +29,8 @@ void test_verifyTokensRepeated_given_2_same_character_tokens_should_return_true(
 
   TEST_ASSERT_TRUE(verifyTokensRepeated(token1,token2));
   freeTokenizer(expression);
+  free(token1);
+  free(token2);
 }
 
 void test_verifyTokensRepeated_given_2_different_character_tokens_should_return_false(void) {
@@ -41,10 +43,12 @@ void test_verifyTokensRepeated_given_2_different_character_tokens_should_return_
 
   TEST_ASSERT_FALSE(verifyTokensRepeated(token1,token2));
   freeTokenizer(expression);
+  free(token1);
+  free(token2);
 }
 
 
-void test_verifyTokenIsEqual_given_not_equal_token_should_return_equal(void) {
+void test_verifyTokenIsEqual_given_not_equal_token_should_return_true(void) {
   Tokenizer *expression;
   Token *token1, *token2;
 
@@ -54,6 +58,8 @@ void test_verifyTokenIsEqual_given_not_equal_token_should_return_equal(void) {
 
   TEST_ASSERT_TRUE(verifyTokenIsEqualSign(token2));
   freeTokenizer(expression);
+  free(token1);
+  free(token2);
 }
 
 void test_verifyTokenIsEqual_given_logical_OR_token_should_return_false(void) {
@@ -66,6 +72,8 @@ void test_verifyTokenIsEqual_given_logical_OR_token_should_return_false(void) {
 
   TEST_ASSERT_FALSE(verifyTokenIsEqualSign(token2));
   freeTokenizer(expression);
+  free(token1);
+  free(token2);
 }
 
 void test_getOperatorIsotopeInfo_given_a_plus_sign_should_return_info_of_3_isotope_symbols(void) {
@@ -78,9 +86,10 @@ void test_getOperatorIsotopeInfo_given_a_plus_sign_should_return_info_of_3_isoto
   tokenIsoInfo = getOperatorIsotopeInfo(token);
 
   TEST_ASSERT_EQUAL(ADD_SYMBOL, tokenIsoInfo->symbolTable[0]);
-  TEST_ASSERT_EQUAL(INCREMENT_SYMBOL, tokenIsoInfo->symbolTable[1]);
+  TEST_ASSERT_EQUAL(UNDEFINED_SYMBOL, tokenIsoInfo->symbolTable[1]);
   TEST_ASSERT_EQUAL(ADD_ASSIGN_SYMBOL, tokenIsoInfo->symbolTable[2]);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_createString_given_expression_of_2_back_to_back_ampersand_expect_string_of_logical_AND(void) {
@@ -93,19 +102,22 @@ void test_createString_given_expression_of_2_back_to_back_ampersand_expect_strin
   newTokenStr = createString(&token->originalStr[token->startColumn], 2);
 
   TEST_ASSERT_EQUAL_STRING ("&&",newTokenStr);
+  freeTokenizer(expression);
   free(newTokenStr);
 }
 
 void test_getTokenInfo_given_binary_plus_sign_token_expect_binding_power_equals_addition_bp(void) {
-  Tokenizer *tokenizer;
+  Tokenizer *expression;
   TokenInfo *tokenInfo;
   Token *token;
 
-  tokenizer = createTokenizer("+");
-  token = getAdvanceToken(tokenizer);
+  expression = createTokenizer("+");
+  token = getAdvanceToken(expression);
   tokenInfo = getTokenInfo(token);
 
   TEST_ASSERT_EQUAL (ADDITION_BP, tokenInfo->bindingPower);
+  freeTokenizer(expression);
+  free(token);
 }
 
 void test_nudInt_given_1_should_return_1(void) {
@@ -119,6 +131,7 @@ void test_nudInt_given_1_should_return_1(void) {
   TEST_ASSERT_EQUAL (1,((IntegerToken *)token)->value);
   TEST_ASSERT_EQUAL (INTEGER_SYMBOL, token->symbol);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_getAdvanceToken_given_expression_1_should_return_token_with_symbol_1(void) {
@@ -132,6 +145,7 @@ void test_getAdvanceToken_given_expression_1_should_return_token_with_symbol_1(v
   TEST_ASSERT_EQUAL (1,((IntegerToken *)token)->value);
   TEST_ASSERT_EQUAL (INTEGER_SYMBOL, token->symbol);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_getAdvanceToken_given_expression_23_plus_98_should_return_3_tokens_23_plus_98(void) {
@@ -150,6 +164,9 @@ void test_getAdvanceToken_given_expression_23_plus_98_should_return_3_tokens_23_
   TEST_ASSERT_EQUAL (98,((IntegerToken *)v2Token)->value);
   TEST_ASSERT_EQUAL (INTEGER_SYMBOL, v2Token->symbol);
   freeTokenizer(expression);
+  free(v1Token);
+  free(v2Token);
+  free(opToken);
 }
 
 void test_verifyTokenBackToBack_given_double_closed_AND_should_return_true(void) {
@@ -162,6 +179,8 @@ void test_verifyTokenBackToBack_given_double_closed_AND_should_return_true(void)
 
   TEST_ASSERT_TRUE (verifyTokensBackToBack(token1,token2));
   freeTokenizer(expression);
+  free(token1);
+  free(token2);
 }
 
 void test_verifyTokenBackToBack_given_double_separated_EQUALS_should_return_false(void) {
@@ -174,18 +193,20 @@ void test_verifyTokenBackToBack_given_double_separated_EQUALS_should_return_fals
 
   TEST_ASSERT_FALSE (verifyTokensBackToBack(token1,token2));
   freeTokenizer(expression);
+  free(token1);
+  free(token2);
 }
 
 void test_evaluate_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_return_6(void) {
   Token *token;
   Tokenizer *expression;
 
-  expression = createTokenizer(" 2 * 3 - -4 ");
+  expression = createTokenizer(" 2 * 3 - -4 % 5");
   token = evaluate(expression,0);
 
-  TEST_ASSERT_EQUAL_FLOAT ( 2 * 3 - -4, ((FloatToken *)token)->value);
+  TEST_ASSERT_EQUAL_FLOAT ( 2 * 3 - -4 % 5, ((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_getAdvanceToken_given_NOT_EQUAL_expression_should_return_token_str_NOT_EQUAL(void) {
@@ -198,7 +219,7 @@ void test_getAdvanceToken_given_NOT_EQUAL_expression_should_return_token_str_NOT
   TEST_ASSERT_EQUAL_STRING ("!=", token->str);
   TEST_ASSERT_EQUAL(NOT_EQUALS_TO_SYMBOL, token->symbol);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_getAdvanceToken_given_separated_AND_expression_should_return_token_str_BITWISE_OR(void) {
@@ -211,7 +232,7 @@ void test_getAdvanceToken_given_separated_AND_expression_should_return_token_str
   TEST_ASSERT_EQUAL_STRING ("&", token->str);
   TEST_ASSERT_EQUAL(BITWISE_AND_SYMBOL, token->symbol);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_getAdvanceToken_given_negative_2_expression_should_return_token_with_negative_symbol(void) {
@@ -223,7 +244,7 @@ void test_getAdvanceToken_given_negative_2_expression_should_return_token_with_n
 
   TEST_ASSERT_EQUAL (SUB_SYMBOL, token->symbol);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_getAdvanceToken_given_subtract_54_expression_should_return_token_with_sub_symbol(void) {
@@ -235,7 +256,7 @@ void test_getAdvanceToken_given_subtract_54_expression_should_return_token_with_
 
   TEST_ASSERT_EQUAL (SUB_SYMBOL, token->symbol);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 
@@ -249,7 +270,7 @@ void test_evaluate_given_2_plus_9_should_return_11(void) {
   TEST_ASSERT_EQUAL_FLOAT (11,((FloatToken *)token)->value);
 
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 
@@ -262,7 +283,7 @@ void test_evaluate_given_logical_not_23_expect_false (void) {
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_evaluate_given_logical_not_negative_23_expect_false (void) {
@@ -274,7 +295,7 @@ void test_evaluate_given_logical_not_negative_23_expect_false (void) {
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_evaluate_given_logical_not_0_expect_true (void) {
@@ -286,14 +307,14 @@ void test_evaluate_given_logical_not_0_expect_true (void) {
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_getTokenIntegerValue_given_a_token_with_float_value_with_no_fractional_part_expect_an_integer_number_will_return(void) {
   Token *token;
   int value;
 
-  token = newFloatToken(8.0000,token,NULL,NULL);
+  token = newFloatToken(8.0000,NULL,NULL);
   value = getTokenIntegerValue(token);
 
   TEST_ASSERT_EQUAL (8,value);
@@ -309,6 +330,7 @@ void test_evaluate_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return
 
   TEST_ASSERT_EQUAL (5 * ( 23 - 8 ) + 9,((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_given_complicated_expression_with_brackets_should_solve_correctly(void) {
@@ -320,6 +342,7 @@ void test_evaluate_given_complicated_expression_with_brackets_should_solve_corre
 
   TEST_ASSERT_EQUAL_FLOAT (-176,((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_given_3_and_4_minuses_2_expression_should_return_value_5(void) {
@@ -331,6 +354,7 @@ void test_evaluate_given_3_and_4_minuses_2_expression_should_return_value_5(void
 
   TEST_ASSERT_EQUAL (5, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_nudTilde_given_tilde_35_should_return_negative_36(void) {
@@ -342,7 +366,7 @@ void test_evaluate_testing_nudTilde_given_tilde_35_should_return_negative_36(voi
 
   TEST_ASSERT_EQUAL (-36, ((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 
@@ -355,6 +379,7 @@ void test_evaluate_given_tilde_containing_expression_should_solve_correctly(void
 
   TEST_ASSERT_EQUAL (~(35 + 74) * 92, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_logical_AND_given_2_true_statements_with_double_ampersand_in_between_should_return_true(void) {
@@ -366,6 +391,7 @@ void test_evaluate_testing_logical_AND_given_2_true_statements_with_double_amper
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_logical_AND_given_1_true_statement_and_1_zero_valued_statement_with_double_ampersand_should_return_false(void) {
@@ -377,6 +403,7 @@ void test_evaluate_testing_logical_AND_given_1_true_statement_and_1_zero_valued_
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_bitwise_AND_given_7_ampersand_in_between_12_should_return_4(void) {
@@ -388,7 +415,7 @@ void test_evaluate_testing_bitwise_AND_given_7_ampersand_in_between_12_should_re
 
   TEST_ASSERT_EQUAL (7&4, ((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_evaluate_testing_bitwise_AND_given_2_statements_with_aan_ampersand_in_between_shuould_solve_correctly(void) {
@@ -400,6 +427,7 @@ void test_evaluate_testing_bitwise_AND_given_2_statements_with_aan_ampersand_in_
 
   TEST_ASSERT_EQUAL ((29- 48) & (7*8), ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_logical_OR_given_1_true_statement_and_1_false_statement_with_double_vertical_lines_in_between_should_return_true(void) {
@@ -411,6 +439,7 @@ void test_evaluate_testing_logical_OR_given_1_true_statement_and_1_false_stateme
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_bitwise_OR_given_2_statements_with_1_vertical_line_in_between_should_solve_correctly(void) {
@@ -422,6 +451,7 @@ void test_evaluate_testing_bitwise_OR_given_2_statements_with_1_vertical_line_in
 
   TEST_ASSERT_EQUAL ((2&19) | (4* 9), ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_bitwise_XOR_given_31_and_19_with_1_caret_in_between_should_return_value_12(void) {
@@ -433,6 +463,7 @@ void test_evaluate_testing_bitwise_XOR_given_31_and_19_with_1_caret_in_between_s
 
   TEST_ASSERT_EQUAL (12, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_left_shift_given_98_shifting_to_left_2_times_should_return_392(void) {
@@ -444,7 +475,7 @@ void test_evaluate_testing_left_shift_given_98_shifting_to_left_2_times_should_r
 
   TEST_ASSERT_EQUAL (392, ((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_evaluate_testing_left_shift_given_complicated_expression_with_left_shift_involved_should_solve_correctly(void) {
@@ -456,6 +487,7 @@ void test_evaluate_testing_left_shift_given_complicated_expression_with_left_shi
 
   TEST_ASSERT_EQUAL ((21 ^12) | (41 << 8), ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_right_shift_given_63_shifting_to_right_8_times_should_return_0(void) {
@@ -467,7 +499,7 @@ void test_evaluate_testing_right_shift_given_63_shifting_to_right_8_times_should
 
   TEST_ASSERT_EQUAL (0, ((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_evaluate_testing_left_shift_given_complicated_expression_with_right_shift_involved_should_solve_correctly(void) {
@@ -479,6 +511,7 @@ void test_evaluate_testing_left_shift_given_complicated_expression_with_right_sh
 
   TEST_ASSERT_EQUAL ((59>>2)*92^32, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_less_than_given_57_lesser_than_23_should_return_false(void) {
@@ -490,7 +523,7 @@ void test_evaluate_testing_less_than_given_57_lesser_than_23_should_return_false
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_evaluate_testing_less_than_given_expression_involving_lesser_than_should_solve_correctly(void) {
@@ -502,6 +535,7 @@ void test_evaluate_testing_less_than_given_expression_involving_lesser_than_shou
 
   TEST_ASSERT_EQUAL ((74 <(63-2)) + 23%6, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_greater_than_given_238_greater_than_78_should_return_true(void) {
@@ -513,9 +547,8 @@ void test_evaluate_testing_greater_than_given_238_greater_than_78_should_return_
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
-
 
 void test_evaluate_testing_less_than_equal_to_given_expression_involving_lesser_than_equal_to_should_solve_correctly(void) {
   Tokenizer *expression;
@@ -526,6 +559,7 @@ void test_evaluate_testing_less_than_equal_to_given_expression_involving_lesser_
 
   TEST_ASSERT_EQUAL (37 <= 2 + 1, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_greater_than_equal_to_given_43_greater_than_equal_to_44_should_return_false(void) {
@@ -537,6 +571,7 @@ void test_evaluate_testing_greater_than_equal_to_given_43_greater_than_equal_to_
 
   TEST_ASSERT_EQUAL (0, ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_not_equal_to_given_157_not_equals_to_157_should_return_false(void) {
@@ -548,10 +583,10 @@ void test_evaluate_testing_not_equal_to_given_157_not_equals_to_157_should_retur
 
   TEST_ASSERT_EQUAL (0,((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
-void xtest_evaluate_testingw_bitwise_OR_given_2_statements_with_1_vertical_line_in_between_should_solve_correctly(void) {
+void test_evaluate_given_multiple_bracketed_expression_should_solve_correctly(void) {
   Tokenizer *expression;
   Token *token;
 
@@ -560,27 +595,7 @@ void xtest_evaluate_testingw_bitwise_OR_given_2_statements_with_1_vertical_line_
 
   TEST_ASSERT_EQUAL ((((2+4)*3)-3) %10, ((FloatToken *)token)->value);
   freeTokenizer(expression);
-}
-
-void test_newFloatToken_given_a_float_number_should_display_correctly(void) {
-  Tokenizer *expression;
-  Token *leftToken, *rightToken, *token;
-
-  expression = createTokenizer(" 7.4  5.6 ");
-  leftToken = getAdvanceToken(expression);
-  rightToken = getAdvanceToken(expression);
-  token = newFloatToken(13,token,leftToken, rightToken);
-
-  TEST_ASSERT_EQUAL(TOKEN_FLOAT_TYPE, token->type);
-  TEST_ASSERT_EQUAL(FLOAT_SYMBOL, token->symbol);
-  TEST_ASSERT_EQUAL_STRING(" 7.4  5.6 ", token->originalStr);
-  TEST_ASSERT_EQUAL(1, token->startColumn);
-  TEST_ASSERT_EQUAL(8, token->length);
-  TEST_ASSERT_EQUAL_STRING("7.4  5.6", token->str);
-  freeTokenizer(expression);
-  freeToken(token);
-  freeToken(rightToken);
-  freeToken(leftToken);
+  free(token);
 }
 
 void test_getTokenValue_given_an_integer_number_should_return_value_correctly(void) {
@@ -590,11 +605,11 @@ void test_getTokenValue_given_an_integer_number_should_return_value_correctly(vo
 
   expression = createTokenizer(" 6 ");
   token = getAdvanceToken(expression);
-
   value = getTokenValue(token);
 
   TEST_ASSERT_EQUAL_FLOAT(6.000, value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_getTokenValue_given_a_floating_point_number_should_return_its_own_value(void) {
@@ -604,27 +619,26 @@ void test_getTokenValue_given_a_floating_point_number_should_return_its_own_valu
 
   expression = createTokenizer(" 834.1 ");
   token = getAdvanceToken(expression);
-
   value = getTokenValue(token);
 
   TEST_ASSERT_EQUAL_FLOAT(834.1, value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_checkIfUndefined_given_unknown_operator_should_return_0(void) {
   Tokenizer *expression;
   Token *token;
-  int result;
   OperatorIsotope *tokenIsoInfo;
 
-  expression = createTokenizer( " ? ");
+  expression = createTokenizer( " (( ");
   token = getToken(expression);
   tokenIsoInfo = getOperatorIsotopeInfo(token);
 
-  result = checkIfUndefined(tokenIsoInfo,1);
-
-  TEST_ASSERT_EQUAL (0, result);
-
+  checkIfUndefined(tokenIsoInfo,1);
+  TEST_ASSERT_TRUE (checkIfUndefined(tokenIsoInfo,1));
+  freeTokenizer(expression);
+  free(token);
 }
 
 void test_evaluate_testing_greater_than_equal_to_given_expression_involving_greater_than_equal_to_should_solve_correctly(void) {
@@ -636,6 +650,7 @@ void test_evaluate_testing_greater_than_equal_to_given_expression_involving_grea
 
   TEST_ASSERT_EQUAL ((8&9*73)<<(12>=6), ((FloatToken *)token)->value);
   freeTokenizer(expression);
+  free(token);
 }
 
 void test_nudFloat_given_8_point_64_should_return_8_point_64_token(void) {
@@ -649,7 +664,7 @@ void test_nudFloat_given_8_point_64_should_return_8_point_64_token(void) {
   TEST_ASSERT_EQUAL_FLOAT(8.64,((FloatToken *)token)->value);
   TEST_ASSERT_EQUAL(FLOAT_SYMBOL, token->symbol);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_evaluate_given_2_point_32_minus_9_point_94_should_return_11(void) {
@@ -661,7 +676,7 @@ void test_evaluate_given_2_point_32_minus_9_point_94_should_return_11(void) {
 
   TEST_ASSERT_EQUAL (2 - -9, ((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_evaluate_testing_equal_to_given_777_equals_to_777_should_return_true(void) {
@@ -673,7 +688,7 @@ void test_evaluate_testing_equal_to_given_777_equals_to_777_should_return_true(v
 
   TEST_ASSERT_EQUAL (1, ((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
 }
 
 void test_evaluate_testing_equal_to_given_expression_involving_equal_to_should_solve_correctly(void) {
@@ -685,7 +700,28 @@ void test_evaluate_testing_equal_to_given_expression_involving_equal_to_should_s
 
   TEST_ASSERT_EQUAL (23==9 * 7|2, ((FloatToken *)token)->value);
   freeTokenizer(expression);
-  freeToken(token);
+  free(token);
+}
+
+void xtest_newFloatToken_given_a_float_number_should_display_correctly(void) {
+  Tokenizer *expression;
+  Token *leftToken, *rightToken, *token;
+
+  expression = createTokenizer(" 7.4  5.6 ");
+  leftToken = getToken(expression);
+  rightToken = getToken(expression);
+  token = newFloatToken(13.0, leftToken, rightToken);
+
+  TEST_ASSERT_EQUAL(TOKEN_FLOAT_TYPE, token->type);
+  TEST_ASSERT_EQUAL(FLOAT_SYMBOL, token->symbol);
+  TEST_ASSERT_EQUAL_STRING(" 7.4  5.6 ", token->originalStr);
+  TEST_ASSERT_EQUAL(1, token->startColumn);
+  TEST_ASSERT_EQUAL(8, token->length);
+  TEST_ASSERT_EQUAL_STRING("7.4  5.6", token->str);
+  freeTokenizer(expression);
+  free(token);
+  free(rightToken);
+  free(leftToken);
 }
 
 void test_getTokenIntegerValue_given_a_token_with_float_value_fractional_part_should_throw_ERR_NOT_AN_INTEGER(void) {
@@ -696,7 +732,7 @@ void test_getTokenIntegerValue_given_a_token_with_float_value_fractional_part_sh
     expression = createTokenizer( "8.232 +");
     token1 = getToken(expression);
     token2 = getToken(expression);
-    token = newFloatToken(8.232,token,token1,token2);
+    token = newFloatToken(8.232,token1,token2);
     getTokenIntegerValue(token);
     TEST_FAIL_MESSAGE ("Expected ERR_NOT_AN_INTEGER to be thrown! But no exception is thrown.");
     } Catch(e) {
@@ -704,7 +740,7 @@ void test_getTokenIntegerValue_given_a_token_with_float_value_fractional_part_sh
     TEST_ASSERT_EQUAL (ERR_NOT_AN_INTEGER, e->errorCode);
     freeException(e);
     freeTokenizer(expression);
-    freeToken(token);
+    free(token);
     }
   }
 
@@ -741,17 +777,17 @@ void test_evaluate_given_fractional_number_in_logical_operation_should_throw_ERR
   }
 }
 
-void test_given_unknown_character_should_throw_ERR_UNDEFINED_SYMBOL(void) {
+void test_given_unknown_character_should_throw_ERR_UNKNOWN_OPERATOR(void) {
   Tokenizer *expression;
   Token *token;
 
   Try {
   expression = createTokenizer( " 7.24 ? 2");
   token = evaluate(expression,0);
-  TEST_FAIL_MESSAGE ("Expected ERR_UNDEFINED_SYMBOL to be thrown! But no exception is thrown.");
+  TEST_FAIL_MESSAGE ("Expected ERR_UNKNOWN_OPERATOR to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
-  TEST_ASSERT_EQUAL (ERR_UNDEFINED_SYMBOL, e->errorCode);
+  TEST_ASSERT_EQUAL (ERR_UNKNOWN_OPERATOR, e->errorCode);
   freeException(e);
   freeTokenizer(expression);
   }
