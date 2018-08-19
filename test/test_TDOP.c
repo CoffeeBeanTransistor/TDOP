@@ -703,25 +703,15 @@ void test_evaluate_testing_equal_to_given_expression_involving_equal_to_should_s
   free(token);
 }
 
-void xtest_newFloatToken_given_a_float_number_should_display_correctly(void) {
-  Tokenizer *expression;
-  Token *leftToken, *rightToken, *token;
+void test_newFloatToken_given_a_float_number_should_display_correctly(void) {
+  Token *token;
 
-  expression = createTokenizer(" 7.4  5.6 ");
-  leftToken = getToken(expression);
-  rightToken = getToken(expression);
-  token = newFloatToken(13.0, leftToken, rightToken);
+  token = newFloatToken(13,NULL, NULL);
 
+  TEST_ASSERT_EQUAL_FLOAT(13, ((FloatToken *)token)->value);
   TEST_ASSERT_EQUAL(TOKEN_FLOAT_TYPE, token->type);
   TEST_ASSERT_EQUAL(FLOAT_SYMBOL, token->symbol);
-  TEST_ASSERT_EQUAL_STRING(" 7.4  5.6 ", token->originalStr);
-  TEST_ASSERT_EQUAL(1, token->startColumn);
-  TEST_ASSERT_EQUAL(8, token->length);
-  TEST_ASSERT_EQUAL_STRING("7.4  5.6", token->str);
-  freeTokenizer(expression);
   free(token);
-  free(rightToken);
-  free(leftToken);
 }
 
 void test_getTokenIntegerValue_given_a_token_with_float_value_fractional_part_should_throw_ERR_NOT_AN_INTEGER(void) {

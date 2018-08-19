@@ -140,7 +140,7 @@ Token *handleSignEqualAndRepeat(Tokenizer *expression, Token *token1) {
 
 Token *newFloatToken(double value, Token *leftToken, Token *rightToken) {
   Token *token;
-  
+
   if(leftToken == NULL || rightToken == NULL) {
     token = createFloatToken(value, NULL);
     token->symbol = FLOAT_SYMBOL;
