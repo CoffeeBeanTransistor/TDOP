@@ -13,4 +13,6 @@
 #define ERR_INVALID_OPERAND       35
 #define ERR_UNKNOWN_OPERATOR      65
 
+#define ERR_INVALID_EXPRESSION    41
+
 #endif // Error_H

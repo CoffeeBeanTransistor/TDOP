@@ -895,6 +895,39 @@ void test_evaluate_given_a_left_number_an_operator_but_no_right_token_should_thr
   }
 }
 
+void test_evaluate_given_from_plus_there_should_throw_ERR_INVALID_EXPRESSION(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  Try {
+  expression = createTokenizer( "from + there" );
+  token = evaluate(expression,0);
+  TEST_FAIL_MESSAGE ("Expected ERR_INVALID_EXPRESSION to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_INVALID_EXPRESSION, e->errorCode);
+  freeException(e);
+  freeTokenizer(expression);
+  }
+}
+
+void test_evaluate_given_hello_world_should_throw_ERR_INVALID_EXPRESSION(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  Try {
+  expression = createTokenizer( "hello world" );
+  token = evaluate(expression,0);
+  TEST_FAIL_MESSAGE ("Expected ERR_INVALID_EXPRESSION to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_INVALID_EXPRESSION, e->errorCode);
+  freeException(e);
+  freeTokenizer(expression);
+  }
+}
+
+
 
 
 /*void test_given_invalid_symbol_placement_nud_is_NULL_should_throw_SYSTEM_ERROR(void) {

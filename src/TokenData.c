@@ -58,6 +58,7 @@ Token *getAdvanceToken(Tokenizer *expression) {
   Token *token1;
 
     token1 = getToken(expression);
+    checkIfTokenValid(token1);
 
     if(token1->type == TOKEN_OPERATOR_TYPE)
       token1 = handleSignEqualAndRepeat(expression, token1);
@@ -80,6 +81,7 @@ Token *getAdvanceToken(Tokenizer *expression) {
 Token *handleSignEqualAndRepeat(Tokenizer *expression, Token *token1) {
 
     Token *token2 = getToken(expression);
+    checkIfTokenValid(token2);
     OperatorIsotope *token1IsoInfo;
 
     token1IsoInfo = getOperatorIsotopeInfo(token1);
@@ -274,6 +276,28 @@ void checkIfNextTokenIsInteger(Tokenizer *expression) {
       throwException(ERR_EXPECTING_OPERATOR, nextToken, "Expecting an operator, but '%s' is met.", nextToken->str);
     else
       pushBackToken(expression,nextToken);
+}
+
+void checkIfTokenValid(Token *token) {
+
+    if(token->type == TOKEN_INTEGER_TYPE )
+      return 1;
+    else if(token->type == TOKEN_FLOAT_TYPE)
+      return 1;
+    else if(token->type == TOKEN_OPERATOR_TYPE)
+      return 1;
+    else if(token->type == TOKEN_NULL_TYPE)
+      return 1;
+    else if(token->type == TOKEN_IDENTIFIER_TYPE)
+      throwException(ERR_INVALID_EXPRESSION, token, "Invalid expression: '%s', '%s' is invalid here.", token->originalStr, token->str);
+    else if(token->type == TOKEN_STRING_TYPE)
+      throwException(ERR_INVALID_EXPRESSION, token, "Invalid expression: '%s', '%s' is invalid here.", token->originalStr, token->str);
+    else if(token->type == TOKEN_UNKNOWN_TYPE)
+      throwException(ERR_INVALID_EXPRESSION, token, "Invalid expression: '%s', '%s' is invalid here.", token->originalStr, token->str);
+    else if(token->type == TOKEN_INVALID_TYPE)
+      throwException(ERR_INVALID_EXPRESSION, token, "Invalid expression: '%s', '%s' is invalid here.", token->originalStr, token->str);
+    else
+      throwException(ERR_INVALID_EXPRESSION, token, "Invalid expression: '%s', '%s' is invalid here.", token->originalStr, token->str);
 }
 
 Token *getNud(Token *thisToken, Tokenizer *expression) {
