@@ -300,19 +300,6 @@ void checkIfTokenValid(Token *token) {
       throwException(ERR_INVALID_EXPRESSION, token, "Invalid expression: '%s', '%s' is invalid here.", token->originalStr, token->str);
 }
 
-void checkIfExpressionReachesNullToken() {
-
-
-
-
-
-
-
-
-
-
-}
-
 Token *getNud(Token *thisToken, Tokenizer *expression) {
   TokenInfo *thisTokenInfo;
   Token *nudToken;

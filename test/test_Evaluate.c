@@ -589,6 +589,18 @@ void test_evaluate_given_multiple_bracketed_expression_should_solve_correctly(vo
   free(token);
 }
 
+void test_evaluate_given_complex_expression_should_solve_correctly(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  expression = createTokenizer( "+ 5%6^7 + 9 && 5 & 8 ||9 ");
+  token = evaluate(expression);
+
+  TEST_ASSERT_EQUAL (+ 5%6^7 + 9 && 5 & 8 ||9,((FloatToken *)token)->value);
+  freeTokenizer(expression);
+  free(token);
+}
+
 void test_getTokenValue_given_an_integer_number_should_return_value_correctly(void) {
   Tokenizer *expression;
   Token *token;
