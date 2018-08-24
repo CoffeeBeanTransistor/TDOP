@@ -3,7 +3,7 @@
 #include "Operator.h"
 #include "Tokenizer.h"
 #include "TokenData.h"
-#include "TDOP.h"
+#include "Evaluate.h"
 #include "Token.h"
 
 Token *nudInt (Token *intToken, Tokenizer *expression);
@@ -79,6 +79,8 @@ Token *nudLeftBracket(Token *leftBracketToken, Tokenizer *expression);
 Token *ledLeftBracket(Token *leftToken, Token *leftBracketToken, Tokenizer *expression);
 
 Token *nudRightBracket(Token *rightBracketToken, Tokenizer *expression);
+Token *ledRightBracket(Token *leftToken, Token *rightBracketToken, Tokenizer *expression);
+
 Token *nudNULL(Token *nullToken, Tokenizer *expression);
 
 int matchBracket(Tokenizer *expression);

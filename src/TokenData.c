@@ -1,5 +1,5 @@
 #include "TokenData.h"
-#include "TDOP.h"
+#include "Evaluate.h"
 #include "Token.h"
 #include "Operator.h"
 #include <stdint.h>
@@ -32,7 +32,7 @@ TokenInfo symbolMapTable[256] = {
   [EQUAL_SYMBOL] = {.bindingPower = EQUAL_BP, .nud = nudEqual, .led = ledEqual},
   [NOT_EQUALS_TO_SYMBOL] = {.bindingPower = NOT_EQUALS_TO_BP, .nud = nudExclamationEqual, .led = ledExclamationEqual},
   [OPENING_BRACKET_SYMBOL] = {.bindingPower = OPENING_BRACKET_BP, .nud = nudLeftBracket, .led = ledLeftBracket},
-  [CLOSING_BRACKET_SYMBOL] = {.bindingPower = CLOSING_BRACKET_BP, .nud = nudRightBracket},
+  [CLOSING_BRACKET_SYMBOL] = {.bindingPower = CLOSING_BRACKET_BP, .nud = nudRightBracket, .led = ledRightBracket},
   [INTEGER_SYMBOL] = {.nud = nudInt, .led = ledInt},
   [FLOAT_SYMBOL] = {.nud = nudFloat, .led = ledFloat},
   [NULL_SYMBOL] = {.bindingPower = WEAKEST_BP, .nud = nudNULL},
@@ -298,6 +298,19 @@ void checkIfTokenValid(Token *token) {
       throwException(ERR_INVALID_EXPRESSION, token, "Invalid expression: '%s', '%s' is invalid here.", token->originalStr, token->str);
     else
       throwException(ERR_INVALID_EXPRESSION, token, "Invalid expression: '%s', '%s' is invalid here.", token->originalStr, token->str);
+}
+
+void checkIfExpressionReachesNullToken() {
+
+
+
+
+
+
+
+
+
+
 }
 
 Token *getNud(Token *thisToken, Tokenizer *expression) {

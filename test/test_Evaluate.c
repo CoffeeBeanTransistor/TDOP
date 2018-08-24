@@ -1,5 +1,5 @@
 #include "unity.h"
-#include "TDOP.h"
+#include "Evaluate.h"
 #include "Tokenizer.h"
 #include "Token.h"
 #include "TokenData.h"
@@ -19,19 +19,6 @@ void tearDown(void)
 {
 }
 
-void test_verifyTokensRepeated_given_2_same_character_tokens_should_return_true(void) {
-  Tokenizer *expression;
-  Token *token1, *token2;
-
-  expression = createTokenizer(" && ");
-  token1 = getToken(expression);
-  token2 = getToken(expression);
-
-  TEST_ASSERT_TRUE(verifyTokensRepeated(token1,token2));
-  freeTokenizer(expression);
-  free(token1);
-  free(token2);
-}
 
 void test_verifyTokensRepeated_given_2_different_character_tokens_should_return_false(void) {
   Tokenizer *expression;
@@ -202,7 +189,7 @@ void test_evaluate_given_1_plus_2_multiply_3_minus_neg_4_remainder_5_should_retu
   Tokenizer *expression;
 
   expression = createTokenizer(" 2 * 3 - -4 % 5");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL_FLOAT ( 2 * 3 - -4 % 5, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -266,7 +253,7 @@ void test_evaluate_given_2_plus_9_should_return_11(void) {
 
   expression = createTokenizer(" 2 + 9 ");
 
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_ASSERT_EQUAL_FLOAT (11,((FloatToken *)token)->value);
 
   freeTokenizer(expression);
@@ -279,7 +266,7 @@ void test_evaluate_given_logical_not_23_expect_false (void) {
   Tokenizer *expression;
 
   expression = createTokenizer(" !23 ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -291,7 +278,7 @@ void test_evaluate_given_logical_not_negative_23_expect_false (void) {
   Tokenizer *expression;
 
   expression = createTokenizer(" !-23 ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -303,7 +290,7 @@ void test_evaluate_given_logical_not_0_expect_true (void) {
   Tokenizer *expression;
 
   expression = createTokenizer(" !0 ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -326,11 +313,15 @@ void test_evaluate_given_5_times_bracket_23_minus_8_bracket_plus_9_should_return
   Tokenizer *expression;
 
   expression = createTokenizer(" 5 * ( 23 - 8 ) + 9 ");
-  token = evaluate(expression,0);
+  Try {
+  token = evaluate(expression);
 
-  TEST_ASSERT_EQUAL (5 * ( 23 - 8 ) + 9,((FloatToken *)token)->value);
-  freeTokenizer(expression);
-  free(token);
+  //TEST_ASSERT_EQUAL (5 * ( 23 - 8 ) + 9,((FloatToken *)token)->value);
+}Catch(e){
+  dumpTokenErrorMessage(e,1);
+}
+  //freeTokenizer(expression);
+  //free(token);
 }
 
 void test_evaluate_given_complicated_expression_with_brackets_should_solve_correctly(void) {
@@ -338,7 +329,7 @@ void test_evaluate_given_complicated_expression_with_brackets_should_solve_corre
   Tokenizer *expression;
 
   expression = createTokenizer(" -(7+--9)*(-1+-2*---6) ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL_FLOAT (-176,((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -350,7 +341,7 @@ void test_evaluate_given_3_and_4_minuses_2_expression_should_return_value_5(void
   Token *token;
 
   expression = createTokenizer(" 3----2 ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (5, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -362,7 +353,7 @@ void test_evaluate_testing_nudTilde_given_tilde_35_should_return_negative_36(voi
   Token *token;
 
   expression = createTokenizer( "~35" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (-36, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -375,7 +366,7 @@ void test_evaluate_given_tilde_containing_expression_should_solve_correctly(void
   Token *token;
 
   expression = createTokenizer( " ~(35 + 74) * 92 " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (~(35 + 74) * 92, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -387,7 +378,7 @@ void test_evaluate_testing_logical_AND_given_2_true_statements_with_double_amper
   Token *token;
 
   expression = createTokenizer( "(23 - 54) && (1-2) " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -399,7 +390,7 @@ void test_evaluate_testing_logical_AND_given_1_true_statement_and_1_zero_valued_
   Token *token;
 
   expression = createTokenizer( "2*5 && 23 - 23 " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -411,7 +402,7 @@ void test_evaluate_testing_bitwise_AND_given_7_ampersand_in_between_12_should_re
   Token *token;
 
   expression = createTokenizer( "7&4" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (7&4, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -423,7 +414,7 @@ void test_evaluate_testing_bitwise_AND_given_2_statements_with_aan_ampersand_in_
   Token *token;
 
   expression = createTokenizer( "(29- 48) & (7*8)" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL ((29- 48) & (7*8), ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -435,7 +426,7 @@ void test_evaluate_testing_logical_OR_given_1_true_statement_and_1_false_stateme
   Token *token;
 
   expression = createTokenizer( "(23 *(23-12)) || (0 / 62) " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -447,7 +438,7 @@ void test_evaluate_testing_bitwise_OR_given_2_statements_with_1_vertical_line_in
   Token *token;
 
   expression = createTokenizer( " (2&19) | (4* 9)" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL ((2&19) | (4* 9), ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -459,7 +450,7 @@ void test_evaluate_testing_bitwise_XOR_given_31_and_19_with_1_caret_in_between_s
   Token *token;
 
   expression = createTokenizer( "31^19" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (12, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -471,7 +462,7 @@ void test_evaluate_testing_left_shift_given_98_shifting_to_left_2_times_should_r
   Token *token;
 
   expression = createTokenizer( " 98 << 2 " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (392, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -483,7 +474,7 @@ void test_evaluate_testing_left_shift_given_complicated_expression_with_left_shi
   Token *token;
 
   expression = createTokenizer( " (21 ^12) | (41 << 8) " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL ((21 ^12) | (41 << 8), ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -495,7 +486,7 @@ void test_evaluate_testing_right_shift_given_63_shifting_to_right_8_times_should
   Token *token;
 
   expression = createTokenizer( " 63 >> 8 " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (0, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -507,7 +498,7 @@ void test_evaluate_testing_left_shift_given_complicated_expression_with_right_sh
   Token *token;
 
   expression = createTokenizer( " (59>>2)*92^32 " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL ((59>>2)*92^32, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -519,7 +510,7 @@ void test_evaluate_testing_less_than_given_57_lesser_than_23_should_return_false
   Token *token;
 
   expression = createTokenizer( " 57 < 23 " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_FALSE (((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -531,7 +522,7 @@ void test_evaluate_testing_less_than_given_expression_involving_lesser_than_shou
   Token *token;
 
   expression = createTokenizer( " (74 <(63-2)) + 23%6 " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL ((74 <(63-2)) + 23%6, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -543,7 +534,7 @@ void test_evaluate_testing_greater_than_given_238_greater_than_78_should_return_
   Token *token;
 
   expression = createTokenizer( "238>78" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_TRUE (((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -555,7 +546,7 @@ void test_evaluate_testing_less_than_equal_to_given_expression_involving_lesser_
   Token *token;
 
   expression = createTokenizer( " 37 <= 2 + 1 " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (37 <= 2 + 1, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -567,7 +558,7 @@ void test_evaluate_testing_greater_than_equal_to_given_43_greater_than_equal_to_
   Token *token;
 
   expression = createTokenizer( "43>=78" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (0, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -579,7 +570,7 @@ void test_evaluate_testing_not_equal_to_given_157_not_equals_to_157_should_retur
   Token *token;
 
   expression = createTokenizer( "157 != 157" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (0,((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -591,7 +582,7 @@ void test_evaluate_given_multiple_bracketed_expression_should_solve_correctly(vo
   Token *token;
 
   expression = createTokenizer( " (((2+4)*3)-3) %10" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL ((((2+4)*3)-3) %10, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -646,7 +637,7 @@ void test_evaluate_testing_greater_than_equal_to_given_expression_involving_grea
   Token *token;
 
   expression = createTokenizer( " (8&9*73)<<(12>=6)" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL ((8&9*73)<<(12>=6), ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -672,7 +663,7 @@ void test_evaluate_given_2_point_32_minus_9_point_94_should_return_11(void) {
   Token *token;
 
   expression = createTokenizer(" 2 - -9 ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (2 - -9, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -684,7 +675,7 @@ void test_evaluate_testing_equal_to_given_777_equals_to_777_should_return_true(v
   Token *token;
 
   expression = createTokenizer( "777 == 777" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (1, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -696,7 +687,7 @@ void test_evaluate_testing_equal_to_given_expression_involving_equal_to_should_s
   Token *token;
 
   expression = createTokenizer( " 23==9 * 7|2" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
 
   TEST_ASSERT_EQUAL (23==9 * 7|2, ((FloatToken *)token)->value);
   freeTokenizer(expression);
@@ -741,7 +732,7 @@ void test_evaluate_given_unmatched_bracket_expression_should_throw_ERR_MISSING_B
 
   Try {
   expression = createTokenizer( "(7 + 6 ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected ERR_MISSING_BRACKET to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -757,7 +748,7 @@ void test_evaluate_given_fractional_number_in_logical_operation_should_throw_ERR
 
   Try {
   expression = createTokenizer( " 8.23 << 5");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected ERR_NOT_AN_INTEGER to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -773,7 +764,7 @@ void test_given_unknown_character_should_throw_ERR_UNKNOWN_OPERATOR(void) {
 
   Try {
   expression = createTokenizer( " 7.24 ? 2");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected ERR_UNKNOWN_OPERATOR to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -789,7 +780,7 @@ void test_given_a_not_supported_operator_should_throw_ERR_UNSUPPORTED_SYMBOL(voi
 
   Try {
   expression = createTokenizer( " 3 = =2 ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected UNSUPPORTED_SYMBOL to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -805,7 +796,7 @@ void test_given_invalid_symbol_placement_should_throw_INVALID_SYMBOL_PLACEMENT(v
 
   Try {
   expression = createTokenizer( " <9 + 4 ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected INVALID_SYMBOL_PLACEMENT to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -821,7 +812,7 @@ void test_given_numbers_divided_by_zero_should_throw_ERR_UNDEFINED(void) {
 
   Try {
   expression = createTokenizer( " 10/(0*9) ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected ERR_UNDEFINED to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -837,7 +828,7 @@ void test_given_number_modulo_by_zero_should_throw_ERR_UNDEFINED(void) {
 
   Try {
   expression = createTokenizer( " 7 % 0");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected ERR_UNDEFINED to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -853,7 +844,7 @@ Token *token;
 
   Try {
   expression = createTokenizer( " (2*3) (5-2)  ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected ERR_EXPECTING_OPERATOR to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -869,7 +860,7 @@ Token *token;
 
   Try {
   expression = createTokenizer( " 7 1 + 9 ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected ERR_EXPECTING_OPERATOR to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -885,7 +876,7 @@ void test_evaluate_given_a_left_number_an_operator_but_no_right_token_should_thr
 
   Try {
   expression = createTokenizer( " 7 <<  " );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected ERR_EXPECTING_OPERAND to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -901,7 +892,7 @@ void test_evaluate_given_from_plus_there_should_throw_ERR_INVALID_EXPRESSION(voi
 
   Try {
   expression = createTokenizer( "from + there" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected ERR_INVALID_EXPRESSION to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -917,7 +908,7 @@ void test_evaluate_given_hello_world_should_throw_ERR_INVALID_EXPRESSION(void) {
 
   Try {
   expression = createTokenizer( "hello world" );
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected ERR_INVALID_EXPRESSION to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);
@@ -927,7 +918,37 @@ void test_evaluate_given_hello_world_should_throw_ERR_INVALID_EXPRESSION(void) {
   }
 }
 
+void test_evaluate_given_no_operator_after_bracketed_6_should_throw_ERR_EXPECTING_OPERATOR(void) {
+  Tokenizer *expression;
+  Token *token;
 
+  Try {
+  expression = createTokenizer( "(6)2+4");
+  token = evaluate(expression);
+  TEST_FAIL_MESSAGE ("Expected ERR_EXPECTING_OPERATOR to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_EXPECTING_OPERATOR, e->errorCode);
+  freeException(e);
+  freeTokenizer(expression);
+  }
+}
+
+void test_evaluate_given_incomplete_bracket_expression_should_throw_ERR_MISSING_BRACKET(void) {
+  Tokenizer *expression;
+  Token *token;
+
+  Try {
+  expression = createTokenizer( "6/2)+4");
+  token = evaluate(expression);
+  TEST_FAIL_MESSAGE ("Expected ERR_MISSING_BRACKET to be thrown! But no exception is thrown.");
+  } Catch(e) {
+  dumpTokenErrorMessage(e,1);
+  TEST_ASSERT_EQUAL (ERR_MISSING_BRACKET, e->errorCode);
+  freeException(e);
+  freeTokenizer(expression);
+  }
+}
 
 
 /*void test_given_invalid_symbol_placement_nud_is_NULL_should_throw_SYSTEM_ERROR(void) {
@@ -936,7 +957,7 @@ Token *token;
 
   Try {
   expression = createTokenizer( " *2 ");
-  token = evaluate(expression,0);
+  token = evaluate(expression);
   TEST_FAIL_MESSAGE ("Expected SYSTEM_ERROR to be thrown! But no exception is thrown.");
   } Catch(e) {
   dumpTokenErrorMessage(e,1);

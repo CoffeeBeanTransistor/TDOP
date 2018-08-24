@@ -1,7 +1,7 @@
 #include "Operator.h"
 #include "Tokenizer.h"
 #include "TokenData.h"
-#include "TDOP.h"
+#include "Evaluate.h"
 #include "Token.h"
 #include "Exception.h"
 #include "Error.h"
@@ -25,14 +25,14 @@ Token *ledFloat (Token *leftToken, Token *thisToken, Tokenizer *expression) {
 }
 
 Token *nudPlus(Token *plusToken, Tokenizer *expression) {
-  return evaluate(expression, ADDITION_BP);
+  return _evaluate(expression, ADDITION_BP);
 }
 
 Token *ledPlus(Token *leftToken, Token *thisToken, Tokenizer *expression){
   Token  *rightToken, *token;
   double v1, v2, ans;
 
-    rightToken = evaluate(expression, ADDITION_BP);
+    rightToken = _evaluate(expression, ADDITION_BP);
     v1 = getTokenValue(leftToken);
     v2 = getTokenValue(rightToken);
     ans =  v1 + v2;
@@ -46,7 +46,7 @@ Token *nudNegative(Token *minusToken, Tokenizer *expression) {
   Token *token;
 
 
-    token = evaluate(expression, UNARY_MINUS_BP);
+    token = _evaluate(expression, UNARY_MINUS_BP);
     value = getTokenValue(token);
     value = -value;
     token = newFloatToken(value,minusToken,token);
@@ -59,7 +59,7 @@ Token *ledMinus(Token *leftToken, Token *thisToken, Tokenizer *expression) {
   Token  *rightToken, *token;
   double v1, v2, ans;
 
-    rightToken = evaluate(expression, SUBTRACTION_BP);
+    rightToken = _evaluate(expression, SUBTRACTION_BP);
     v1 = getTokenValue(leftToken);
     v2 = getTokenValue(rightToken);
     ans =  v1 - v2;
@@ -75,7 +75,7 @@ Token *ledAsterisk(Token *leftToken, Token *thisToken, Tokenizer *expression) {
   Token  *rightToken, *token;
   double v1, v2, ans;
 
-    rightToken = evaluate(expression, MULTIPLICATION_BP);
+    rightToken = _evaluate(expression, MULTIPLICATION_BP);
     v1 = getTokenValue(leftToken);
     v2 = getTokenValue(rightToken);
     ans =  v1 * v2;
@@ -91,7 +91,7 @@ Token *ledSlash(Token *leftToken, Token *thisToken, Tokenizer *expression) {
   Token  *rightToken, *token;
   double v1, v2, ans;
 
-    rightToken = evaluate(expression, DIVISION_BP);
+    rightToken = _evaluate(expression, DIVISION_BP);
     v1 = getTokenValue(leftToken);
     v2 = getTokenValue(rightToken);
 
@@ -112,7 +112,7 @@ Token *ledPercent(Token *leftToken, Token *thisToken, Tokenizer *expression) {
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, REMAINDER_BP);
+    rightToken = _evaluate(expression, REMAINDER_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -128,7 +128,7 @@ Token *ledPercent(Token *leftToken, Token *thisToken, Tokenizer *expression) {
 Token *nudExclamation(Token *exclToken, Tokenizer *expression) {
   Token *token;
 
-  token = evaluate(expression, LOGICAL_NOT_BP);
+  token = _evaluate(expression, LOGICAL_NOT_BP);
 
   if(getTokenIntegerValue(token) != 0)
     token = newFloatToken(0, exclToken, token);
@@ -147,7 +147,7 @@ Token *nudTilde(Token *tildeToken, Tokenizer *expression) {
   Token *token;
   int value;
 
-  token = evaluate(expression, BITWISE_NOT_BP);
+  token = _evaluate(expression, BITWISE_NOT_BP);
 
   value = getTokenIntegerValue(token);
   value = ~value;
@@ -168,7 +168,7 @@ Token *ledDoubleAmpersand(Token *leftToken, Token *thisToken, Tokenizer *express
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, LOGICAL_AND_BP);
+    rightToken = _evaluate(expression, LOGICAL_AND_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -186,7 +186,7 @@ Token *ledAmpersand(Token *leftToken, Token *thisToken, Tokenizer *expression) {
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, BITWISE_AND_BP);
+    rightToken = _evaluate(expression, BITWISE_AND_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -204,7 +204,7 @@ Token *ledDoubleVerticalBar(Token *leftToken, Token *thisToken, Tokenizer *expre
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, LOGICAL_OR_BP);
+    rightToken = _evaluate(expression, LOGICAL_OR_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -221,7 +221,7 @@ Token *ledVerticalBar(Token *leftToken, Token *thisToken, Tokenizer *expression)
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, BITWISE_OR_BP);
+    rightToken = _evaluate(expression, BITWISE_OR_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -238,7 +238,7 @@ Token *ledCaret(Token *leftToken, Token *thisToken, Tokenizer *expression) {
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, BITWISE_XOR_BP);
+    rightToken = _evaluate(expression, BITWISE_XOR_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -255,7 +255,7 @@ Token *ledDoubleLeftArrows(Token *leftToken, Token *thisToken, Tokenizer *expres
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, BITWISE_LEFT_SHIFTER_BP);
+    rightToken = _evaluate(expression, BITWISE_LEFT_SHIFTER_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -272,7 +272,7 @@ Token *ledDoubleRightArrows(Token *leftToken, Token *thisToken, Tokenizer *expre
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, BITWISE_RIGHT_SHIFTER_BP);
+    rightToken = _evaluate(expression, BITWISE_RIGHT_SHIFTER_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -289,7 +289,7 @@ Token *ledLeftArrow(Token *leftToken, Token *thisToken, Tokenizer *expression) {
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, LESSER_BP);
+    rightToken = _evaluate(expression, LESSER_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -306,7 +306,7 @@ Token *ledRightArrow(Token *leftToken, Token *thisToken, Tokenizer *expression) 
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, GREATER_BP);
+    rightToken = _evaluate(expression, GREATER_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -323,7 +323,7 @@ Token *ledLeftArrowEqual(Token *leftToken, Token *thisToken, Tokenizer *expressi
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, LESSER_EQUALS_BP);
+    rightToken = _evaluate(expression, LESSER_EQUALS_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -340,7 +340,7 @@ Token *ledRightArrowEqual(Token *leftToken, Token *thisToken, Tokenizer *express
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, GREATER_EQUALS_BP);
+    rightToken = _evaluate(expression, GREATER_EQUALS_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -365,7 +365,7 @@ Token *ledDoubleEquals(Token *leftToken, Token *thisToken, Tokenizer *expression
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, EQUALS_TO_BP);
+    rightToken = _evaluate(expression, EQUALS_TO_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -382,7 +382,7 @@ Token *ledExclamationEqual(Token *leftToken, Token *thisToken, Tokenizer *expres
   Token  *rightToken, *token;
   int v1, v2, ans;
 
-    rightToken = evaluate(expression, NOT_EQUALS_TO_BP);
+    rightToken = _evaluate(expression, NOT_EQUALS_TO_BP);
 
     v1 = getTokenIntegerValue(leftToken);
     v2 = getTokenIntegerValue(rightToken);
@@ -394,7 +394,7 @@ Token *ledExclamationEqual(Token *leftToken, Token *thisToken, Tokenizer *expres
 Token *nudLeftBracket(Token *leftBracketToken, Tokenizer *expression) {
     Token *expr;
 
-    expr = evaluate(expression, WEAKEST_BP);
+    expr = _evaluate(expression, OPENING_BRACKET_BP);
 
     if(matchBracket(expression)) {
       freeToken(leftBracketToken);
@@ -408,6 +408,10 @@ Token *ledLeftBracket(Token *leftToken, Token *leftBracketToken, Tokenizer *expr
 
 Token *nudRightBracket(Token *rightBracketToken, Tokenizer *expression) {
   throwException(ERR_EXPECTING_OPERAND, rightBracketToken, "Expecting an operand, but '%s' is met.", rightBracketToken->str);
+}
+
+Token *ledRightBracket(Token *leftToken, Token *rightBracketToken, Tokenizer *expression) {
+  throwException(ERR_MISSING_BRACKET, rightBracketToken, "Incomplete bracket, '%s is missing a left bracket.'", rightBracketToken->str);
 }
 
 int matchBracket(Tokenizer *expression) {
